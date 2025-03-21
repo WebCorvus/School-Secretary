@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Guardian(models.Model):
-    TURMA_CHOICES = (
+    CLASS_CHOICES = (
         ("1A", "1° Ano A"),
         ("1B", "1° Ano B"),
         ("1C", "1° Ano C"),
@@ -25,19 +25,19 @@ class Guardian(models.Model):
         max_length=15, verbose_name="Guardian's phone number (xx) xxxxx-xxxx"
     )
     email = models.EmailField(max_length=100, verbose_name="Guardian's email")
-    adress = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11, unique=True)
-    birthday = models.DateField()
+    birthday = models.DateField(max_length=10)
+    adress = models.CharField(max_length=100)
     class_choices = models.CharField(
-        max_length=2, choices=TURMA_CHOICES, blank=True, null=False
+        max_length=2, choices=CLASS_CHOICES, blank=True, null=False
     )
 
     def __str__(self):
-        return self.first_name
+        return self.first_name + ' ' + self.last_name
 
 
 class Student(models.Model):
-    TURMA_CHOICES = (
+    CLASS_CHOICES = (
         ("1A", "1° Ano A"),
         ("1B", "1° Ano B"),
         ("1C", "1° Ano C"),
@@ -58,19 +58,19 @@ class Student(models.Model):
         max_length=15, verbose_name="Student's phone number (xx) xxxxx-xxxx"
     )
     email = models.EmailField(max_length=100, verbose_name="Student's email")
-    adress = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11, unique=True)
-    birthday = models.DateField()
+    birthday = models.DateField(max_length=10)
+    adress = models.CharField(max_length=100)
     class_choices = models.CharField(
-        max_length=2, choices=TURMA_CHOICES, blank=True, null=False
+        max_length=2, choices=CLASS_CHOICES, blank=True, null=False
     )
 
     def __str__(self):
-        return self.first_name
+        return self.first_name + ' ' + self.last_name
 
 
 class Professor(models.Model):
-    TURMA_CHOICES = (
+    CLASS_CHOICES = (
         ("1A", "1° Ano A"),
         ("1B", "1° Ano B"),
         ("1C", "1° Ano C"),
@@ -87,13 +87,13 @@ class Professor(models.Model):
     phone_number = models.CharField(
         max_length=15, verbose_name="Professor's phone number (xx) xxxxx-xxxx"
     )
-    email = models.EmailField(max_length=100, verbose_name="Professor's Email")
-    adress = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, verbose_name="Professor's email")
     cpf = models.CharField(max_length=11, unique=True)
-    birthday = models.DateField()
+    birthday = models.DateField(max_length=10)
+    adress = models.CharField(max_length=100)
     class_choices = models.CharField(
-        max_length=2, choices=TURMA_CHOICES, blank=True, null=False
+        max_length=2, choices=CLASS_CHOICES, blank=True, null=False
     )
 
     def __str__(self):
-        return self.first_name
+        return self.first_name + ' ' + self.last_name

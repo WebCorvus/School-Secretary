@@ -1,5 +1,5 @@
 from django.contrib import admin
-from escola.models import Guardian, Student, Professor
+from school.models import Guardian, Student, Professor
 
 
 class GuardiansAdmin(admin.ModelAdmin):
