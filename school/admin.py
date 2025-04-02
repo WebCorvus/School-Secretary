@@ -1,5 +1,5 @@
 from django.contrib import admin
-from school.models import Guardian, Student, Professor
+from school.models import Guardian, Student, Professor, Contract, Class
 
 
 class GuardiansAdmin(admin.ModelAdmin):
@@ -13,7 +13,7 @@ class GuardiansAdmin(admin.ModelAdmin):
         "adress",
         "cpf",
         "birthday",
-        "class_choices",
+        "class_choice",
     )
     list_display_links = (
         "first_name",
@@ -43,7 +43,7 @@ class StudentsAdmin(admin.ModelAdmin):
         "adress",
         "cpf",
         "birthday",
-        "class_choices",
+        "class_choice",
     )
     list_display_links = (
         "first_name",
@@ -72,7 +72,7 @@ class ProfessorsAdmin(admin.ModelAdmin):
         "adress",
         "cpf",
         "birthday",
-        "class_choices",
+        "class_choice",
     )
     list_display_links = (
         "first_name",
@@ -90,6 +90,39 @@ class ProfessorsAdmin(admin.ModelAdmin):
     )
 
 
+class ContractsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "guardian",
+        "student",
+    )
+    list_display_links = (
+        "guardian",
+        "student",
+    )
+    search_fields = (
+        "guardian",
+        "student",
+    )
+
+
+class ClassesAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "class_choices",
+        "itinerary_choices",
+    )
+    list_display_links = (
+        "class_choices",
+        "itinerary_choices",
+    )
+    search_fields = (
+        "class_choices",
+        "itinerary_choices",
+    )
+    list_filter = ("itinerary_choices",)
+
+
 admin.site.register(
     Guardian,
     GuardiansAdmin,
@@ -103,4 +136,14 @@ admin.site.register(
 admin.site.register(
     Professor,
     ProfessorsAdmin,
+)
+
+admin.site.register(
+    Contract,
+    ContractsAdmin,
+)
+
+admin.site.register(
+    Class,
+    ClassesAdmin,
 )
