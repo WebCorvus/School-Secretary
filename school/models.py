@@ -1,15 +1,5 @@
 from django.db import models
-from django.core.exceptions import ValidationError
-from validate_docbr import CPF
-
-
-def cpf_validator(value):
-    cpf = CPF()
-    if not cpf.validate(value):
-        raise ValidationError(
-            ("%(value)s is not valid"),
-            params={"value": value},
-        )
+from .validators import cep_validator, cpf_validator, phone_validator
 
 
 class Class(models.Model):
@@ -45,12 +35,19 @@ class Guardian(models.Model):
         max_length=6, unique=True, verbose_name="Student's registration"
     )
     phone_number = models.CharField(
-        max_length=15, verbose_name="Guardian's phone number (xx) xxxxx-xxxx"
+        max_length=15,
+        verbose_name="Guardian's phone number (XX) 9XXXX-XXXX",
+        validators=[phone_validator],
     )
     email = models.EmailField(max_length=100, verbose_name="Guardian's email")
-    cpf = models.CharField(max_length=11, unique=True, validators=[cpf_validator])
+    cpf = models.CharField(
+        max_length=11,
+        verbose_name="Guardian's CPF",
+        unique=True,
+        validators=[cpf_validator],
+    )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100)
+    adress = models.CharField(max_length=100, validators=[cep_validator])
     class_choice = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
@@ -71,12 +68,19 @@ class Student(models.Model):
         max_length=6, unique=True, verbose_name="Student's registration"
     )
     phone_number = models.CharField(
-        max_length=15, verbose_name="Student's phone number (xx) xxxxx-xxxx"
+        max_length=15,
+        verbose_name="Student's phone number (XX) 9XXXX-XXXX",
+        validators=[phone_validator],
     )
     email = models.EmailField(max_length=100, verbose_name="Student's email")
-    cpf = models.CharField(max_length=11, unique=True, validators=[cpf_validator])
+    cpf = models.CharField(
+        max_length=11,
+        verbose_name="Student's CPF",
+        unique=True,
+        validators=[cpf_validator],
+    )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100)
+    adress = models.CharField(max_length=100, validators=[cep_validator])
     class_choice = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
@@ -94,12 +98,19 @@ class Professor(models.Model):
     first_name = models.CharField(max_length=200, verbose_name="Professor's first name")
     last_name = models.CharField(max_length=200, verbose_name="Professor's last name")
     phone_number = models.CharField(
-        max_length=15, verbose_name="Professor's phone number (xx) xxxxx-xxxx"
+        max_length=15,
+        verbose_name="Professor's phone number (XX) 9XXXX-XXXX",
+        validators=[phone_validator],
     )
     email = models.EmailField(max_length=100, verbose_name="Professor's email")
-    cpf = models.CharField(max_length=11, unique=True, validators=[cpf_validator])
+    cpf = models.CharField(
+        max_length=11,
+        verbose_name="Professor's CPF",
+        unique=True,
+        validators=[cpf_validator],
+    )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100)
+    adress = models.CharField(max_length=100, validators=[cep_validator])
     class_choice = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
