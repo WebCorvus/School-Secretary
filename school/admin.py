@@ -2,41 +2,10 @@ from django.contrib import admin
 from school.models import Guardian, Student, Professor, Contract, Class
 
 
-class GuardiansAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "first_name",
-        "last_name",
-        "registration_number_student",
-        "phone_number",
-        "email",
-        "adress",
-        "cpf",
-        "birthday",
-        "class_choice",
-    )
-    list_display_links = (
-        "first_name",
-        "last_name",
-        "email",
-        "adress",
-    )
-    search_fields = (
-        "first_name",
-        "last_name",
-        "registration_number_student",
-    )
-    list_filter = (
-        "first_name",
-        "last_name",
-    )
-
-
 class StudentsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "first_name",
-        "last_name",
+        "full_name",
         "registration_number",
         "phone_number",
         "email",
@@ -46,48 +15,55 @@ class StudentsAdmin(admin.ModelAdmin):
         "class_choice",
     )
     list_display_links = (
-        "first_name",
-        "last_name",
+        "full_name",
         "email",
         "adress",
     )
     search_fields = (
-        "first_name",
-        "last_name",
+        "full_name",
         "registration_number",
     )
-    list_filter = (
-        "first_name",
-        "last_name",
+    list_filter = ("full_name",)
+
+
+class GuardiansAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "full_name",
+        "student",
+        "phone_number",
+        "email",
+        "cpf",
+        "birthday",
+        "adress",
     )
+    list_display_links = (
+        "full_name",
+        "email",
+        "adress",
+    )
+    search_fields = ("full_name",)
+    list_filter = ("full_name",)
 
 
 class ProfessorsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "first_name",
-        "last_name",
+        "full_name",
         "phone_number",
         "email",
-        "adress",
         "cpf",
         "birthday",
+        "adress",
         "class_choice",
     )
     list_display_links = (
-        "first_name",
-        "last_name",
+        "full_name",
         "email",
         "adress",
     )
-    search_fields = (
-        "first_name",
-        "last_name",
-    )
-    list_filter = (
-        "first_name",
-        "last_name",
-    )
+    search_fields = ("full_name",)
+    list_filter = ("full_name",)
 
 
 class ContractsAdmin(admin.ModelAdmin):

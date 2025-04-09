@@ -28,42 +28,11 @@ class Class(models.Model):
         return f"{self.get_class_choices_display()} - {self.get_itinerary_choices_display()}"
 
 
-class Guardian(models.Model):
-    first_name = models.CharField(max_length=200, verbose_name="Guardian's first name")
-    last_name = models.CharField(max_length=200, verbose_name="Guardian's last name")
-    registration_number_student = models.CharField(
-        max_length=6, unique=True, verbose_name="Student's registration"
-    )
-    phone_number = models.CharField(
-        max_length=15,
-        verbose_name="Guardian's phone number (XX) 9XXXX-XXXX",
-        validators=[phone_validator],
-    )
-    email = models.EmailField(max_length=100, verbose_name="Guardian's email")
-    cpf = models.CharField(
-        max_length=11,
-        verbose_name="Guardian's CPF",
-        unique=True,
-        validators=[cpf_validator],
-    )
-    birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100, validators=[cep_validator])
-    class_choice = models.ForeignKey(
-        Class,
-        on_delete=models.CASCADE,
-        verbose_name="Student's class",
-        related_name="guardian_student",
-        blank=False,
-        null=True,
-    )
-
-    def __str__(self):
-        return self.first_name + " " + self.last_name
-
-
 class Student(models.Model):
-    first_name = models.CharField(max_length=200, verbose_name="Student's first name")
-    last_name = models.CharField(max_length=200, verbose_name="Student's last name")
+    full_name = models.CharField(
+        max_length=200, verbose_name="Student's full name", null=True
+    )
+
     registration_number = models.CharField(
         max_length=6, unique=True, verbose_name="Student's registration"
     )
@@ -91,12 +60,44 @@ class Student(models.Model):
     )
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.full_name
+
+
+class Guardian(models.Model):
+    full_name = models.CharField(
+        max_length=200, verbose_name="Guardian's full name", null=True
+    )
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name="Guardian's student",
+        related_name="guardian_student",
+        blank=False,
+        null=True,
+    )
+    phone_number = models.CharField(
+        max_length=15,
+        verbose_name="Guardian's phone number (XX) 9XXXX-XXXX",
+        validators=[phone_validator],
+    )
+    email = models.EmailField(max_length=100, verbose_name="Guardian's email")
+    cpf = models.CharField(
+        max_length=11,
+        verbose_name="Guardian's CPF",
+        unique=True,
+        validators=[cpf_validator],
+    )
+    birthday = models.DateField(max_length=10)
+    adress = models.CharField(max_length=100, validators=[cep_validator])
+
+    def __str__(self):
+        return self.full_name
 
 
 class Professor(models.Model):
-    first_name = models.CharField(max_length=200, verbose_name="Professor's first name")
-    last_name = models.CharField(max_length=200, verbose_name="Professor's last name")
+    full_name = models.CharField(
+        max_length=200, verbose_name="Professor's full name", null=True
+    )
     phone_number = models.CharField(
         max_length=15,
         verbose_name="Professor's phone number (XX) 9XXXX-XXXX",
@@ -121,7 +122,7 @@ class Professor(models.Model):
     )
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.full_name
 
 
 class Contract(models.Model):
