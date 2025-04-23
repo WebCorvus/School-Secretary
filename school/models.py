@@ -149,7 +149,7 @@ class Contract(models.Model):
     def generate_contract_pdf(self):
         response = HttpResponse(content_type="application/pdf")
         response["Content-Disposition"] = (
-            f'attachment; filename="contract_{self.id}.pdf"'
+            f'attachment; filename="contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf"'
         )
 
         p = canvas.Canvas(response)
@@ -160,12 +160,15 @@ class Contract(models.Model):
         p.drawString(100, 720, f"Guardian CPF: {self.guardian.cpf}")
         p.drawString(100, 700, f"Guardian Birthday: {self.guardian.birthday}")
         p.drawString(100, 680, f"Guardian Address: {self.guardian.adress}")
-        p.drawString(100, 660, f"Student Name: {self.student.full_name}")
-        p.drawString(100, 640, f"Student Phone: {self.student.phone_number}")
-        p.drawString(100, 620, f"Student Email: {self.student.email}")
-        p.drawString(100, 600, f"Student CPF: {self.student.cpf}")
-        p.drawString(100, 580, f"Student Birthday: {self.student.birthday}")
-        p.drawString(100, 560, f"Student Address: {self.student.adress}")
+        p.drawString(100, 640, f"Student Name: {self.student.full_name}")
+        p.drawString(100, 620, f"Student Phone: {self.student.phone_number}")
+        p.drawString(100, 600, f"Student Email: {self.student.email}")
+        p.drawString(100, 580, f"Student CPF: {self.student.cpf}")
+        p.drawString(100, 560, f"Student Birthday: {self.student.birthday}")
+        p.drawString(100, 540, f"Student Address: {self.student.adress}")
+        p.drawString(
+            100, 500, f"Assinatura: _______________________________________________X"
+        )
         p.showPage()
         p.save()
 
