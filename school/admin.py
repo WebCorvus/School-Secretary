@@ -1,5 +1,5 @@
 from django.contrib import admin
-from school.models import Guardian, Student, Professor, Contract, Class
+from school.models import Guardian, Student, Professor, Contract, Class, Bulletin
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from django.urls import path
@@ -130,6 +130,14 @@ class ClassesAdmin(admin.ModelAdmin):
     list_filter = ("itinerary_choices",)
 
 
+class BulletinsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "student",
+        "grades",
+    )
+
+
 admin.site.register(
     Guardian,
     GuardiansAdmin,
@@ -153,4 +161,8 @@ admin.site.register(
 admin.site.register(
     Class,
     ClassesAdmin,
+)
+admin.site.register(
+    Bulletin,
+    BulletinsAdmin,
 )

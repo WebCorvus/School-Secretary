@@ -130,6 +130,26 @@ class Professor(models.Model):
         return self.full_name
 
 
+class Bulletin(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name="Student's name",
+        related_name="bulletins",
+        blank=False,
+        null=True,
+    )
+
+    grades = models.JSONField(
+        verbose_name="JSON Values of Grades",
+        blank=False,
+        null=True,
+    )
+
+    def __str__(self):
+        return f"{self.student.full_name}'s Bulletin"
+
+
 class Contract(models.Model):
     guardian = models.ForeignKey(
         Guardian,
@@ -164,4 +184,4 @@ class Contract(models.Model):
         return response
 
     def __str__(self):
-        return f"Contract: {self.guardian.full_name} e {self.student.full_name}"
+        return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
