@@ -1,6 +1,9 @@
 from django.db import models
 from django.http import HttpResponse
-from reportlab.pdfgen import canvas
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+from io import BytesIO
+
 from .validators import cep_validator, cpf_validator, phone_validator
 
 
@@ -147,32 +150,18 @@ class Contract(models.Model):
     )
 
     def generate_contract_pdf(self):
-        response = HttpResponse(content_type="application/pdf")
+        html_string = render_to_string("contract_template.html", {"contract": self})
+        pdf_buffer = BytesIO()
+        pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
+        if pisa_status.err:
+            return HttpResponse("Error generating PDF", status=500)
+
+        pdf_buffer.seek(0)
+        response = HttpResponse(pdf_buffer, content_type="application/pdf")
         response["Content-Disposition"] = (
             f'attachment; filename="contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf"'
         )
-
-        p = canvas.Canvas(response)
-        p.drawString(100, 800, f"Contract ID: {self.id}")
-        p.drawString(100, 780, f"Guardian Name: {self.guardian.full_name}")
-        p.drawString(100, 760, f"Guardian Phone: {self.guardian.phone_number}")
-        p.drawString(100, 740, f"Guardian Email: {self.guardian.email}")
-        p.drawString(100, 720, f"Guardian CPF: {self.guardian.cpf}")
-        p.drawString(100, 700, f"Guardian Birthday: {self.guardian.birthday}")
-        p.drawString(100, 680, f"Guardian Address: {self.guardian.adress}")
-        p.drawString(100, 640, f"Student Name: {self.student.full_name}")
-        p.drawString(100, 620, f"Student Phone: {self.student.phone_number}")
-        p.drawString(100, 600, f"Student Email: {self.student.email}")
-        p.drawString(100, 580, f"Student CPF: {self.student.cpf}")
-        p.drawString(100, 560, f"Student Birthday: {self.student.birthday}")
-        p.drawString(100, 540, f"Student Address: {self.student.adress}")
-        p.drawString(
-            100, 500, f"Assinatura: _______________________________________________X"
-        )
-        p.showPage()
-        p.save()
-
         return response
 
     def __str__(self):
-        return f"Contract for {self.student.full_name} and {self.guardian.full_name}"
+        return f"Contract: {self.guardian.full_name} e {self.student.full_name}"

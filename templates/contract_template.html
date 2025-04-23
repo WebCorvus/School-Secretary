@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Contract</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			.content {
+				margin: 10px;
+			}
+			.content-table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			.content-table td {
+				vertical-align: top; /* Align content to the top */
+			}
+			.signature {
+				margin: 50px 10px 10px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<h1>{{contract}}</h1>
+		</div>
+		<div class="content">
+			<h2>Contract ID: {{ contract.id }}</h2>
+			<br />
+
+			<table class="content-table">
+				<tr>
+					<td>
+						<h2>Guardian Information</h2>
+						<p>
+							<strong>Name:</strong>
+							{{ contract.guardian.full_name }}
+						</p>
+						<p>
+							<strong>Phone:</strong>
+							{{ contract.guardian.phone_number }}
+						</p>
+						<p>
+							<strong>Email:</strong>
+							{{ contract.guardian.email }}
+						</p>
+						<p>
+							<strong>Address:</strong>
+							{{ contract.guardian.adress }}
+						</p>
+					</td>
+					<td>
+						<h2>Student Information</h2>
+						<p>
+							<strong>Name:</strong>
+							{{ contract.student.full_name }}
+						</p>
+						<p>
+							<strong>Registration Number:</strong>
+							{{ contract.student.registration_number }}
+						</p>
+						<p>
+							<strong>Phone:</strong>
+							{{ contract.student.phone_number }}
+						</p>
+						<p>
+							<strong>Email:</strong>
+							{{ contract.student.email }}
+						</p>
+						<p>
+							<strong>CPF:</strong>
+							{{ contract.student.cpf }}
+						</p>
+						<p>
+							<strong>Birthday:</strong>
+							{{ contract.student.birthday }}
+						</p>
+						<p>
+							<strong>Address:</strong>
+							{{ contract.student.adress }}
+						</p>
+						<br />
+					</td>
+				</tr>
+			</table>
+
+			<h2>Class Information</h2>
+			<p>
+				<strong>Class:</strong>
+				{{ contract.student.class_choice }}
+			</p>
+			<p>
+				<strong>Itinerary:</strong>
+				{{ contract.student.class_choice }}
+			</p>
+		</div>
+		<br />
+
+		<div class="signature">
+			<p>
+				<strong>Signature:</strong>
+				________________________________________________________________________X
+			</p>
+		</div>
+	</body>
+</html>
