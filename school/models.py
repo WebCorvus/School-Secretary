@@ -162,6 +162,19 @@ class Bulletin(models.Model):
         return f"{self.student.full_name}'s Bulletin"
 
 
+class Presence(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name="Student's name",
+        related_name="presence_list",
+        blank=False,
+        null=True,
+    )
+    date = models.DateField()
+    presence = models.BooleanField()
+
+
 class Contract(models.Model):
     guardian = models.ForeignKey(
         Guardian,
@@ -197,3 +210,32 @@ class Contract(models.Model):
 
     def __str__(self):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
+
+
+class Book(models.Model):
+    tenant = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name="Tenant's name",
+        related_name="alugated_book",
+        blank=False,
+        null=True,
+    )
+
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=True,
+    )
+
+    author = models.CharField(
+        max_length=100,
+        blank=False,
+        null=True,
+    )
+
+    summary = models.TextField(
+        max_length=200,
+        blank=False,
+        null=True,
+    )

@@ -1,5 +1,14 @@
 from django.contrib import admin
-from school.models import Guardian, Student, Professor, Contract, Class, Bulletin
+from school.models import (
+    Guardian,
+    Student,
+    Professor,
+    Contract,
+    Class,
+    Bulletin,
+    Book,
+    Presence,
+)
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from django.urls import path
@@ -87,7 +96,7 @@ class ContractsAdmin(admin.ModelAdmin):
 
     def download_contract(self, obj):
         return format_html(
-            '<a href="{}">Download Contract</a>',
+            '<a href="{}">Download</a>',
             f"/admin/school/contract/{obj.id}/generate-pdf/",
         )
 
@@ -136,6 +145,58 @@ class BulletinsAdmin(admin.ModelAdmin):
         "student",
         "grades",
     )
+    list_display_links = (
+        "student",
+        "grades",
+    )
+    search_fields = (
+        "student",
+        "grades",
+    )
+    list_filter = ("student",)
+
+
+class PresencesAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "student",
+        "date",
+        "presence",
+    )
+    list_display_links = (
+        "student",
+        "date",
+        "presence",
+    )
+    search_fields = (
+        "student",
+        "date",
+        "presence",
+    )
+    list_filter = ("student", "date")
+
+
+class BooksAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "tenant",
+        "name",
+        "author",
+        "summary",
+    )
+    list_display_links = (
+        "tenant",
+        "name",
+        "author",
+        "summary",
+    )
+    search_fields = (
+        "tenant",
+        "name",
+        "author",
+        "summary",
+    )
+    list_filter = ("tenant",)
 
 
 admin.site.register(
@@ -165,4 +226,12 @@ admin.site.register(
 admin.site.register(
     Bulletin,
     BulletinsAdmin,
+)
+admin.site.register(
+    Presence,
+    PresencesAdmin,
+)
+admin.site.register(
+    Book,
+    BooksAdmin,
 )
