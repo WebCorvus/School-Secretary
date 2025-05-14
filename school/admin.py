@@ -8,6 +8,7 @@ from school.models import (
     Bulletin,
     Book,
     Presence,
+    Schedule,
 )
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
@@ -25,6 +26,7 @@ class StudentsAdmin(admin.ModelAdmin):
         "cpf",
         "birthday",
         "class_choice",
+        "download_presence_list",
     )
     list_display_links = (
         "full_name",
@@ -94,13 +96,13 @@ class ContractsAdmin(admin.ModelAdmin):
         "student",
     )
 
-    def download_contract(self, obj):
-        return format_html(
-            '<a href="{}">Download</a>',
-            f"/admin/school/contract/{obj.id}/generate-pdf/",
-        )
-
-    download_contract.short_description = "Download Contract"
+    def generate_pdf(self, request, contract_id):
+        try:
+            contract = Contract.objects.get(pk=contract_id)
+            return contract.generate_contract_pdf()
+        except Contract.DoesNotExist:
+            self.message_user(request, "Contract not found.")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
     def get_urls(self):
         urls = super().get_urls()
@@ -113,13 +115,12 @@ class ContractsAdmin(admin.ModelAdmin):
         ]
         return custom_urls + urls
 
-    def generate_pdf(self, request, contract_id):
-        try:
-            contract = Contract.objects.get(pk=contract_id)
-            return contract.generate_contract_pdf()
-        except Contract.DoesNotExist:
-            self.message_user(request, "Contract not found.")
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    def download_contract(self, obj):
+        return format_html(
+            f"<a href=/admin/school/contract/{obj.id}/generate-pdf/>Download</a>",
+        )
+
+    download_contract.short_description = "Download Contract"
 
 
 class ClassesAdmin(admin.ModelAdmin):
@@ -199,6 +200,23 @@ class BooksAdmin(admin.ModelAdmin):
     list_filter = ("tenant",)
 
 
+class SchedulesAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "professor",
+        "tasks",
+    )
+    list_display_links = (
+        "professor",
+        "tasks",
+    )
+    search_fields = (
+        "professor",
+        "tasks",
+    )
+    list_filter = ("professor",)
+
+
 admin.site.register(
     Guardian,
     GuardiansAdmin,
@@ -234,4 +252,8 @@ admin.site.register(
 admin.site.register(
     Book,
     BooksAdmin,
+)
+admin.site.register(
+    Schedule,
+    SchedulesAdmin,
 )
