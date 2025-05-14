@@ -22,7 +22,7 @@ class StudentsAdmin(admin.ModelAdmin):
         "registration_number",
         "phone_number",
         "email",
-        "adress",
+        "address",
         "cpf",
         "birthday",
         "class_choice",
@@ -31,13 +31,39 @@ class StudentsAdmin(admin.ModelAdmin):
     list_display_links = (
         "full_name",
         "email",
-        "adress",
+        "address",
     )
     search_fields = (
         "full_name",
         "registration_number",
     )
     list_filter = ("full_name",)
+
+    def generate_presence_pdf(self, request, student_id):
+        try:
+            student = Student.objects.get(pk=student_id)
+            return student.generate_presence_pdf()
+        except Contract.DoesNotExist:
+            self.message_user(request, "Student not found.")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "<int:student_id>/generate-presence-pdf/",
+                self.admin_site.admin_view(self.generate_presence_pdf),
+                name="generate-presence-pdf",
+            ),
+        ]
+        return custom_urls + urls
+
+    def download_presence_list(self, obj):
+        return format_html(
+            f"<a href=/admin/school/student/{obj.id}/generate-presence-pdf/>Download</a>",
+        )
+
+    download_presence_list.short_description = "Download Presence List"
 
 
 class GuardiansAdmin(admin.ModelAdmin):
@@ -49,12 +75,12 @@ class GuardiansAdmin(admin.ModelAdmin):
         "email",
         "cpf",
         "birthday",
-        "adress",
+        "address",
     )
     list_display_links = (
         "full_name",
         "email",
-        "adress",
+        "address",
     )
     search_fields = ("full_name",)
     list_filter = ("full_name",)
@@ -68,13 +94,13 @@ class ProfessorsAdmin(admin.ModelAdmin):
         "email",
         "cpf",
         "birthday",
-        "adress",
+        "address",
         "class_choice",
     )
     list_display_links = (
         "full_name",
         "email",
-        "adress",
+        "address",
     )
     search_fields = ("full_name",)
     list_filter = ("full_name",)

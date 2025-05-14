@@ -59,18 +59,39 @@ class Student(models.Model):
         validators=[cpf_validator],
     )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100, validators=[cep_validator])
+    address = models.CharField(max_length=100, validators=[cep_validator])
     class_choice = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
         verbose_name="Student's class",
-        related_name="student_class",
+        related_name="class_student",
         blank=False,
         null=True,
     )
 
+    def generate_presence_pdf(self):
+        presence_records = Presence.objects.filter(student=self)
+        html_string = render_to_string(
+            "presence_list.html",
+            {
+                "presences": presence_records,
+                "student": self,
+            },
+        )
+        pdf_buffer = BytesIO()
+        pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
+        if pisa_status.err:
+            return HttpResponse("Error generating PDF", status=500)
+
+        pdf_buffer.seek(0)
+        response = HttpResponse(pdf_buffer, content_type="application/pdf")
+        response["Content-Disposition"] = (
+            f'attachment; filename="presence_list_{self.presence_list.id}.pdf"'
+        )
+        return response
+
     def __str__(self):
-        return self.full_name
+        return self.full_name + "_" + self.registration_number
 
 
 class Guardian(models.Model):
@@ -98,7 +119,7 @@ class Guardian(models.Model):
         validators=[cpf_validator],
     )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100, validators=[cep_validator])
+    address = models.CharField(max_length=100, validators=[cep_validator])
 
     def __str__(self):
         return self.full_name
@@ -121,7 +142,7 @@ class Professor(models.Model):
         validators=[cpf_validator],
     )
     birthday = models.DateField(max_length=10)
-    adress = models.CharField(max_length=100, validators=[cep_validator])
+    address = models.CharField(max_length=100, validators=[cep_validator])
     class_choice = models.ForeignKey(
         Class,
         on_delete=models.CASCADE,
@@ -155,7 +176,7 @@ class Contract(models.Model):
     )
 
     def generate_contract_pdf(self):
-        html_string = render_to_string("contract_template.html", {"contract": self})
+        html_string = render_to_string("contract.html", {"contract": self})
         pdf_buffer = BytesIO()
         pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
         if pisa_status.err:
