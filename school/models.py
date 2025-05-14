@@ -4,6 +4,8 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from io import BytesIO
 
+from datetime import datetime
+
 from .validators import cep_validator, cpf_validator, phone_validator
 
 
@@ -31,6 +33,9 @@ class Class(models.Model):
 
     def __str__(self):
         return f"{self.get_class_choices_display()} - {self.get_itinerary_choices_display()}"
+
+    class Meta:
+        verbose_name_plural = "Classes"
 
 
 class Student(models.Model):
@@ -135,7 +140,7 @@ class Bulletin(models.Model):
         Student,
         on_delete=models.CASCADE,
         verbose_name="Student's name",
-        related_name="bulletins",
+        related_name="bulletin",
         blank=False,
         null=True,
     )
@@ -145,6 +150,13 @@ class Bulletin(models.Model):
         blank=False,
         null=True,
     )
+
+    year = models.IntegerField(
+        blank=False,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         return f"{self.student.full_name}'s Bulletin"
