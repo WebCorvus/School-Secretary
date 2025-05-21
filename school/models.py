@@ -10,33 +10,53 @@ from .validators import cep_validator, cpf_validator, phone_validator
 from .pdfgen import pdfgen
 
 
-class Class(models.Model):
-    CLASS_CHOICES = (
-        ("1A", "1° Ano A"),
-        ("1B", "1° Ano B"),
-        ("1C", "1° Ano C"),
-        ("2A", "2° Ano A"),
-        ("2B", "2° Ano B"),
-        ("2C", "2° Ano C"),
-        ("3A", "3° Ano A"),
-        ("3B", "3° Ano B"),
-        ("3C", "3° Ano C"),
+class Subject(models.Model):
+    SUBJECTS_CHOICE = (
+        ("CH", "Ciências Humanas"),
+        ("CN", "Ciências da Natureza"),
+        ("MAT", "Matemática"),
+        ("LING", "Linguagens"),
     )
 
+    subject_name = models.CharField(max_length=40, choices=SUBJECTS_CHOICE)
+
+    def __str__(self):
+        return self.subject_name
+
+
+class Itinerary(models.Model):
     ITINERARY_CHOICES = (
         ("DS", "Desenvolvimento de Sistemas"),
         ("CN", "Ciencias da Natureza"),
         ("JG", "Desenvolvimento de Jogos"),
     )
 
-    class_choices = models.CharField(max_length=50, choices=CLASS_CHOICES)
-    itinerary_choices = models.CharField(max_length=50, choices=ITINERARY_CHOICES)
+    itinerary_name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
 
     def __str__(self):
-        return f"{self.get_class_choices_display()} - {self.get_itinerary_choices_display()}"
+        return self.itinerary_name
 
-    class Meta:
-        verbose_name_plural = "Classes"
+
+class Group(models.Model):
+    CLASS_CHOICES = (
+        ("1F", "1° Ano do Fundamental"),
+        ("2F", "2° Ano do Fundamental"),
+        ("3F", "3° Ano do Fundamental"),
+        ("4F", "4° Ano do Fundamental"),
+        ("5F", "5° Ano do Fundamental"),
+        ("6F", "6° Ano do Fundamental"),
+        ("7F", "7° Ano do Fundamental"),
+        ("8F", "8° Ano do Fundamental"),
+        ("9F", "9° Ano do Fundamental"),
+        ("1M", "1° Ano do Médio"),
+        ("2M", "2° Ano do Médio"),
+        ("3M", "3° Ano do Médio"),
+    )
+
+    group_name = models.CharField(max_length=40, choices=CLASS_CHOICES)
+
+    def __str__(self):
+        return self.group_name
 
 
 class Student(models.Model):
@@ -61,11 +81,20 @@ class Student(models.Model):
     )
     birthday = models.DateField(max_length=10)
     address = models.CharField(max_length=100, validators=[cep_validator])
-    class_choice = models.ForeignKey(
-        Class,
+    group = models.ForeignKey(
+        Group,
         on_delete=models.CASCADE,
-        verbose_name="Student's class",
-        related_name="class_student",
+        verbose_name="Student's group",
+        related_name="student",
+        blank=False,
+        null=True,
+    )
+
+    itinerary = models.ForeignKey(
+        Itinerary,
+        on_delete=models.CASCADE,
+        verbose_name="Student's itinerary",
+        related_name="student",
         blank=False,
         null=True,
     )
@@ -75,14 +104,24 @@ class Student(models.Model):
         return pdfgen(
             "presence_list.html",
             {
-                "data": presence_records,
                 "student": self,
+                "data": presence_records,
             },
             f"Presence_{self.full_name}.pdf",
         )
 
+    def generate_grades_pdf(self):
+        grades = Grades.objects.filter(student=self)
+        return pdfgen(
+            "grades.html",
+            {
+                "student": self,
+                "data": grades,
+            },
+        )
+
     def __str__(self):
-        return self.full_name + "_" + self.registration_number
+        return self.full_name
 
 
 class Guardian(models.Model):
@@ -134,11 +173,19 @@ class Professor(models.Model):
     )
     birthday = models.DateField(max_length=10)
     address = models.CharField(max_length=100, validators=[cep_validator])
-    class_choice = models.ForeignKey(
-        Class,
+    subject = models.ForeignKey(
+        Subject,
         on_delete=models.CASCADE,
-        verbose_name="Professor's class",
-        related_name="professor_class",
+        verbose_name="Professor's Subject",
+        related_name="professor",
+        blank=False,
+        null=True,
+    )
+    group = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+        verbose_name="Professor's Group",
+        related_name="professor",
         blank=False,
         null=True,
     )
@@ -189,8 +236,11 @@ class Grades(models.Model):
         null=True,
     )
 
-    grades = models.JSONField(
-        verbose_name="JSON Values of Grades",
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        verbose_name="Grade's Subject",
+        related_name="grades",
         blank=False,
         null=True,
     )

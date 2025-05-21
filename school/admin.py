@@ -1,12 +1,14 @@
 from django.contrib import admin
 from school.models import (
-    Guardian,
+    Subject,
+    Itinerary,
+    Group,
     Student,
+    Guardian,
     Professor,
     Contract,
-    Class,
-    Presence,
     Grades,
+    Presence,
     SchoolRecord,
     Book,
     Schedule,
@@ -16,21 +18,34 @@ from django.utils.html import format_html
 from django.urls import path
 
 
-class ClassesAdmin(admin.ModelAdmin):
+class SubjectsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "class_choices",
-        "itinerary_choices",
+        "subject_name",
     )
-    list_display_links = (
-        "class_choices",
-        "itinerary_choices",
+    list_display_links = ("subject_name",)
+    search_fields = ("subject_name",)
+    list_filter = ("subject_name",)
+
+
+class ItinerariesAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "itinerary_name",
     )
-    search_fields = (
-        "class_choices",
-        "itinerary_choices",
+    list_display_links = ("itinerary_name",)
+    search_fields = ("itinerary_name",)
+    list_filter = ("itinerary_name",)
+
+
+class GroupsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "group_name",
     )
-    list_filter = ("itinerary_choices",)
+    list_display_links = ("group_name",)
+    search_fields = ("group_name",)
+    list_filter = ("group_name",)
 
 
 class StudentsAdmin(admin.ModelAdmin):
@@ -43,7 +58,7 @@ class StudentsAdmin(admin.ModelAdmin):
         "address",
         "cpf",
         "birthday",
-        "class_choice",
+        "group",
         "download_presence_list",
     )
     list_display_links = (
@@ -113,7 +128,7 @@ class ProfessorsAdmin(admin.ModelAdmin):
         "cpf",
         "birthday",
         "address",
-        "class_choice",
+        "group",
     )
     list_display_links = (
         "full_name",
@@ -247,8 +262,18 @@ class SchedulesAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    Class,
-    ClassesAdmin,
+    Subject,
+    SubjectsAdmin,
+)
+
+admin.site.register(
+    Itinerary,
+    ItinerariesAdmin,
+)
+
+admin.site.register(
+    Group,
+    GroupsAdmin,
 )
 
 admin.site.register(
