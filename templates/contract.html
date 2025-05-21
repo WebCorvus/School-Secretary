@@ -28,10 +28,10 @@
 	</head>
 	<body>
 		<div class="header">
-			<h1>{{contract}}</h1>
+			<h1>{{obj}}</h1>
 		</div>
 		<div class="content">
-			<h2>Contract ID: {{ contract.id }}</h2>
+			<h2>Contract ID: {{ data.id }}</h2>
 			<br />
 
 			<table class="content-table">
@@ -40,50 +40,50 @@
 						<h2>Guardian Information</h2>
 						<p>
 							<strong>Name:</strong>
-							{{ contract.guardian.full_name }}
+							{{ data.guardian.full_name }}
 						</p>
 						<p>
 							<strong>Phone:</strong>
-							{{ contract.guardian.phone_number }}
+							{{ data.guardian.phone_number }}
 						</p>
 						<p>
 							<strong>Email:</strong>
-							{{ contract.guardian.email }}
+							{{ data.guardian.email }}
 						</p>
 						<p>
 							<strong>Address:</strong>
-							{{ contract.guardian.adress }}
+							{{ data.guardian.address }}
 						</p>
 					</td>
 					<td>
 						<h2>Student Information</h2>
 						<p>
 							<strong>Name:</strong>
-							{{ contract.student.full_name }}
+							{{ data.student.full_name }}
 						</p>
 						<p>
 							<strong>Registration Number:</strong>
-							{{ contract.student.registration_number }}
+							{{ data.student.registration_number }}
 						</p>
 						<p>
 							<strong>Phone:</strong>
-							{{ contract.student.phone_number }}
+							{{ data.student.phone_number }}
 						</p>
 						<p>
 							<strong>Email:</strong>
-							{{ contract.student.email }}
+							{{ data.student.email }}
 						</p>
 						<p>
 							<strong>CPF:</strong>
-							{{ contract.student.cpf }}
+							{{ data.student.cpf }}
 						</p>
 						<p>
 							<strong>Birthday:</strong>
-							{{ contract.student.birthday }}
+							{{ data.student.birthday }}
 						</p>
 						<p>
 							<strong>Address:</strong>
-							{{ contract.student.adress }}
+							{{ data.student.address }}
 						</p>
 						<br />
 					</td>
@@ -93,11 +93,11 @@
 			<h2>Class Information</h2>
 			<p>
 				<strong>Class:</strong>
-				{{ contract.student.class_choice }}
+				{{ data.student.class_choice }}
 			</p>
 			<p>
 				<strong>Itinerary:</strong>
-				{{ contract.student.class_choice }}
+				{{ data.student.class_choice }}
 			</p>
 		</div>
 		<br />

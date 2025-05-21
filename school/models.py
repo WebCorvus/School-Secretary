@@ -7,6 +7,7 @@ from io import BytesIO
 from datetime import datetime
 
 from .validators import cep_validator, cpf_validator, phone_validator
+from .pdfgen import pdfgen
 
 
 class Class(models.Model):
@@ -71,24 +72,11 @@ class Student(models.Model):
 
     def generate_presence_pdf(self):
         presence_records = Presence.objects.filter(student=self)
-        html_string = render_to_string(
+        return pdfgen(
             "presence_list.html",
-            {
-                "presences": presence_records,
-                "student": self,
-            },
+            {"data": presence_records},
+            f"Presence_{self.full_name}.pdf",
         )
-        pdf_buffer = BytesIO()
-        pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
-        if pisa_status.err:
-            return HttpResponse("Error generating PDF", status=500)
-
-        pdf_buffer.seek(0)
-        response = HttpResponse(pdf_buffer, content_type="application/pdf")
-        response["Content-Disposition"] = (
-            f'attachment; filename="presence_list_{self.presence_list.id}.pdf"'
-        )
-        return response
 
     def __str__(self):
         return self.full_name + "_" + self.registration_number
@@ -176,18 +164,11 @@ class Contract(models.Model):
     )
 
     def generate_contract_pdf(self):
-        html_string = render_to_string("contract.html", {"contract": self})
-        pdf_buffer = BytesIO()
-        pisa_status = pisa.CreatePDF(html_string, dest=pdf_buffer)
-        if pisa_status.err:
-            return HttpResponse("Error generating PDF", status=500)
-
-        pdf_buffer.seek(0)
-        response = HttpResponse(pdf_buffer, content_type="application/pdf")
-        response["Content-Disposition"] = (
-            f'attachment; filename="contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf"'
+        return pdfgen(
+            "contract.html",
+            {"data": self},
+            f"contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf",
         )
-        return response
 
     def __str__(self):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"

@@ -154,7 +154,7 @@ class ContractsAdmin(admin.ModelAdmin):
             path(
                 "<int:contract_id>/generate-pdf/",
                 self.admin_site.admin_view(self.generate_pdf),
-                name="contract-generate-pdf",
+                name="generate-contract-pdf",
             ),
         ]
         return custom_urls + urls

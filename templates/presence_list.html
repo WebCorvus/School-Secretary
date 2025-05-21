@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Contract</title>
+		<title>Presence List</title>
 		<style>
 			body {
 				font-family: Arial, sans-serif;
@@ -18,13 +18,51 @@
 				width: 100%;
 				border-collapse: collapse;
 			}
+			.content-table th,
 			.content-table td {
-				vertical-align: top; /* Align content to the top */
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: center;
+			}
+			.content-table th {
+				background-color: #f2f2f2;
 			}
 			.signature {
 				margin: 50px 10px 10px 10px;
 			}
 		</style>
 	</head>
-	<body></body>
+	<body>
+		<div class="header">
+			<h2>Presence List</h2>
+		</div>
+		<div class="content">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Presence</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for record in obj %}
+					<tr>
+						<td>{{ record.date|date:"d/m/Y" }}</td>
+						<td>
+							{% if record.presence %} Present {% else %} Absent
+							{% endif %}
+						</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td colspan="2">No presence records found.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="signature">
+			<p>Signature: ____________________________</p>
+		</div>
+	</body>
 </html>
