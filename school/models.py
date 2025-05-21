@@ -213,6 +213,8 @@ class Contract(models.Model):
         null=True,
     )
 
+    created_at = models.DateTimeField(default=datetime.now())
+
     def generate_contract_pdf(self):
         return pdfgen(
             "contract.html",
@@ -270,6 +272,7 @@ class Presence(models.Model):
     )
     date = models.DateField()
     presence = models.BooleanField()
+    created_at = models.DateTimeField(default=datetime.now())
 
 
 class SchoolRecord(models.Model):
@@ -311,6 +314,8 @@ class Book(models.Model):
         null=True,
     )
 
+    created_at = models.DateTimeField(default=datetime.now())
+
 
 class Schedule(models.Model):
     professor = models.ForeignKey(
@@ -323,3 +328,5 @@ class Schedule(models.Model):
     )
 
     tasks = models.JSONField()
+
+    created_at = models.DateTimeField(default=datetime.now())
