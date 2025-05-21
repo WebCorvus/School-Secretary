@@ -161,7 +161,7 @@ class Contract(models.Model):
         Guardian,
         on_delete=models.CASCADE,
         verbose_name="Guardian's name",
-        related_name="contract_guardian",
+        related_name="contrac",
         blank=False,
         null=True,
     )
@@ -170,7 +170,7 @@ class Contract(models.Model):
         Student,
         on_delete=models.CASCADE,
         verbose_name="Student's name",
-        related_name="contract_student",
+        related_name="contract",
         blank=False,
         null=True,
     )
@@ -193,12 +193,12 @@ class Contract(models.Model):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
 
 
-class Bulletin(models.Model):
+class Grades(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
         verbose_name="Student's name",
-        related_name="bulletin",
+        related_name="grades",
         blank=False,
         null=True,
     )
@@ -219,6 +219,9 @@ class Bulletin(models.Model):
     def __str__(self):
         return f"{self.student.full_name}'s Bulletin"
 
+    class Meta:
+        verbose_name_plural = "Grades"
+
 
 class Presence(models.Model):
     student = models.ForeignKey(
@@ -231,6 +234,17 @@ class Presence(models.Model):
     )
     date = models.DateField()
     presence = models.BooleanField()
+
+
+class SchoolRecord(models.Model):
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        verbose_name="Student's name",
+        related_name="school_record",
+        blank=False,
+        null=True,
+    )
 
 
 class Book(models.Model):

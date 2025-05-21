@@ -5,14 +5,32 @@ from school.models import (
     Professor,
     Contract,
     Class,
-    Bulletin,
-    Book,
     Presence,
+    Grades,
+    SchoolRecord,
+    Book,
     Schedule,
 )
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from django.urls import path
+
+
+class ClassesAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "class_choices",
+        "itinerary_choices",
+    )
+    list_display_links = (
+        "class_choices",
+        "itinerary_choices",
+    )
+    search_fields = (
+        "class_choices",
+        "itinerary_choices",
+    )
+    list_filter = ("itinerary_choices",)
 
 
 class StudentsAdmin(admin.ModelAdmin):
@@ -149,38 +167,13 @@ class ContractsAdmin(admin.ModelAdmin):
     download_contract.short_description = "Download Contract"
 
 
-class ClassesAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "class_choices",
-        "itinerary_choices",
-    )
-    list_display_links = (
-        "class_choices",
-        "itinerary_choices",
-    )
-    search_fields = (
-        "class_choices",
-        "itinerary_choices",
-    )
-    list_filter = ("itinerary_choices",)
-
-
-class BulletinsAdmin(admin.ModelAdmin):
+class GradesAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "student",
-        "grades",
     )
-    list_display_links = (
-        "student",
-        "grades",
-    )
-    search_fields = (
-        "student",
-        "grades",
-    )
-    list_filter = ("student",)
+    list_display_links = ("student",)
+    search_fields = ("student",)
 
 
 class PresencesAdmin(admin.ModelAdmin):
@@ -201,6 +194,16 @@ class PresencesAdmin(admin.ModelAdmin):
         "presence",
     )
     list_filter = ("student", "date")
+
+
+class SchoolRecordsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "student",
+    )
+    list_display_links = ("student",)
+    search_fields = ("student",)
+    list_filter = ("student",)
 
 
 class BooksAdmin(admin.ModelAdmin):
@@ -244,13 +247,18 @@ class SchedulesAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    Guardian,
-    GuardiansAdmin,
+    Class,
+    ClassesAdmin,
 )
 
 admin.site.register(
     Student,
     StudentsAdmin,
+)
+
+admin.site.register(
+    Guardian,
+    GuardiansAdmin,
 )
 
 admin.site.register(
@@ -264,21 +272,25 @@ admin.site.register(
 )
 
 admin.site.register(
-    Class,
-    ClassesAdmin,
+    Grades,
+    GradesAdmin,
 )
-admin.site.register(
-    Bulletin,
-    BulletinsAdmin,
-)
+
 admin.site.register(
     Presence,
     PresencesAdmin,
 )
+
+admin.site.register(
+    SchoolRecord,
+    SchoolRecordsAdmin,
+)
+
 admin.site.register(
     Book,
     BooksAdmin,
 )
+
 admin.site.register(
     Schedule,
     SchedulesAdmin,
