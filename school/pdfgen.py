@@ -13,5 +13,5 @@ def pdfgen(template, context, filename):
 
     pdf_buffer.seek(0)
     response = HttpResponse(pdf_buffer, content_type="application/pdf")
-    response["Content-Disposition"] = f"attachment; filename={filename}"
+    response["Content-Disposition"] = f"inline; filename={filename}"
     return response
