@@ -74,7 +74,10 @@ class Student(models.Model):
         presence_records = Presence.objects.filter(student=self)
         return pdfgen(
             "presence_list.html",
-            {"data": presence_records},
+            {
+                "data": presence_records,
+                "student": self,
+            },
             f"Presence_{self.full_name}.pdf",
         )
 
@@ -166,8 +169,10 @@ class Contract(models.Model):
     def generate_contract_pdf(self):
         return pdfgen(
             "contract.html",
-            {"data": self},
-            f"contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf",
+            {
+                "data": self,
+            },
+            f"Contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf",
         )
 
     def __str__(self):

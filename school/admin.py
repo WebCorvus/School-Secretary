@@ -81,7 +81,7 @@ class StudentsAdmin(admin.ModelAdmin):
             f"<a href=/admin/school/student/{obj.id}/generate-presence-pdf/>Download</a>",
         )
 
-    download_presence_list.short_description = "Download Presence List"
+    download_presence_list.short_description = "Download Presence"
 
 
 class GuardiansAdmin(admin.ModelAdmin):

@@ -34,7 +34,7 @@
 	</head>
 	<body>
 		<div class="header">
-			<h2>Presence List</h2>
+			<h2>Presence List of {{student.full_name}}</h2>
 		</div>
 		<div class="content">
 			<table class="content-table">
@@ -45,7 +45,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for record in obj %}
+					{% for record in data %}
 					<tr>
 						<td>{{ record.date|date:"d/m/Y" }}</td>
 						<td>
@@ -60,9 +60,6 @@
 					{% endfor %}
 				</tbody>
 			</table>
-		</div>
-		<div class="signature">
-			<p>Signature: ____________________________</p>
 		</div>
 	</body>
 </html>
