@@ -118,6 +118,7 @@ class Student(models.Model):
                 "student": self,
                 "data": grades,
             },
+            f"Grades_{self.full_name}.pdf",
         )
 
     def __str__(self):
@@ -248,6 +249,11 @@ class Grades(models.Model):
     )
 
     year = models.IntegerField(
+        blank=False,
+        null=True,
+    )
+
+    values = models.JSONField(
         blank=False,
         null=True,
     )

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Grades</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				font-size: 12px;
+			}
+			.header {
+				text-align: center;
+			}
+			.content {
+				margin: 10px;
+			}
+			.content-table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			.content-table th {
+				background-color: rgb(237, 237, 237);
+				padding: 4px 6px;
+				border: 1px solid #ddd;
+				text-align: center;
+				vertical-align: middle;
+			}
+			.content-table td {
+				background-color: rgb(247, 247, 247);
+				vertical-align: middle;
+				text-align: center;
+				padding: 4px 6px;
+				border: 1px solid #ddd;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<h1>Grades of {{student.full_name}}</h1>
+		</div>
+		<div class="content">
+			<table class="content-table">
+				<tr>
+					<th>Subject</th>
+					<th>1° Bimester</th>
+					<th>2° Bimester</th>
+					<th>3° Bimester</th>
+					<th>4° Bimester</th>
+				</tr>
+				{% for grades in data %}
+				<tr>
+					<th>{{grades.subject}}</th>
+					<td>{{grades.values.first_bimester}}</td>
+					<td>{{grades.values.second_bimester}}</td>
+					<td>{{grades.values.third_bimester}}</td>
+					<td>{{grades.values.fourth_bimester}}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	</body>
+</html>

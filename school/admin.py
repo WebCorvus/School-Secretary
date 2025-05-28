@@ -59,7 +59,8 @@ class StudentsAdmin(admin.ModelAdmin):
         "cpf",
         "birthday",
         "group",
-        "download_presence_list",
+        "download_presence_pdf",
+        "download_grades_pdf",
     )
     list_display_links = (
         "full_name",
@@ -80,6 +81,14 @@ class StudentsAdmin(admin.ModelAdmin):
             self.message_user(request, "Student not found.")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
+    def generate_grades_pdf(self, request, student_id):
+        try:
+            student = Student.objects.get(pk=student_id)
+            return student.generate_grades_pdf()
+        except Contract.DoesNotExist:
+            self.message_user(request, "Student not found.")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -88,15 +97,26 @@ class StudentsAdmin(admin.ModelAdmin):
                 self.admin_site.admin_view(self.generate_presence_pdf),
                 name="generate-presence-pdf",
             ),
+            path(
+                "<int:student_id>/generate-grades-pdf/",
+                self.admin_site.admin_view(self.generate_grades_pdf),
+                name="generate-grades-pdf",
+            ),
         ]
         return custom_urls + urls
 
-    def download_presence_list(self, obj):
+    def download_presence_pdf(self, obj):
         return format_html(
             f"<a href=/admin/school/student/{obj.id}/generate-presence-pdf/>Download</a>",
         )
 
-    download_presence_list.short_description = "Download Presence"
+    def download_grades_pdf(self, obj):
+        return format_html(
+            f"<a href=/admin/school/student/{obj.id}/generate-grades-pdf/>Download</a>",
+        )
+
+    download_presence_pdf.short_description = "Download Presence"
+    download_grades_pdf.short_description = "Download Grades"
 
 
 class GuardiansAdmin(admin.ModelAdmin):
