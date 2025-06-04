@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Presence List</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+			}
+			.header {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			.content {
+				margin: 10px;
+			}
+			.content-table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			.content-table th,
+			.content-table td {
+				border: 1px solid #ddd;
+				padding: 8px;
+				text-align: center;
+			}
+			.content-table th {
+				background-color: #f2f2f2;
+			}
+			.signature {
+				margin: 50px 10px 10px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="header">
+			<h2>Presence List of {{student.full_name}}</h2>
+		</div>
+		<div class="content">
+			<table class="content-table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Presence</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for record in data %}
+					<tr>
+						<td>{{ record.date|date:"d/m/Y" }}</td>
+						<td>
+							{% if record.presence %} Present {% else %} Absent
+							{% endif %}
+						</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td colspan="2">No presence records found.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

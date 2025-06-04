@@ -20,6 +20,11 @@ class Subject(models.Model):
 
     subject_name = models.CharField(max_length=40, choices=SUBJECTS_CHOICE)
 
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
+
     def __str__(self):
         return self.subject_name
 
@@ -32,6 +37,11 @@ class Itinerary(models.Model):
     )
 
     itinerary_name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
+
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
     def __str__(self):
         return self.itinerary_name
@@ -54,6 +64,11 @@ class Group(models.Model):
     )
 
     group_name = models.CharField(max_length=40, choices=CLASS_CHOICES)
+
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
     def __str__(self):
         return self.group_name
@@ -121,6 +136,11 @@ class Student(models.Model):
             f"Grades_{self.full_name}.pdf",
         )
 
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
+
     def __str__(self):
         return self.full_name
 
@@ -151,6 +171,11 @@ class Guardian(models.Model):
     )
     birthday = models.DateField(max_length=10)
     address = models.CharField(max_length=100, validators=[cep_validator])
+
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
     def __str__(self):
         return self.full_name
@@ -191,6 +216,11 @@ class Professor(models.Model):
         null=True,
     )
 
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
+
     def __str__(self):
         return self.full_name
 
@@ -214,8 +244,6 @@ class Contract(models.Model):
         null=True,
     )
 
-    created_at = models.DateTimeField(default=datetime.now())
-
     def generate_contract_pdf(self):
         return pdfgen(
             "contract.html",
@@ -224,6 +252,11 @@ class Contract(models.Model):
             },
             f"Contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf",
         )
+
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
     def __str__(self):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
@@ -258,7 +291,10 @@ class Grades(models.Model):
         null=True,
     )
 
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
     def __str__(self):
         return f"{self.student.full_name}'s Bulletin"
@@ -278,7 +314,10 @@ class Presence(models.Model):
     )
     date = models.DateField()
     presence = models.BooleanField()
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
 
 class SchoolRecord(models.Model):
@@ -320,7 +359,10 @@ class Book(models.Model):
         null=True,
     )
 
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
 
 
 class Schedule(models.Model):
@@ -335,4 +377,7 @@ class Schedule(models.Model):
 
     tasks = models.JSONField()
 
-    created_at = models.DateTimeField(default=datetime.now())
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
