@@ -7,7 +7,7 @@ from .models import (
     Student,
     Guardian,
     Contract,
-    Grades,
+    Grade,
     Presence,
 )
 
@@ -145,7 +145,7 @@ class ContractsAdmin(admin.ModelAdmin):
     download_contract.short_description = "Download Contract"
 
 
-class GradesAdmin(admin.ModelAdmin):
+class GradeAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "student",
@@ -193,8 +193,8 @@ admin.site.register(
 )
 
 admin.site.register(
-    Grades,
-    GradesAdmin,
+    Grade,
+    GradeAdmin,
 )
 
 admin.site.register(

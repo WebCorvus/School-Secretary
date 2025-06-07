@@ -1,9 +1,8 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
-from rest_framework.response import Response
 
-from .models import Student, Grades
-from .serializers import StudentDataSerializer
+from .models import Student, Grade
+from .serializers import StudentDataSerializer, GradeSerializer
 
 
 class StudentDataViewSet(viewsets.ModelViewSet):
@@ -25,3 +24,15 @@ class StudentDataViewSet(viewsets.ModelViewSet):
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
         return student.generate_presence_pdf()
+
+
+class GradeViewSet(viewsets.ModelViewSet):
+    queryset = Grade.objects.all()
+    serializer_class = GradeSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student",
+        "subject",
+        "year",
+        "value",
+    ]

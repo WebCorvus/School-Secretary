@@ -4,6 +4,13 @@ from datetime import datetime
 from utils.pdfgen import pdfgen
 from utils.validators import phone_validator, cep_validator, cpf_validator
 
+BIMESTER_CHOICES = [
+    ("1B", "1º Bimestre"),
+    ("2B", "2º Bimestre"),
+    ("3B", "3º Bimestre"),
+    ("4B", "4º Bimestre"),
+]
+
 
 class Student(models.Model):
     full_name = models.CharField(
@@ -57,7 +64,7 @@ class Student(models.Model):
         )
 
     def generate_grades_pdf(self):
-        grades = Grades.objects.filter(student=self)
+        grades = Grade.objects.filter(student=self)
         return pdfgen(
             "grades.html",
             {
@@ -149,12 +156,12 @@ class Contract(models.Model):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
 
 
-class Grades(models.Model):
+class Grade(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.CASCADE,
         verbose_name="Student's name",
-        related_name="grades",
+        related_name="grade",
         blank=False,
         null=True,
     )
@@ -163,7 +170,7 @@ class Grades(models.Model):
         "school.Subject",
         on_delete=models.CASCADE,
         verbose_name="Grade's Subject",
-        related_name="grades",
+        related_name="grade",
         blank=False,
         null=True,
     )
@@ -173,10 +180,14 @@ class Grades(models.Model):
         null=True,
     )
 
-    value = models.JSONField(
+    bimester = models.CharField(
+        max_length=20,
+        choices=BIMESTER_CHOICES,
         blank=False,
         null=True,
     )
+
+    value = models.FloatField(blank=False, null=True)
 
     created_at = models.DateTimeField(
         default=datetime.now(),
