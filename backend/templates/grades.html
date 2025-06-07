@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Grades</title>
+		<meta charset="UTF-8" />
+		<title>Boletim Escolar</title>
 		<style>
 			body {
 				font-family: Arial, sans-serif;
@@ -17,42 +18,48 @@
 				width: 100%;
 				border-collapse: collapse;
 			}
-			.content-table th {
-				background-color: rgb(237, 237, 237);
-				padding: 4px 6px;
+			.content-table th,
+			.content-table td {
 				border: 1px solid #ddd;
+				padding: 4px 6px;
 				text-align: center;
-				vertical-align: middle;
+			}
+			.content-table th {
+				background-color: #ededed;
 			}
 			.content-table td {
-				background-color: rgb(247, 247, 247);
-				vertical-align: middle;
-				text-align: center;
-				padding: 4px 6px;
-				border: 1px solid #ddd;
+				background-color: #f7f7f7;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="header">
-			<h1>Grades of {{student.full_name}}</h1>
+			<h1>Boletim de {{ student.full_name }}</h1>
+			<p>Matrícula: {{ student.registration_number }}</p>
+			<p>Grupo: {{ student.group }}</p>
+			<p>Itinerário: {{ student.itinerary }}</p>
 		</div>
 		<div class="content">
 			<table class="content-table">
 				<tr>
-					<th>Subject</th>
-					<th>1° Bimester</th>
-					<th>2° Bimester</th>
-					<th>3° Bimester</th>
-					<th>4° Bimester</th>
+					<th>Disciplina</th>
+					<th>1º Bimestre</th>
+					<th>2º Bimestre</th>
+					<th>3º Bimestre</th>
+					<th>4º Bimestre</th>
 				</tr>
-				{% for grades in data %}
+				{% for subject, grades in data.items %}
 				<tr>
-					<th>{{grades.subject}}</th>
-					<td>{{grades.values.first_bimester}}</td>
-					<td>{{grades.values.second_bimester}}</td>
-					<td>{{grades.values.third_bimester}}</td>
-					<td>{{grades.values.fourth_bimester}}</td>
+					<th>{{ subject }}</th>
+					{% if grades %} {% for grade in grades %}
+					<td>{{ grade.value|default_if_none:"-" }}</td>
+
+					{% endfor %} {% else %}
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					<td>-</td>
+					{% endif %}
 				</tr>
 				{% endfor %}
 			</table>

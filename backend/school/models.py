@@ -9,6 +9,8 @@ SUBJECTS_CHOICES = (
     ("CN", "Ciências da Natureza"),
     ("MAT", "Matemática"),
     ("LING", "Linguagens"),
+    ("DS", "Desenvolvimento de Sistemas"),
+    ("JG", "Desenvolvimento de Jogos"),
 )
 
 ITINERARY_CHOICES = (
@@ -34,7 +36,9 @@ CLASS_CHOICES = (
 
 
 class Subject(models.Model):
-    subject_name = models.CharField(max_length=40, choices=SUBJECTS_CHOICES)
+    name = models.CharField(
+        max_length=40, choices=SUBJECTS_CHOICES, blank=False, null=True
+    )
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -42,7 +46,7 @@ class Subject(models.Model):
     )
 
     def __str__(self):
-        return self.subject_name
+        return self.name
 
 
 class Itinerary(models.Model):

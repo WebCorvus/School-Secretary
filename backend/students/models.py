@@ -4,6 +4,8 @@ from datetime import datetime
 from utils.pdfgen import pdfgen
 from utils.validators import phone_validator, cep_validator, cpf_validator
 
+from school.models import SUBJECTS_CHOICES
+
 BIMESTER_CHOICES = [
     ("1B", "1º Bimestre"),
     ("2B", "2º Bimestre"),
@@ -64,12 +66,19 @@ class Student(models.Model):
         )
 
     def generate_grades_pdf(self):
-        grades = Grade.objects.filter(student=self)
+        subjects = [sub[0] for sub in SUBJECTS_CHOICES]
+        data = {}
+        for subject in subjects:
+            data[subject] = Grade.objects.filter(
+                student=self,
+                subject__name=subject,
+            )
+
         return pdfgen(
             "grades.html",
             {
                 "student": self,
-                "data": grades,
+                "data": data,
             },
             f"Grades_{self.full_name}.pdf",
         )

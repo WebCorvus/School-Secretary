@@ -13,11 +13,11 @@ from school.models import (
 class SubjectsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "subject_name",
+        "name",
     )
-    list_display_links = ("subject_name",)
-    search_fields = ("subject_name",)
-    list_filter = ("subject_name",)
+    list_display_links = ("name",)
+    search_fields = ("name",)
+    list_filter = ("name",)
 
 
 class ItinerariesAdmin(admin.ModelAdmin):
