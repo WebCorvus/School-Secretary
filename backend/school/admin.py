@@ -42,13 +42,13 @@ class GroupsAdmin(admin.ModelAdmin):
 
 class ProfessorsAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "full_name",
         "phone_number",
         "email",
         "cpf",
         "birthday",
         "address",
+        "subject",
         "group",
     )
     list_display_links = (
@@ -64,6 +64,7 @@ class SchoolRecordsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "student",
+        "descrition",
     )
     list_display_links = ("student",)
     search_fields = ("student",)
@@ -129,7 +130,6 @@ admin.site.register(
     Professor,
     ProfessorsAdmin,
 )
-
 
 admin.site.register(
     SchoolRecord,

@@ -14,7 +14,6 @@ from .models import (
 
 class StudentsAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "full_name",
         "registration_number",
         "phone_number",
@@ -23,6 +22,7 @@ class StudentsAdmin(admin.ModelAdmin):
         "cpf",
         "birthday",
         "group",
+        "itinerary",
         "download_presence_pdf",
         "download_grades_pdf",
     )
@@ -71,12 +71,12 @@ class StudentsAdmin(admin.ModelAdmin):
 
     def download_presence_pdf(self, obj):
         return format_html(
-            f"<a href=/admin/school/student/{obj.id}/generate-presence-pdf/>Download</a>",
+            f"<a href=/admin/students/student/{obj.id}/generate-presence-pdf/>Download</a>",
         )
 
     def download_grades_pdf(self, obj):
         return format_html(
-            f"<a href=/admin/school/student/{obj.id}/generate-grades-pdf/>Download</a>",
+            f"<a href=/admin/students/student/{obj.id}/generate-grades-pdf/>Download</a>",
         )
 
     download_presence_pdf.short_description = "Download Presence"
@@ -85,7 +85,6 @@ class StudentsAdmin(admin.ModelAdmin):
 
 class GuardiansAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "full_name",
         "student",
         "phone_number",
@@ -140,7 +139,7 @@ class ContractsAdmin(admin.ModelAdmin):
 
     def download_contract(self, obj):
         return format_html(
-            f"<a href=/admin/school/contract/{obj.id}/generate-pdf/>Download</a>",
+            f"<a href=/admin/students/contract/{obj.id}/generate-pdf/>Download</a>",
         )
 
     download_contract.short_description = "Download Contract"
@@ -150,9 +149,12 @@ class GradesAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "student",
+        "subject",
+        "year",
     )
     list_display_links = ("student",)
     search_fields = ("student",)
+    list_filter = ("student", "subject", "year")
 
 
 class PresencesAdmin(admin.ModelAdmin):
