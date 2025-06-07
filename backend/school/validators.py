@@ -1,5 +1,5 @@
-from django.core.exceptions import ValidationError
 import re
+from django.core.exceptions import ValidationError
 from validate_docbr import CPF
 
 

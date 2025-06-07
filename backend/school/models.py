@@ -117,7 +117,7 @@ class Student(models.Model):
     def generate_presence_pdf(self):
         presence_records = Presence.objects.filter(student=self)
         return pdfgen(
-            "presence_list.html",
+            "presence.html",
             {
                 "student": self,
                 "data": presence_records,
