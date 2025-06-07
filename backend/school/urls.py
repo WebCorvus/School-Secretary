@@ -6,6 +6,4 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r"professor", ProfessorViewSet, basename="professor")
 
-urlpatterns = [
-    path("", include(router.urls)),
-]
+urlpatterns = router.urls
