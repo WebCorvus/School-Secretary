@@ -8,9 +8,6 @@ from school.models import (
     Book,
     Schedule,
 )
-from django.http import HttpResponseRedirect
-from django.utils.html import format_html
-from django.urls import path
 
 
 class SubjectsAdmin(admin.ModelAdmin):
