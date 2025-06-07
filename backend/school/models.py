@@ -3,16 +3,38 @@ from datetime import datetime
 
 from utils.validators import cep_validator, cpf_validator, phone_validator
 
+# Choices globais
+SUBJECTS_CHOICES = (
+    ("CH", "Ciências Humanas"),
+    ("CN", "Ciências da Natureza"),
+    ("MAT", "Matemática"),
+    ("LING", "Linguagens"),
+)
+
+ITINERARY_CHOICES = (
+    ("DS", "Desenvolvimento de Sistemas"),
+    ("CN", "Ciencias da Natureza"),
+    ("JG", "Desenvolvimento de Jogos"),
+)
+
+CLASS_CHOICES = (
+    ("1F", "1° Ano do Fundamental"),
+    ("2F", "2° Ano do Fundamental"),
+    ("3F", "3° Ano do Fundamental"),
+    ("4F", "4° Ano do Fundamental"),
+    ("5F", "5° Ano do Fundamental"),
+    ("6F", "6° Ano do Fundamental"),
+    ("7F", "7° Ano do Fundamental"),
+    ("8F", "8° Ano do Fundamental"),
+    ("9F", "9° Ano do Fundamental"),
+    ("1M", "1° Ano do Médio"),
+    ("2M", "2° Ano do Médio"),
+    ("3M", "3° Ano do Médio"),
+)
+
 
 class Subject(models.Model):
-    SUBJECTS_CHOICE = (
-        ("CH", "Ciências Humanas"),
-        ("CN", "Ciências da Natureza"),
-        ("MAT", "Matemática"),
-        ("LING", "Linguagens"),
-    )
-
-    subject_name = models.CharField(max_length=40, choices=SUBJECTS_CHOICE)
+    subject_name = models.CharField(max_length=40, choices=SUBJECTS_CHOICES)
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -24,12 +46,6 @@ class Subject(models.Model):
 
 
 class Itinerary(models.Model):
-    ITINERARY_CHOICES = (
-        ("DS", "Desenvolvimento de Sistemas"),
-        ("CN", "Ciencias da Natureza"),
-        ("JG", "Desenvolvimento de Jogos"),
-    )
-
     itinerary_name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
 
     created_at = models.DateTimeField(
@@ -42,21 +58,6 @@ class Itinerary(models.Model):
 
 
 class Group(models.Model):
-    CLASS_CHOICES = (
-        ("1F", "1° Ano do Fundamental"),
-        ("2F", "2° Ano do Fundamental"),
-        ("3F", "3° Ano do Fundamental"),
-        ("4F", "4° Ano do Fundamental"),
-        ("5F", "5° Ano do Fundamental"),
-        ("6F", "6° Ano do Fundamental"),
-        ("7F", "7° Ano do Fundamental"),
-        ("8F", "8° Ano do Fundamental"),
-        ("9F", "9° Ano do Fundamental"),
-        ("1M", "1° Ano do Médio"),
-        ("2M", "2° Ano do Médio"),
-        ("3M", "3° Ano do Médio"),
-    )
-
     group_name = models.CharField(max_length=40, choices=CLASS_CHOICES)
 
     created_at = models.DateTimeField(
