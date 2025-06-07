@@ -173,7 +173,7 @@ class Grades(models.Model):
         null=True,
     )
 
-    values = models.JSONField(
+    value = models.JSONField(
         blank=False,
         null=True,
     )
