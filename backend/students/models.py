@@ -100,7 +100,7 @@ class Guardian(models.Model):
         Student,
         on_delete=models.CASCADE,
         verbose_name="Guardian's student",
-        related_name="guardian_student",
+        related_name="guardian",
         blank=False,
         null=True,
     )
@@ -133,7 +133,7 @@ class Contract(models.Model):
         Guardian,
         on_delete=models.CASCADE,
         verbose_name="Guardian's name",
-        related_name="contrac",
+        related_name="contract",
         blank=False,
         null=True,
     )
@@ -215,7 +215,7 @@ class Presence(models.Model):
         Student,
         on_delete=models.CASCADE,
         verbose_name="Student's name",
-        related_name="presence_list",
+        related_name="presence",
         blank=False,
         null=True,
     )

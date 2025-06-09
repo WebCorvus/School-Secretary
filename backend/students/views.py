@@ -1,13 +1,19 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 
-from .models import Student, Grade
-from .serializers import StudentDataSerializer, GradeSerializer
+from .models import Student, Grade, Guardian, Contract, Presence
+from .serializers import (
+    StudentSerializer,
+    GradeSerializer,
+    GuardianSerializer,
+    ContractSerializer,
+    PresenceSerializer,
+)
 
 
-class StudentDataViewSet(viewsets.ModelViewSet):
+class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
-    serializer_class = StudentDataSerializer
+    serializer_class = StudentSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
@@ -35,4 +41,37 @@ class GradeViewSet(viewsets.ModelViewSet):
         "subject",
         "year",
         "value",
+    ]
+
+
+class GuardianViewSet(viewsets.ModelViewSet):
+    queryset = Guardian.objects.all()
+    serializer_class = GuardianSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "full_name",
+        "cpf",
+        "email",
+        "phone_number",
+    ]
+
+
+class ContractViewSet(viewsets.ModelViewSet):
+    queryset = Contract.objects.all()
+    serializer_class = ContractSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "guardian",
+        "student",
+    ]
+
+
+class PresenceViewSet(viewsets.ModelViewSet):
+    queryset = Presence.objects.all()
+    serializer_class = PresenceSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student",
+        "date",
+        "presence",
     ]
