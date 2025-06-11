@@ -18,6 +18,8 @@ class StudentViewSet(viewsets.ModelViewSet):
     search_fields = [
         "full_name",
         "registration_number",
+        "phone_number",
+        "email",
         "cpf",
     ]
 
@@ -50,9 +52,9 @@ class GuardianViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
+        "phone_number",
         "cpf",
         "email",
-        "phone_number",
     ]
 
 

@@ -35,7 +35,27 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
-.btn-gray {
-	@apply m-1 p-1.5 rounded-sm bg-[var(--background)] hover:bg-[var(--light-gray)] active:bg-[var(--dark-gray)];
+.btn {
+	@apply m-1 p-1 rounded-sm;
 	transition: background 0.2s, color 0.2s;
+}
+
+.btn-gray {
+	@apply bg-[var(--gray)] hover:bg-[var(--light-gray)] active:bg-[var(--gray)];
+}
+
+.table {
+	border-collapse: collapse;
+	width: 80%;
+}
+
+.table th,
+.table td {
+	padding: 5px;
+	text-align: center;
+}
+
+.table-border th,
+.table-border td {
+	border: 1px solid var(--light-gray);
 }

@@ -5,11 +5,11 @@ export default function Header() {
 		<div className="">
 			<ul className="p-1.5">
 				<li>
-					<Link className="btn-gray" href="/">
+					<Link className="btn btn-gray" href="/">
 						Início
 					</Link>
 
-					<Link className="btn-gray" href="/students">
+					<Link className="btn btn-gray" href="/students">
 						Estudantes
 					</Link>
 				</li>
