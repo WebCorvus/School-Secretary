@@ -39,9 +39,10 @@ class GradeViewSet(viewsets.ModelViewSet):
     serializer_class = GradeSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        "student",
-        "subject",
+        "student__full_name",
+        "subject__name",
         "year",
+        "bimester",
         "value",
     ]
 
@@ -52,6 +53,7 @@ class GuardianViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
+        "student__full_name",
         "phone_number",
         "cpf",
         "email",
@@ -63,8 +65,8 @@ class ContractViewSet(viewsets.ModelViewSet):
     serializer_class = ContractSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        "guardian",
-        "student",
+        "guardian__full_name",
+        "student__full_name",
     ]
 
 
@@ -73,7 +75,7 @@ class PresenceViewSet(viewsets.ModelViewSet):
     serializer_class = PresenceSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        "student",
+        "student__full_name",
         "date",
         "presence",
     ]

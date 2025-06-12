@@ -1,0 +1,77 @@
+"use client";
+
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { ProfessorProps } from "@/types/professor";
+import { PROFESSOR_BASE_URL } from "@/config";
+import SearchField from "@/components/searchField";
+
+export default function ProfessorsPage() {
+	const [data, setData] = useState<ProfessorProps[]>([]);
+	const [search, setSearch] = useState("");
+	const [searching, setSearching] = useState(false);
+
+	useEffect(() => {
+		axios
+			.get(`${PROFESSOR_BASE_URL}?search=${search}`)
+			.then((response) => setData(response.data))
+			.finally(() => setSearching(false));
+	}, [searching]);
+
+	const handleSearch = (value: string) => {
+		setSearching(true);
+		setSearch(value);
+	};
+
+	return (
+		<div>
+			<div className="flex justify-center">
+				<div className="title-container">
+					<h1 className="title">Dados dos Professores Cadastrados</h1>
+				</div>
+			</div>
+
+			<div className="flex flex-row items-center justify-center">
+				<SearchField
+					placeholder="Buscar professor..."
+					onSearch={handleSearch}
+				/>
+			</div>
+			<div className="flex justify-center m-3">
+				<Link
+					className="link link-common w-50 text-center"
+					href="/professors/add"
+				>
+					Adicionar
+				</Link>
+			</div>
+			<div className="flex justify-center">
+				<table className="m-3 table table-border">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Telefone</th>
+							<th>Email</th>
+							<th>CPF</th>
+							<th>Nascimento</th>
+							<th>Endereço</th>
+						</tr>
+					</thead>
+					<tbody>
+						{data.map((professor) => (
+							<tr key={professor.id}>
+								<td>{professor.full_name}</td>
+								<td>{professor.phone_number}</td>
+								<td>{professor.email}</td>
+								<td>{professor.cpf}</td>
+								<td>{professor.birthday}</td>
+								<td>{professor.address}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	);
+}

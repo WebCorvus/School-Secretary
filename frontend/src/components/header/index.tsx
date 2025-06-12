@@ -11,22 +11,22 @@ export default function Header() {
 					<Link href="/students">Estudantes</Link>
 				</li>
 				<li>
-					<Link href="/professor">Professores</Link>
+					<Link href="/professors">Professores</Link>
 				</li>
 				<li>
 					<Link href="/schedule">Horários</Link>
 				</li>
 				<li>
-					<Link href="/subject">Disciplinas</Link>
+					<Link href="/subjects">Disciplinas</Link>
 				</li>
 				<li>
-					<Link href="/itinerary">Itinerários</Link>
+					<Link href="/itineraries">Itinerários</Link>
 				</li>
 				<li>
-					<Link href="/group">Turmas</Link>
+					<Link href="/groups">Turmas</Link>
 				</li>
 				<li>
-					<Link href="/book">Livros</Link>
+					<Link href="/books">Livros</Link>
 				</li>
 			</ul>
 		</div>

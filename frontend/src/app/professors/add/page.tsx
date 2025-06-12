@@ -1,45 +1,40 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-
-import { StudentProps } from "@/types/student";
+import { ProfessorProps } from "@/types/professor";
+import { GROUP_BASE_URL, SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
 import { GroupProps } from "@/types/group";
-import { ItineraryProps } from "@/types/itinerary";
+import { SubjectProps } from "@/types/subject";
 
-import { STUDENT_BASE_URL, GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
+type ProfessorPostProps = Omit<ProfessorProps, "id" | "created_at">;
 
-type StudentPostProps = Omit<StudentProps, "id" | "created_at">;
-
-export default function Add() {
+export default function AddProfessor() {
 	const [groups, setGroups] = useState<GroupProps[]>([]);
-	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
-	const [student, setStudent] = useState<StudentPostProps>({
+	const [subjects, setSubjects] = useState<SubjectProps[]>([]);
+	const [professor, setProfessor] = useState<ProfessorPostProps>({
 		full_name: "",
-		email: "",
-		registration_number: "",
 		phone_number: "",
+		email: "",
 		cpf: "",
 		birthday: "",
 		address: "",
+		subject: 0,
 		group: 0,
-		itinerary: 0,
 	});
 
-	useEffect(() => {
-		axios.get(GROUP_BASE_URL).then((response) => {
-			setGroups(response.data);
-		});
-		axios.get(ITINERARY_BASE_URL).then((response) => {
-			setItineraries(response.data);
-		});
+	React.useEffect(() => {
+		axios.get(GROUP_BASE_URL).then((response) => setGroups(response.data));
+		axios
+			.get(SUBJECT_BASE_URL)
+			.then((response) => setSubjects(response.data));
 	}, []);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
 		const { name, value } = e.target;
-		setStudent((prev) => ({
+		setProfessor((prev) => ({
 			...prev,
 			[name]: value,
 		}));
@@ -48,18 +43,17 @@ export default function Add() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await axios.post(STUDENT_BASE_URL, student);
-			alert("Aluno cadastrado com sucesso!");
-			setStudent({
+			await axios.post(PROFESSOR_BASE_URL, professor);
+			alert("Professor cadastrado com sucesso!");
+			setProfessor({
 				full_name: "",
-				registration_number: "",
 				phone_number: "",
 				email: "",
 				cpf: "",
 				birthday: "",
 				address: "",
+				subject: 0,
 				group: 0,
-				itinerary: 0,
 			});
 		} catch (error) {
 			alert(`Erro ao cadastrar: ${error}`);
@@ -70,11 +64,11 @@ export default function Add() {
 		<div>
 			<div className="flex justify-center">
 				<div className="title-container">
-					<h1 className="title">Adicionar Aluno</h1>
+					<h1 className="title">Adicionar Professor</h1>
 				</div>
 			</div>
 			<div className="flex justify-center">
-				<div className="form-container ">
+				<div className="form-container">
 					<form
 						className="form"
 						method="post"
@@ -83,55 +77,48 @@ export default function Add() {
 						<input
 							type="text"
 							name="full_name"
-							placeholder="Nome do aluno"
-							value={student.full_name}
-							onChange={handleChange}
-						/>
-						<input
-							type="text"
-							name="registration_number"
-							placeholder="Matrícula"
-							value={student.registration_number}
+							placeholder="Nome do professor"
+							value={professor.full_name}
 							onChange={handleChange}
 						/>
 						<input
 							type="text"
 							name="phone_number"
 							placeholder="Telefone"
-							value={student.phone_number}
+							value={professor.phone_number}
 							onChange={handleChange}
 						/>
 						<input
 							type="email"
 							name="email"
-							placeholder="E-mail do aluno"
-							value={student.email}
+							placeholder="E-mail do professor"
+							value={professor.email}
 							onChange={handleChange}
 						/>
 						<input
 							type="text"
 							name="cpf"
 							placeholder="CPF"
-							value={student.cpf}
+							value={professor.cpf}
 							onChange={handleChange}
 						/>
 						<input
 							type="date"
 							name="birthday"
 							placeholder="Data de nascimento"
-							value={student.birthday}
+							value={professor.birthday}
 							onChange={handleChange}
 						/>
 						<input
 							type="text"
 							name="address"
 							placeholder="Endereço"
-							value={student.address}
+							value={professor.address}
 							onChange={handleChange}
 						/>
 						<select
 							name="group"
-							value={student.group}
+							value={professor.group}
 							onChange={handleChange}
 						>
 							<option value="">Selecione a turma</option>
@@ -142,14 +129,14 @@ export default function Add() {
 							))}
 						</select>
 						<select
-							name="itinerary"
-							value={student.itinerary}
+							name="subject"
+							value={professor.subject}
 							onChange={handleChange}
 						>
-							<option value="">Selecione o itinerário</option>
-							{itineraries.map((itinerary) => (
-								<option key={itinerary.id} value={itinerary.id}>
-									{itinerary.name}
+							<option value="">Selecione a matéria</option>
+							{subjects.map((subject) => (
+								<option key={subject.id} value={subject.id}>
+									{subject.name}
 								</option>
 							))}
 						</select>
