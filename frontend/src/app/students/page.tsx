@@ -50,11 +50,19 @@ export default function Home() {
 					onSearch={handleSearch}
 				/>
 			</div>
+			<div className="flex justify-center m-3">
+				<Link
+					className="link link-common w-50 text-center"
+					href="/students/add"
+				>
+					Adicionar
+				</Link>
+			</div>
 			<div className="flex justify-center">
 				{searching ? (
 					<p>Carregando...</p>
 				) : (
-					<table className="m-5 table table-border">
+					<table className="m-3 table table-border">
 						<thead>
 							<tr>
 								<th>Nome</th>
