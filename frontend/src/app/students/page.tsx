@@ -38,6 +38,9 @@ export default function Home() {
 
 	return (
 		<div>
+			<div className="title-container">
+				<h1 className="title">Dados dos Alunos Cadastrados</h1>
+			</div>
 			<div className="m-2">
 				<SearchField
 					placeholder="Buscar aluno..."
@@ -45,7 +48,6 @@ export default function Home() {
 				/>
 			</div>
 			<div className="justify-items-center">
-				<h1 className="m-5 text-3xl">Dados dos Alunos Cadastrados</h1>
 				{searching ? (
 					<p>Carregando...</p>
 				) : (

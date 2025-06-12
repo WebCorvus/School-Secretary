@@ -29,7 +29,6 @@ export default function SearchField({
 					placeholder={placeholder}
 					value={value}
 					onChange={handleChange}
-					className="w-100 p-1 border-1 border-[var(--gray)] rounded-md"
 				/>
 				<button type="submit" className="btn btn-gray">
 					Buscar

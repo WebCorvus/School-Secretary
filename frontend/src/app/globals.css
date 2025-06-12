@@ -44,14 +44,34 @@ body {
 	@apply bg-[var(--gray)] hover:bg-[var(--light-gray)] active:bg-[var(--gray)];
 }
 
+.form-container {
+	@apply container justify-items-center;
+	width: 65%;
+}
+
+.form {
+	@apply w-full flex flex-col;
+}
+
+.form input {
+	@apply m-1.5 w-full p-1 border border-[var(--gray)] rounded-md;
+}
+
+.title-container {
+	@apply container justify-items-center;
+}
+
+.title {
+	@apply m-5 text-3xl;
+}
+
 .table {
 	border-collapse: collapse;
-	width: 80%;
 }
 
 .table th,
 .table td {
-	padding: 5px;
+	padding: 10px;
 	text-align: center;
 }
 
