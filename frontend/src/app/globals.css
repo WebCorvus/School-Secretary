@@ -3,9 +3,9 @@
 :root {
 	--black: rgb(20, 20, 20);
 	--white: rgb(250, 250, 250);
-	--dark-gray: rgb(40, 40, 40);
-	--gray: rgb(60, 60, 60);
-	--light-gray: rgb(80, 80, 80);
+	--dark-gray: rgb(50, 50, 50);
+	--gray: rgb(100, 100, 100);
+	--light-gray: rgb(200, 200, 200);
 
 	--success: rgb(0, 180, 0);
 	--warning: rgb(250, 250, 0);
@@ -13,6 +13,11 @@
 
 	--background: var(--white);
 	--foreground: var(--black);
+	--divide: var(--light-gray);
+
+	--button-bg: var(--black);
+	--button-hover: var(--dark-gray);
+	--button-color: var(--white);
 }
 
 @theme inline {
@@ -24,8 +29,18 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
+		--dark-gray: rgb(40, 40, 40);
+		--gray: rgb(60, 60, 60);
+		--light-gray: rgb(80, 80, 80);
+
 		--background: var(--dark-gray);
 		--foreground: var(--white);
+
+		--button-bg: var(--gray);
+		--button-hover: var(--light-gray);
+		--button-color: var(--white);
+
+		--divide: var(--gray);
 	}
 }
 
@@ -40,29 +55,55 @@ body {
 	transition: background 0.2s, color 0.2s;
 }
 
-.btn-gray {
-	@apply bg-[var(--gray)] hover:bg-[var(--light-gray)] active:bg-[var(--gray)];
+.btn-normal {
+	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
 }
 
 .form-container {
-	@apply container justify-items-center;
-	width: 65%;
+	@apply container justify-center w-[100%] max-w-[700px];
 }
 
 .form {
-	@apply w-full flex flex-col;
+	@apply flex flex-col;
 }
 
 .form input {
-	@apply m-1.5 w-full p-1 border border-[var(--gray)] rounded-md;
+	@apply m-1.5 w-full p-1 border border-[var(--divide)] rounded-md;
 }
 
 .form select {
-	@apply m-1.5 w-full p-1.5 bg-[var(--background)]  border border-[var(--gray)]  rounded-md;
+	@apply m-1.5 w-full p-1.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--divide)]  rounded-md;
+}
+
+.form button {
+	@apply m-1 px-3 rounded-sm;
+	transition: background 0.2s, color 0.2s;
+
+	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
+}
+
+.search-form-container {
+	@apply container grid justify-center;
+}
+
+.search-form {
+	@apply w-full flex flex-row;
+}
+
+.search-form input {
+	@apply m-1.5 w-full p-1.5 border border-[var(--divide)] rounded-md;
+	width: 400px;
+}
+
+.search-form button {
+	@apply m-1 px-3 rounded-sm;
+	transition: background 0.2s, color 0.2s;
+
+	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
 }
 
 .title-container {
-	@apply container justify-items-center;
+	@apply container grid justify-center;
 }
 
 .title {
@@ -81,5 +122,5 @@ body {
 
 .table-border th,
 .table-border td {
-	border: 1px solid var(--light-gray);
+	border: 1px solid var(--divide);
 }

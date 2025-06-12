@@ -37,14 +37,18 @@ export default function Home() {
 
 	return (
 		<div>
-			<div className="title-container">
-				<h1 className="title">Dados dos Alunos Cadastrados</h1>
+			<div className="flex justify-center w-full">
+				<div className="title-container">
+					<h1 className="title">Dados dos Alunos Cadastrados</h1>
+				</div>
 			</div>
-			<div className="m-2">
-				<SearchField
-					placeholder="Buscar aluno..."
-					onSearch={handleSearch}
-				/>
+			<div className="flex justify-center w-full">
+				<div>
+					<SearchField
+						placeholder="Buscar aluno..."
+						onSearch={handleSearch}
+					/>
+				</div>
 			</div>
 			<div className="justify-items-center">
 				{searching ? (

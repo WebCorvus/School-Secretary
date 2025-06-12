@@ -21,18 +21,18 @@ export default function SearchField({
 	};
 
 	return (
-		<div className="justify-items-center">
-			<form onSubmit={handleSubmit}>
+		<div className="search-from-container">
+			<form className="search-form" onSubmit={handleSubmit}>
 				<input
 					type="text"
 					name="search"
 					placeholder={placeholder}
 					value={value}
 					onChange={handleChange}
+					aria-label="Campo de busca"
+					className="max-w-[400px] min-w-[200px] w-full"
 				/>
-				<button type="submit" className="btn btn-gray">
-					Buscar
-				</button>
+				<button type="submit">Buscar</button>
 			</form>
 		</div>
 	);

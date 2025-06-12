@@ -69,7 +69,7 @@ export default function Add() {
 	};
 
 	return (
-		<div className=" justify-items-center">
+		<div className="justify-items-center">
 			<div className="title-container">
 				<h1 className="title">Adicionar Aluno</h1>
 			</div>
@@ -148,7 +148,6 @@ export default function Add() {
 							</option>
 						))}
 					</select>
-
 					<button type="submit" className="btn btn-gray w-full">
 						Adicionar
 					</button>
