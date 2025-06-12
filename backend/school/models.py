@@ -50,7 +50,7 @@ class Subject(models.Model):
 
 
 class Itinerary(models.Model):
-    itinerary_name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
+    name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -58,11 +58,15 @@ class Itinerary(models.Model):
     )
 
     def __str__(self):
-        return self.itinerary_name
+        return self.name
 
 
 class Group(models.Model):
-    group_name = models.CharField(max_length=40, choices=CLASS_CHOICES)
+    name = models.CharField(
+        max_length=40,
+        unique=True,
+        choices=CLASS_CHOICES,
+    )
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -70,7 +74,7 @@ class Group(models.Model):
     )
 
     def __str__(self):
-        return self.group_name
+        return self.name
 
 
 class Professor(models.Model):
@@ -139,17 +143,16 @@ class SchoolRecord(models.Model):
 
 
 class Book(models.Model):
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=True,
+    )
     tenant = models.ForeignKey(
         "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Tenant's name",
         related_name="alugated_book",
-        blank=False,
-        null=True,
-    )
-
-    name = models.CharField(
-        max_length=100,
         blank=False,
         null=True,
     )

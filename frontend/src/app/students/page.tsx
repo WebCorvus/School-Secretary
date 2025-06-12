@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchField from "@/components/searchField";
-
-const STUDENTS_BASE_URL: string = "http://127.0.0.1:8000/students/data";
+import { STUDENT_BASE_URL } from "@/config";
 
 interface StudentProps {
 	id: number;
@@ -26,7 +25,7 @@ export default function Home() {
 
 	useEffect(() => {
 		axios
-			.get<StudentProps[]>(`${STUDENTS_BASE_URL}/?search=${search}`)
+			.get<StudentProps[]>(`${STUDENT_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setSearching(false));
 	}, [searching]);

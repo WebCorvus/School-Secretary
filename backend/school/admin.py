@@ -23,21 +23,21 @@ class SubjectsAdmin(admin.ModelAdmin):
 class ItinerariesAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "itinerary_name",
+        "name",
     )
-    list_display_links = ("itinerary_name",)
-    search_fields = ("itinerary_name",)
-    list_filter = ("itinerary_name",)
+    list_display_links = ("name",)
+    search_fields = ("name",)
+    list_filter = ("name",)
 
 
 class GroupsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "group_name",
+        "name",
     )
-    list_display_links = ("group_name",)
-    search_fields = ("group_name",)
-    list_filter = ("group_name",)
+    list_display_links = ("name",)
+    search_fields = ("name",)
+    list_filter = ("name",)
 
 
 class ProfessorsAdmin(admin.ModelAdmin):

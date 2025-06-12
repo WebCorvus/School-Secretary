@@ -1,28 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const STUDENT_BASE_URL: string = "http://127.0.0.1:8000/students/data/";
+import { StudentProps } from "@/types/student";
+import { GroupProps } from "@/types/group";
+import { ItineraryProps } from "@/types/itinerary";
 
-interface StudentProps {
-	id: number;
-	full_name: string;
-	registration_number: string;
-	phone_number: string;
-	email: string;
-	cpf: string;
-	birthday: string;
-	address: string;
-	group: string;
-	itinerary: string;
-	created_at: string;
-}
+import { STUDENT_BASE_URL } from "@/config";
+import { GROUP_BASE_URL } from "@/config";
+import { ITINERARY_BASE_URL } from "@/config";
 
-// Tipo para o formulário, sem id e created_at
 type StudentPostProps = Omit<StudentProps, "id" | "created_at">;
 
 export default function Add() {
+	const [groups, setGroups] = useState<GroupProps[]>([]);
+	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [student, setStudent] = useState<StudentPostProps>({
 		full_name: "",
 		email: "",
@@ -35,7 +28,18 @@ export default function Add() {
 		itinerary: "",
 	});
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	useEffect(() => {
+		axios.get(GROUP_BASE_URL).then((response) => {
+			setGroups(response.data);
+		});
+		axios.get(ITINERARY_BASE_URL).then((response) => {
+			setItineraries(response.data);
+		});
+	}, []);
+
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	) => {
 		const { name, value } = e.target;
 		setStudent((prev) => ({
 			...prev,
@@ -43,7 +47,8 @@ export default function Add() {
 		}));
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		try {
 			await axios.post(STUDENT_BASE_URL, student);
 			alert("Aluno cadastrado com sucesso!");
@@ -119,20 +124,31 @@ export default function Add() {
 						value={student.address}
 						onChange={handleChange}
 					/>
-					<input
-						type="text"
+					<select
 						name="group"
-						placeholder="Turma"
 						value={student.group}
 						onChange={handleChange}
-					/>
-					<input
-						type="text"
+					>
+						<option value="">Selecione a turma</option>
+						{groups.map((group) => (
+							<option key={group.id} value={group.id}>
+								{group.name}
+							</option>
+						))}
+					</select>
+					<select
 						name="itinerary"
-						placeholder="Itinerário"
 						value={student.itinerary}
 						onChange={handleChange}
-					/>
+					>
+						<option value="">Selecione o Itinerário</option>
+						{itineraries.map((itinerary) => (
+							<option key={itinerary.id} value={itinerary.id}>
+								{itinerary.name}
+							</option>
+						))}
+					</select>
+
 					<button type="submit" className="btn btn-gray w-full">
 						Adicionar
 					</button>

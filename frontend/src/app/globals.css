@@ -57,6 +57,10 @@ body {
 	@apply m-1.5 w-full p-1 border border-[var(--gray)] rounded-md;
 }
 
+.form select {
+	@apply m-1.5 w-full p-1.5 bg-[var(--background)]  border border-[var(--gray)]  rounded-md;
+}
+
 .title-container {
 	@apply container justify-items-center;
 }
