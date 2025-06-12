@@ -18,8 +18,14 @@
 	--divide: var(--light-gray);
 
 	--button-bg: var(--black);
-	--button-hover: rgb(220, 220, 220);
+	--button-active: rgb(150, 150, 150);
+	--button-hover: rgb(100, 100, 100);
 	--button-color: var(--white);
+
+	--link-bg: var(--background);
+	--link-active: rgb(230, 230, 230);
+	--link-hover: rgb(220, 220, 220);
+	--link-color: var(--foreground);
 }
 
 @theme inline {
@@ -41,8 +47,14 @@
 		--foreground: var(--white);
 
 		--button-bg: var(--gray);
+		--button-active: rgb(150, 150, 150);
 		--button-hover: var(--light-gray);
 		--button-color: var(--white);
+
+		--link-bg: var(--background);
+		--link-active: var(--light-gray);
+		--link-hover: var(--gray);
+		--link-color: var(--foreground);
 
 		--divide: var(--gray);
 	}
@@ -55,8 +67,12 @@ body {
 }
 
 .btn {
-	@apply m-1 p-1 rounded-sm;
+	@apply m-1 px-3 rounded-sm;
 	transition: background 0.2s, color 0.2s;
+}
+
+.btn-common {
+	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
 }
 
 .header-container {
@@ -67,12 +83,8 @@ body {
 	@apply p-1.5 flex flex-row;
 }
 
-.header li {
-	@apply p-1 m-1 hover:bg-[var(--button-hover)] rounded-md;
-}
-
-.btn-normal {
-	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
+.header a {
+	@apply p-1.5 m-1.5 text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
 }
 
 .form-container {
@@ -111,13 +123,6 @@ body {
 	width: 400px;
 }
 
-.search-form button {
-	@apply m-1 px-3 rounded-sm;
-	transition: background 0.2s, color 0.2s;
-
-	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
-}
-
 .title-container {
 	@apply container grid justify-center;
 }
@@ -127,6 +132,15 @@ body {
 }
 
 .link {
+	@apply m-1 p-1 rounded-sm;
+	transition: background 0.2s, color 0.2s;
+}
+
+.link-common {
+	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
+}
+
+.link-blue {
 	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 

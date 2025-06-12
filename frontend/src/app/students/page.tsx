@@ -43,13 +43,12 @@ export default function Home() {
 					<h1 className="title">Dados dos Alunos Cadastrados</h1>
 				</div>
 			</div>
-			<div className="flex justify-center w-full">
-				<div>
-					<SearchField
-						placeholder="Buscar aluno..."
-						onSearch={handleSearch}
-					/>
-				</div>
+
+			<div className="flex flex-row items-center justify-center">
+				<SearchField
+					placeholder="Buscar aluno..."
+					onSearch={handleSearch}
+				/>
 			</div>
 			<div className="flex justify-center">
 				{searching ? (
@@ -79,7 +78,7 @@ export default function Home() {
 									<td>{register.birthday}</td>
 									<td>
 										<Link
-											className="link"
+											className="link link-blue"
 											href={`${STUDENT_BASE_URL}${register.id}/download-presence/`}
 										>
 											Presença
@@ -87,7 +86,7 @@ export default function Home() {
 									</td>
 									<td>
 										<Link
-											className="link"
+											className="link link-blue"
 											href={`${STUDENT_BASE_URL}${register.id}/download-grades/`}
 										>
 											Boletim
