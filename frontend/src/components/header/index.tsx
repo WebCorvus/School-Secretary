@@ -2,38 +2,31 @@ import Link from "next/link";
 
 export default function Header() {
 	return (
-		<div>
-			<ul className="p-1.5">
+		<div className="header-container">
+			<ul className="header">
 				<li>
-					<Link className="btn btn-normal" href="/">
-						Início
-					</Link>
-
-					<Link className="btn btn-normal" href="/students">
-						Estudantes
-					</Link>
-
-					<Link className="btn btn-normal" href="/professor">
-						Professores
-					</Link>
-					<Link className="btn btn-normal" href="/subject">
-						Disciplinas
-					</Link>
-					<Link className="btn btn-normal" href="/itinerary">
-						Itinerários
-					</Link>
-					<Link className="btn btn-normal" href="/group">
-						Turmas
-					</Link>
-					<Link className="btn btn-normal" href="/schoolrecord">
-						Boletins
-					</Link>
-					<Link className="btn btn-normal" href="/book">
-						Livros
-					</Link>
-					<Link className="btn btn-normal" href="/schedule">
-						Horários
-					</Link>
+					<Link href="/">Início</Link>
+				</li>
+				<li>
+					<Link href="/students">Estudantes</Link>
+				</li>
+				<li>
+					<Link href="/professor">Professores</Link>
+				</li>
+				<li>
+					<Link href="/schedule">Horários</Link>
+				</li>
+				<li>
+					<Link href="/subject">Disciplinas</Link>
+				</li>
+				<li>
+					<Link href="/itinerary">Itinerários</Link>
+				</li>
+				<li>
+					<Link href="/group">Turmas</Link>
+				</li>
+				<li>
+					<Link href="/book">Livros</Link>
 				</li>
 			</ul>
 		</div>

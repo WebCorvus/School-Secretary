@@ -5,7 +5,7 @@
 	--white: rgb(245, 245, 245);
 	--dark-gray: rgb(50, 50, 50);
 	--gray: rgb(100, 100, 100);
-	--light-gray: rgb(200, 200, 200);
+	--light-gray: rgb(150, 150, 150);
 	--blue: rgb(0, 0, 255);
 	--dark-blue: rgb(0, 0, 150);
 
@@ -18,7 +18,7 @@
 	--divide: var(--light-gray);
 
 	--button-bg: var(--black);
-	--button-hover: var(--dark-gray);
+	--button-hover: rgb(220, 220, 220);
 	--button-color: var(--white);
 }
 
@@ -57,6 +57,18 @@ body {
 .btn {
 	@apply m-1 p-1 rounded-sm;
 	transition: background 0.2s, color 0.2s;
+}
+
+.header-container {
+	@apply container grid;
+}
+
+.header {
+	@apply p-1.5 flex flex-row;
+}
+
+.header li {
+	@apply p-1 m-1 hover:bg-[var(--button-hover)] rounded-md;
 }
 
 .btn-normal {
