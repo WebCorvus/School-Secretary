@@ -159,7 +159,7 @@ export default function Add() {
 							type="submit"
 							className="btn btn-gray w-full py-1"
 						>
-							Adicionar
+							Concluir
 						</button>
 					</form>
 				</div>
