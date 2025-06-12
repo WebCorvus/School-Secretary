@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SearchField from "@/components/searchField";
@@ -37,7 +38,7 @@ export default function Home() {
 
 	return (
 		<div>
-			<div className="flex justify-center w-full">
+			<div className="flex justify-center">
 				<div className="title-container">
 					<h1 className="title">Dados dos Alunos Cadastrados</h1>
 				</div>
@@ -50,7 +51,7 @@ export default function Home() {
 					/>
 				</div>
 			</div>
-			<div className="justify-items-center">
+			<div className="flex justify-center">
 				{searching ? (
 					<p>Carregando...</p>
 				) : (
@@ -63,6 +64,8 @@ export default function Home() {
 								<th>Email</th>
 								<th>CPF</th>
 								<th>Nascimento</th>
+								<th>Presença</th>
+								<th>Boletim</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -74,6 +77,22 @@ export default function Home() {
 									<td>{register.email}</td>
 									<td>{register.cpf}</td>
 									<td>{register.birthday}</td>
+									<td>
+										<Link
+											className="link"
+											href={`${STUDENT_BASE_URL}${register.id}/download-presence/`}
+										>
+											Presença
+										</Link>
+									</td>
+									<td>
+										<Link
+											className="link"
+											href={`${STUDENT_BASE_URL}${register.id}/download-grades/`}
+										>
+											Boletim
+										</Link>
+									</td>
 								</tr>
 							))}
 						</tbody>

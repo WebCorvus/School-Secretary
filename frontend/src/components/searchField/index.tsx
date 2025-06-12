@@ -21,7 +21,7 @@ export default function SearchField({
 	};
 
 	return (
-		<div className="search-from-container">
+		<div className="search-form-container">
 			<form className="search-form" onSubmit={handleSubmit}>
 				<input
 					type="text"

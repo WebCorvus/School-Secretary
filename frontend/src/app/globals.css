@@ -2,10 +2,12 @@
 
 :root {
 	--black: rgb(20, 20, 20);
-	--white: rgb(250, 250, 250);
+	--white: rgb(245, 245, 245);
 	--dark-gray: rgb(50, 50, 50);
 	--gray: rgb(100, 100, 100);
 	--light-gray: rgb(200, 200, 200);
+	--blue: rgb(0, 0, 255);
+	--dark-blue: rgb(0, 0, 150);
 
 	--success: rgb(0, 180, 0);
 	--warning: rgb(250, 250, 0);
@@ -32,6 +34,8 @@
 		--dark-gray: rgb(40, 40, 40);
 		--gray: rgb(60, 60, 60);
 		--light-gray: rgb(80, 80, 80);
+		--blue: rgb(100, 100, 255);
+		--dark-blue: rgb(100, 100, 150);
 
 		--background: var(--dark-gray);
 		--foreground: var(--white);
@@ -108,6 +112,10 @@ body {
 
 .title {
 	@apply m-5 text-3xl;
+}
+
+.link {
+	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 
 .table {

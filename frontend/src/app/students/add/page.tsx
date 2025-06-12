@@ -69,89 +69,97 @@ export default function Add() {
 	};
 
 	return (
-		<div className="justify-items-center">
-			<div className="title-container">
-				<h1 className="title">Adicionar Aluno</h1>
+		<div>
+			<div className="flex justify-center">
+				<div className="title-container">
+					<h1 className="title">Adicionar Aluno</h1>
+				</div>
 			</div>
-			<div className="form-container">
-				<form className="form" method="post" onSubmit={handleSubmit}>
-					<input
-						type="text"
-						name="full_name"
-						placeholder="Nome do aluno"
-						value={student.full_name}
-						onChange={handleChange}
-					/>
-					<input
-						type="text"
-						name="registration_number"
-						placeholder="Matrícula"
-						value={student.registration_number}
-						onChange={handleChange}
-					/>
-					<input
-						type="text"
-						name="phone_number"
-						placeholder="Telefone"
-						value={student.phone_number}
-						onChange={handleChange}
-					/>
-					<input
-						type="email"
-						name="email"
-						placeholder="E-mail do aluno"
-						value={student.email}
-						onChange={handleChange}
-					/>
-					<input
-						type="text"
-						name="cpf"
-						placeholder="CPF"
-						value={student.cpf}
-						onChange={handleChange}
-					/>
-					<input
-						type="date"
-						name="birthday"
-						placeholder="Data de nascimento"
-						value={student.birthday}
-						onChange={handleChange}
-					/>
-					<input
-						type="text"
-						name="address"
-						placeholder="Endereço"
-						value={student.address}
-						onChange={handleChange}
-					/>
-					<select
-						name="group"
-						value={student.group}
-						onChange={handleChange}
+			<div className="flex justify-center">
+				<div className="form-container ">
+					<form
+						className="form"
+						method="post"
+						onSubmit={handleSubmit}
 					>
-						<option value="">Selecione a turma</option>
-						{groups.map((group) => (
-							<option key={group.id} value={group.id}>
-								{group.name}
-							</option>
-						))}
-					</select>
-					<select
-						name="itinerary"
-						value={student.itinerary}
-						onChange={handleChange}
-					>
-						<option value="">Selecione o Itinerário</option>
-						{itineraries.map((itinerary) => (
-							<option key={itinerary.id} value={itinerary.id}>
-								{itinerary.name}
-							</option>
-						))}
-					</select>
-					<button type="submit" className="btn btn-gray w-full">
-						Adicionar
-					</button>
-				</form>
+						<input
+							type="text"
+							name="full_name"
+							placeholder="Nome do aluno"
+							value={student.full_name}
+							onChange={handleChange}
+						/>
+						<input
+							type="text"
+							name="registration_number"
+							placeholder="Matrícula"
+							value={student.registration_number}
+							onChange={handleChange}
+						/>
+						<input
+							type="text"
+							name="phone_number"
+							placeholder="Telefone"
+							value={student.phone_number}
+							onChange={handleChange}
+						/>
+						<input
+							type="email"
+							name="email"
+							placeholder="E-mail do aluno"
+							value={student.email}
+							onChange={handleChange}
+						/>
+						<input
+							type="text"
+							name="cpf"
+							placeholder="CPF"
+							value={student.cpf}
+							onChange={handleChange}
+						/>
+						<input
+							type="date"
+							name="birthday"
+							placeholder="Data de nascimento"
+							value={student.birthday}
+							onChange={handleChange}
+						/>
+						<input
+							type="text"
+							name="address"
+							placeholder="Endereço"
+							value={student.address}
+							onChange={handleChange}
+						/>
+						<select
+							name="group"
+							value={student.group}
+							onChange={handleChange}
+						>
+							<option value="">Selecione a turma</option>
+							{groups.map((group) => (
+								<option key={group.id} value={group.id}>
+									{group.name}
+								</option>
+							))}
+						</select>
+						<select
+							name="itinerary"
+							value={student.itinerary}
+							onChange={handleChange}
+						>
+							<option value="">Selecione o Itinerário</option>
+							{itineraries.map((itinerary) => (
+								<option key={itinerary.id} value={itinerary.id}>
+									{itinerary.name}
+								</option>
+							))}
+						</select>
+						<button type="submit" className="btn btn-gray w-full">
+							Adicionar
+						</button>
+					</form>
+				</div>
 			</div>
 		</div>
 	);
