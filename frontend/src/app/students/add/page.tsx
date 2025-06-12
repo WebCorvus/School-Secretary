@@ -155,7 +155,10 @@ export default function Add() {
 								</option>
 							))}
 						</select>
-						<button type="submit" className="btn btn-gray w-full">
+						<button
+							type="submit"
+							className="btn btn-gray w-full py-1"
+						>
 							Adicionar
 						</button>
 					</form>
