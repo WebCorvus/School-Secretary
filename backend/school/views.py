@@ -47,7 +47,8 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        "name",
+        "full_name",
+        "short_name",
     ]
 
 

@@ -3,41 +3,20 @@ from datetime import datetime
 
 from utils.validators import cep_validator, cpf_validator, phone_validator
 
-# Choices globais
-SUBJECTS_CHOICES = (
-    ("CH", "Ciências Humanas"),
-    ("CN", "Ciências da Natureza"),
-    ("MAT", "Matemática"),
-    ("LING", "Linguagens"),
-    ("DS", "Desenvolvimento de Sistemas"),
-    ("JG", "Desenvolvimento de Jogos"),
-)
-
-ITINERARY_CHOICES = (
-    ("DS", "Desenvolvimento de Sistemas"),
-    ("CN", "Ciencias da Natureza"),
-    ("JG", "Desenvolvimento de Jogos"),
-)
-
-CLASS_CHOICES = (
-    ("1F", "1° Ano do Fundamental"),
-    ("2F", "2° Ano do Fundamental"),
-    ("3F", "3° Ano do Fundamental"),
-    ("4F", "4° Ano do Fundamental"),
-    ("5F", "5° Ano do Fundamental"),
-    ("6F", "6° Ano do Fundamental"),
-    ("7F", "7° Ano do Fundamental"),
-    ("8F", "8° Ano do Fundamental"),
-    ("9F", "9° Ano do Fundamental"),
-    ("1M", "1° Ano do Médio"),
-    ("2M", "2° Ano do Médio"),
-    ("3M", "3° Ano do Médio"),
-)
-
 
 class Subject(models.Model):
-    name = models.CharField(
-        max_length=40, choices=SUBJECTS_CHOICES, blank=False, null=True
+    full_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
+    )
+
+    short_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
     )
 
     created_at = models.DateTimeField(
@@ -50,7 +29,19 @@ class Subject(models.Model):
 
 
 class Itinerary(models.Model):
-    name = models.CharField(max_length=40, choices=ITINERARY_CHOICES)
+    full_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
+    )
+
+    short_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
+    )
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -62,10 +53,18 @@ class Itinerary(models.Model):
 
 
 class Group(models.Model):
-    name = models.CharField(
-        max_length=40,
+    full_name = models.CharField(
+        max_length=200,
         unique=True,
-        choices=CLASS_CHOICES,
+        blank=False,
+        null=True,
+    )
+
+    short_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
     )
 
     created_at = models.DateTimeField(
@@ -79,7 +78,9 @@ class Group(models.Model):
 
 class Professor(models.Model):
     full_name = models.CharField(
-        max_length=200, verbose_name="Professor's full name", null=True
+        max_length=200,
+        verbose_name="Professor's full name",
+        null=True,
     )
     phone_number = models.CharField(
         max_length=15,
@@ -96,7 +97,7 @@ class Professor(models.Model):
     birthday = models.DateField(max_length=10)
     address = models.CharField(max_length=100, validators=[cep_validator])
     subject = models.ForeignKey(
-        Subject,
+        "school.Subject",
         on_delete=models.CASCADE,
         verbose_name="Professor's Subject",
         related_name="professor",
@@ -104,7 +105,7 @@ class Professor(models.Model):
         null=True,
     )
     group = models.ForeignKey(
-        Group,
+        "school.Group",
         on_delete=models.CASCADE,
         verbose_name="Professor's Group",
         related_name="professor",

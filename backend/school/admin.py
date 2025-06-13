@@ -13,31 +13,61 @@ from school.models import (
 class SubjectsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "name",
+        "full_name",
+        "short_name",
     )
-    list_display_links = ("name",)
-    search_fields = ("name",)
-    list_filter = ("name",)
+    list_display_links = (
+        "full_name",
+        "short_name",
+    )
+    search_fields = (
+        "full_name",
+        "short_name",
+    )
+    list_filter = (
+        "full_name",
+        "short_name",
+    )
 
 
 class ItinerariesAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "name",
+        "full_name",
+        "short_name",
     )
-    list_display_links = ("name",)
-    search_fields = ("name",)
-    list_filter = ("name",)
+    list_display_links = (
+        "full_name",
+        "short_name",
+    )
+    search_fields = (
+        "full_name",
+        "short_name",
+    )
+    list_filter = (
+        "full_name",
+        "short_name",
+    )
 
 
 class GroupsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "name",
+        "full_name",
+        "short_name",
     )
-    list_display_links = ("name",)
-    search_fields = ("name",)
-    list_filter = ("name",)
+    list_display_links = (
+        "full_name",
+        "short_name",
+    )
+    search_fields = (
+        "full_name",
+        "short_name",
+    )
+    list_filter = (
+        "full_name",
+        "short_name",
+    )
 
 
 class ProfessorsAdmin(admin.ModelAdmin):

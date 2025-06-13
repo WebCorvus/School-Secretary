@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ProfessorProps } from "@/types/professor";
 import { GROUP_BASE_URL, SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
@@ -10,6 +11,7 @@ import { SubjectProps } from "@/types/subject";
 type ProfessorPostProps = Omit<ProfessorProps, "id" | "created_at">;
 
 export default function AddProfessor() {
+	const router = useRouter();
 	const [groups, setGroups] = useState<GroupProps[]>([]);
 	const [subjects, setSubjects] = useState<SubjectProps[]>([]);
 	const [professor, setProfessor] = useState<ProfessorPostProps>({
@@ -55,6 +57,7 @@ export default function AddProfessor() {
 				subject: 0,
 				group: 0,
 			});
+			router.push("/professors");
 		} catch (error) {
 			alert(`Erro ao cadastrar: ${error}`);
 		}

@@ -92,7 +92,7 @@ body {
 }
 
 .form-container {
-	@apply container justify-center w-[100%] max-w-[700px];
+	@apply container flex justify-center items-center w-[100%] max-w-[700px];
 }
 
 .form {

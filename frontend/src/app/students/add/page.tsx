@@ -137,7 +137,7 @@ export default function Add() {
 							<option value="">Selecione a turma</option>
 							{groups.map((group) => (
 								<option key={group.id} value={group.id}>
-									{group.name}
+									{group.full_name}
 								</option>
 							))}
 						</select>
@@ -149,7 +149,7 @@ export default function Add() {
 							<option value="">Selecione o itinerário</option>
 							{itineraries.map((itinerary) => (
 								<option key={itinerary.id} value={itinerary.id}>
-									{itinerary.name}
+									{itinerary.full_name}
 								</option>
 							))}
 						</select>
