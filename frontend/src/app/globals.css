@@ -92,11 +92,11 @@ body {
 }
 
 .form-container {
-	@apply container flex justify-center items-center w-[100%] max-w-[700px];
+	@apply container flex justify-center items-center;
 }
 
 .form {
-	@apply flex flex-col;
+	@apply flex flex-col w-[600px] max-w-screen;
 }
 
 .form input {

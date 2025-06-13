@@ -67,13 +67,13 @@ export default function Add() {
 	};
 
 	return (
-		<div>
+		<div className="m-10">
 			<div className="flex justify-center">
 				<div className="title-container">
 					<h1 className="title">Adicionar Aluno</h1>
 				</div>
 			</div>
-			<div className="flex justify-center">
+			<div className="flex justify-center items-center">
 				<div className="form-container ">
 					<form
 						className="form"
