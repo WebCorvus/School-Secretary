@@ -49,7 +49,7 @@ class Itinerary(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
 
 class Group(models.Model):
@@ -63,6 +63,15 @@ class Group(models.Model):
     short_name = models.CharField(
         max_length=200,
         unique=True,
+        blank=False,
+        null=True,
+    )
+
+    itinerary = models.ForeignKey(
+        "school.Itinerary",
+        on_delete=models.CASCADE,
+        verbose_name="Itinerário da turma",
+        related_name="groups",
         blank=False,
         null=True,
     )

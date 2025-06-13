@@ -3,10 +3,12 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ProfessorProps } from "@/types/professor";
-import { PROFESSOR_BASE_URL, SUBJECT_BASE_URL } from "@/config";
+
 import SearchField from "@/components/searchField";
+
+import { ProfessorProps } from "@/types/professor";
 import { SubjectProps } from "@/types/subject";
+import { PROFESSOR_BASE_URL, SUBJECT_BASE_URL } from "@/config";
 
 export default function ProfessorsPage() {
 	const [data, setData] = useState<ProfessorProps[]>([]);
@@ -80,7 +82,7 @@ export default function ProfessorsPage() {
 									{subjects.find(
 										(subject) =>
 											subject.id === professor.subject
-									)?.name || "Não encontrado"}
+									)?.full_name || "Não encontrado"}
 								</td>
 							</tr>
 						))}

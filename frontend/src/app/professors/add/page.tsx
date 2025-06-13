@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import axios from "axios";
-import { ProfessorProps } from "@/types/professor";
-import { GROUP_BASE_URL, SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import { GroupProps } from "@/types/group";
+import { ProfessorProps } from "@/types/professor";
 import { SubjectProps } from "@/types/subject";
+
+import { GROUP_BASE_URL, SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
 
 type ProfessorPostProps = Omit<ProfessorProps, "id" | "created_at">;
 
@@ -25,7 +27,7 @@ export default function AddProfessor() {
 		group: 0,
 	});
 
-	React.useEffect(() => {
+	useEffect(() => {
 		axios.get(GROUP_BASE_URL).then((response) => setGroups(response.data));
 		axios
 			.get(SUBJECT_BASE_URL)
@@ -127,7 +129,7 @@ export default function AddProfessor() {
 							<option value="">Selecione a turma</option>
 							{groups.map((group) => (
 								<option key={group.id} value={group.id}>
-									{group.name}
+									{group.full_name}
 								</option>
 							))}
 						</select>
@@ -139,7 +141,7 @@ export default function AddProfessor() {
 							<option value="">Selecione a matéria</option>
 							{subjects.map((subject) => (
 								<option key={subject.id} value={subject.id}>
-									{subject.name}
+									{subject.full_name}
 								</option>
 							))}
 						</select>

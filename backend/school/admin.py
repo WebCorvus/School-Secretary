@@ -55,6 +55,7 @@ class GroupsAdmin(admin.ModelAdmin):
         "id",
         "full_name",
         "short_name",
+        "itinerary",
     )
     list_display_links = (
         "full_name",
@@ -67,6 +68,7 @@ class GroupsAdmin(admin.ModelAdmin):
     list_filter = (
         "full_name",
         "short_name",
+        "itinerary",
     )
 
 

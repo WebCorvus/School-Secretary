@@ -1,15 +1,20 @@
 "use client";
 
+import axios from "axios";
+
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { GroupProps } from "@/types/group";
-import { GROUP_BASE_URL } from "@/config";
+
 import SearchField from "@/components/searchField";
+
+import { GroupProps } from "@/types/group";
+import { ItineraryProps } from "@/types/itinerary";
+import { GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
 
 export default function GroupsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<GroupProps[]>([]);
+	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [searching, setSearching] = useState(false);
 
 	useEffect(() => {
@@ -18,6 +23,14 @@ export default function GroupsPage() {
 			.then((response) => setData(response.data))
 			.finally(() => setSearching(false));
 	}, [searching]);
+
+	useEffect(() => {
+		axios
+			.get<ItineraryProps[]>(`${ITINERARY_BASE_URL}?search=${search}`)
+			.then((response) => {
+				setItineraries(response.data);
+			});
+	}, []);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
@@ -55,6 +68,7 @@ export default function GroupsPage() {
 							<tr>
 								<th>Abreviação</th>
 								<th>Nome completo</th>
+								<th>Itinerário</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,6 +76,12 @@ export default function GroupsPage() {
 								<tr key={group.id}>
 									<td>{group.short_name}</td>
 									<td>{group.full_name}</td>
+									<td>
+										{itineraries.find(
+											(itinerary) =>
+												itinerary.id === group.itinerary
+										)?.full_name || "Não encontrado"}
+									</td>
 								</tr>
 							))}
 						</tbody>

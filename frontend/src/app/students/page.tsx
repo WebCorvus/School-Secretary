@@ -1,11 +1,13 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
+import SearchField from "@/components/searchField";
+
 import { StudentProps } from "@/types/student";
 import { STUDENT_BASE_URL } from "@/config";
-import SearchField from "@/components/searchField";
 
 export default function Home() {
 	const [search, setSearch] = useState("");

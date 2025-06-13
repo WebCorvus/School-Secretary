@@ -1,30 +1,48 @@
 "use client";
 
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { GROUP_BASE_URL } from "@/config";
+import { ItineraryProps } from "@/types/itinerary";
+import { GroupProps } from "@/types/group";
+import { GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
+
+type GroupPostProps = Omit<GroupProps, "id" | "created_at">;
 
 export default function AddGroup() {
 	const router = useRouter();
+	const [itinerary, setItinerary] = useState<number>();
+	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [year, setYear] = useState("");
 	const [level, setLevel] = useState("");
 	const [loading, setLoading] = useState(false);
 
+	useEffect(() => {
+		axios.get(ITINERARY_BASE_URL).then((response) => {
+			setItineraries(response.data);
+		});
+	}, []);
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!year || !level) {
-			alert("Selecione o ano e o nível.");
+		if (!year || !level || !itinerary) {
+			alert("Selecione o ano, o nível e o itinerário.");
 			return;
 		}
 		setLoading(true);
-		const short_name = `${year}${level}`;
-		const full_name = `${year}º Ano do Ensino ${
-			level === "M" ? "Médio" : "Fundamental"
-		}`;
+		const group: GroupPostProps = {
+			short_name: `${year}${level}-${
+				itineraries.find((elm) => elm.id === itinerary)?.short_name ||
+				"Não encontrado"
+			}`,
+			full_name: `${year}º Ano do Ensino ${
+				level === "M" ? "Médio" : "Fundamental"
+			}`,
+			itinerary: itinerary,
+		};
 		try {
-			await axios.post(GROUP_BASE_URL, { short_name, full_name });
+			await axios.post(GROUP_BASE_URL, group);
 			alert("Turma cadastrada com sucesso!");
 			router.push("/groups");
 		} catch (error) {
@@ -81,6 +99,31 @@ export default function AddGroup() {
 							<option value="">Selecione o nível</option>
 							<option value="F">Fundamental</option>
 							<option value="M">Médio</option>
+						</select>
+					</div>
+					<div className="mb-4">
+						<label
+							htmlFor="itinerary"
+							className="block mb-2 font-bold"
+						>
+							Itinerário
+						</label>
+						<select
+							id="itinerary"
+							name="itinerary"
+							value={itinerary}
+							onChange={(e) =>
+								setItinerary(Number(e.target.value))
+							}
+							className="form select"
+							required
+						>
+							<option value="">Selecione o itinerário</option>
+							{itineraries.map((itinerary) => (
+								<option key={itinerary.id} value={itinerary.id}>
+									{itinerary.full_name}
+								</option>
+							))}
 						</select>
 					</div>
 					<button

@@ -1,5 +1,6 @@
 export interface SubjectProps {
 	id: number;
-	name: string;
+	full_name: string;
+	short_name: string;
 	created_at: string;
 }
