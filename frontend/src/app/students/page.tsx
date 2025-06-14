@@ -4,12 +4,11 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
-import SearchField from "@/components/searchField";
-
 import { StudentProps } from "@/types/student";
 import { STUDENT_BASE_URL } from "@/config";
+import SearchField from "@/components/searchField";
 
-export default function Home() {
+export default function StudentsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<StudentProps[]>([]);
 	const [updating, setUpdating] = useState(false);
@@ -65,6 +64,8 @@ export default function Home() {
 							<th>Data de Nascimento</th>
 							<th>Endereço</th>
 							<th>Turma</th>
+							<th>Notas</th>
+							<th>Presença</th>
 							<th>Remover</th>
 						</tr>
 					</thead>
@@ -82,6 +83,22 @@ export default function Home() {
 									{student.group_details?.full_name || "-"}
 								</td>
 
+								<td>
+									<Link
+										href={`${STUDENT_BASE_URL}${student.id}/download-grades`}
+										className="link link-blue"
+									>
+										Notas
+									</Link>
+								</td>
+								<td>
+									<Link
+										href={`${STUDENT_BASE_URL}${student.id}/download-presence`}
+										className="link link-blue"
+									>
+										Presença
+									</Link>
+								</td>
 								<td>
 									<button
 										className="link link-blue"

@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { StudentPostProps } from "@/types/student";
 import { GroupProps } from "@/types/group";
-import { ItineraryProps } from "@/types/itinerary";
 
-import { STUDENT_BASE_URL, GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
+import { STUDENT_BASE_URL, GROUP_BASE_URL } from "@/config";
 
-export default function Add() {
+export default function AddStudents() {
+	const router = useRouter();
 	const [groups, setGroups] = useState<GroupProps[]>([]);
-	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [student, setStudent] = useState<StudentPostProps>({
 		full_name: "",
 		email: "",
@@ -21,15 +21,11 @@ export default function Add() {
 		birthday: "",
 		address: "",
 		group: 0,
-		itinerary: 0,
 	});
 
 	useEffect(() => {
 		axios.get(GROUP_BASE_URL).then((response) => {
 			setGroups(response.data);
-		});
-		axios.get(ITINERARY_BASE_URL).then((response) => {
-			setItineraries(response.data);
 		});
 	}, []);
 
@@ -57,8 +53,8 @@ export default function Add() {
 				birthday: "",
 				address: "",
 				group: 0,
-				itinerary: 0,
 			});
+			router.push("/students");
 		} catch (error) {
 			alert(`Erro ao cadastrar: ${error}`);
 		}
@@ -136,18 +132,6 @@ export default function Add() {
 							{groups.map((group) => (
 								<option key={group.id} value={group.id}>
 									{group.full_name}
-								</option>
-							))}
-						</select>
-						<select
-							name="itinerary"
-							value={student.itinerary}
-							onChange={handleChange}
-						>
-							<option value="">Selecione o itinerário</option>
-							{itineraries.map((itinerary) => (
-								<option key={itinerary.id} value={itinerary.id}>
-									{itinerary.full_name}
 								</option>
 							))}
 						</select>
