@@ -161,6 +161,9 @@ body {
 .table td {
 	padding: 10px;
 	text-align: center;
+	white-space: normal;
+	min-width: 120px;
+	word-break: break-word;
 }
 
 .table-border th,
