@@ -5,14 +5,14 @@ from utils.validators import cep_validator, cpf_validator, phone_validator
 
 
 class Subject(models.Model):
-    full_name = models.CharField(
+    short_name = models.CharField(
         max_length=200,
         unique=True,
         blank=False,
         null=True,
     )
 
-    short_name = models.CharField(
+    full_name = models.CharField(
         max_length=200,
         unique=True,
         blank=False,

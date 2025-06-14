@@ -145,10 +145,7 @@ export default function AddProfessor() {
 								</option>
 							))}
 						</select>
-						<button
-							type="submit"
-							className="btn btn-gray w-full py-1"
-						>
+						<button type="submit" className="btn btn-gray w-full">
 							Concluir
 						</button>
 					</form>
