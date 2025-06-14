@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HorizontalLine from "../HorizontalLine";
 
 export default function Header() {
 	return (
