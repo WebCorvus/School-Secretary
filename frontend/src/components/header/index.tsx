@@ -14,7 +14,7 @@ export default function Header() {
 					<Link href="/professors">Professores</Link>
 				</li>
 				<li>
-					<Link href="/subjects">Disciplinas</Link>
+					<Link href="/subjects">Matérias</Link>
 				</li>
 				<li>
 					<Link href="/itineraries">Itinerários</Link>

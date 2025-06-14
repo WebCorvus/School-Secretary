@@ -75,7 +75,7 @@ export default function AddProfessor() {
 			<div className="flex justify-center">
 				<div className="form-container">
 					<form
-						className="form"
+						className="form flex-col"
 						method="post"
 						onSubmit={handleSubmit}
 					>

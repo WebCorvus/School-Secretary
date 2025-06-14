@@ -12,11 +12,11 @@ type GroupPostProps = Omit<GroupProps, "id" | "created_at">;
 
 export default function AddGroup() {
 	const router = useRouter();
-	const [itinerary, setItinerary] = useState<number>();
+	const [itinerary, setItinerary] = useState<number>(0);
 	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [year, setYear] = useState("");
 	const [level, setLevel] = useState("");
-	const [loading, setLoading] = useState(false);
+	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
 		axios.get(ITINERARY_BASE_URL).then((response) => {
@@ -26,11 +26,7 @@ export default function AddGroup() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!year || !level || !itinerary) {
-			alert("Selecione o ano, o nível e o itinerário.");
-			return;
-		}
-		setLoading(true);
+		setPosting(true);
 		const group: GroupPostProps = {
 			short_name: `${year}${level}-${
 				itineraries.find((elm) => elm.id === itinerary)?.short_name ||
@@ -48,7 +44,7 @@ export default function AddGroup() {
 		} catch (error) {
 			alert(`Erro ao cadastrar turma: ${error}`);
 		} finally {
-			setLoading(false);
+			setPosting(false);
 		}
 	};
 
@@ -58,7 +54,7 @@ export default function AddGroup() {
 			<div className="form-container ">
 				<form
 					onSubmit={handleSubmit}
-					className="form p-6 border border-[var(--divide)] rounded  w-full max-w-sm"
+					className="form flex-col p-6 border border-[var(--divide)] rounded max-w-sm"
 				>
 					<div className="mb-4">
 						<label htmlFor="year" className="block mb-2 font-bold">
@@ -116,7 +112,6 @@ export default function AddGroup() {
 								setItinerary(Number(e.target.value))
 							}
 							className="form select"
-							required
 						>
 							<option value="">Selecione o itinerário</option>
 							{itineraries.map((itinerary) => (
@@ -129,9 +124,9 @@ export default function AddGroup() {
 					<button
 						type="submit"
 						className="btn btn-common w-full"
-						disabled={loading}
+						disabled={posting}
 					>
-						{loading ? "Salvando..." : "Salvar"}
+						{posting ? "Salvando..." : "Salvar"}
 					</button>
 				</form>
 			</div>

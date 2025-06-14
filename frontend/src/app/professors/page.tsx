@@ -14,7 +14,7 @@ export default function ProfessorsPage() {
 	const [data, setData] = useState<ProfessorProps[]>([]);
 	const [subjects, setSubjects] = useState<SubjectProps[]>([]);
 	const [search, setSearch] = useState("");
-	const [searching, setSearching] = useState(false);
+	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
 		axios.get(SUBJECT_BASE_URL).then((response) => {
@@ -26,12 +26,17 @@ export default function ProfessorsPage() {
 		axios
 			.get(`${PROFESSOR_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setSearching(false));
-	}, [searching]);
+			.finally(() => setUpdating(false));
+	}, [updating]);
 
 	const handleSearch = (value: string) => {
-		setSearching(true);
+		setUpdating(true);
 		setSearch(value);
+	};
+
+	const handleDelete = (value: number) => {
+		axios.delete(`${PROFESSOR_BASE_URL}${value}/`);
+		setUpdating(true);
 	};
 
 	return (
@@ -67,6 +72,7 @@ export default function ProfessorsPage() {
 							<th>Nascimento</th>
 							<th>Endereço</th>
 							<th>Matéria</th>
+							<th>Remover</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -83,6 +89,16 @@ export default function ProfessorsPage() {
 										(subject) =>
 											subject.id === professor.subject
 									)?.full_name || "Não encontrado"}
+								</td>
+								<td>
+									<button
+										className="link link-blue"
+										onClick={() =>
+											handleDelete(professor.id)
+										}
+									>
+										Remover
+									</button>
 								</td>
 							</tr>
 						))}

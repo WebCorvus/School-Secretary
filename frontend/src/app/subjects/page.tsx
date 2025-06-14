@@ -7,17 +7,17 @@ import React, { useState, useEffect } from "react";
 
 import SearchField from "@/components/searchField";
 
-import { ItineraryProps } from "@/types/itinerary";
-import { ITINERARY_BASE_URL } from "@/config";
+import { SubjectProps } from "@/types/subject";
+import { SUBJECT_BASE_URL } from "@/config";
 
-export default function ItinerariesPage() {
+export default function SubjectsPage() {
 	const [search, setSearch] = useState("");
-	const [data, setData] = useState<ItineraryProps[]>([]);
+	const [data, setData] = useState<SubjectProps[]>([]);
 	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
 		axios
-			.get<ItineraryProps[]>(`${ITINERARY_BASE_URL}?search=${search}`)
+			.get<SubjectProps[]>(`${SUBJECT_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setUpdating(false));
 	}, [updating]);
@@ -28,7 +28,7 @@ export default function ItinerariesPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${ITINERARY_BASE_URL}${value}/`);
+		axios.delete(`${SUBJECT_BASE_URL}${value}/`);
 		setUpdating(true);
 	};
 
@@ -36,20 +36,20 @@ export default function ItinerariesPage() {
 		<div>
 			<div className="flex justify-center">
 				<div className="title-container">
-					<h1 className="title">Itinerários</h1>
+					<h1 className="title">Matérias</h1>
 				</div>
 			</div>
 
 			<div className="flex flex-row items-center justify-center">
 				<SearchField
-					placeholder="Buscar itinerário..."
+					placeholder="Buscar matéria..."
 					onSearch={handleSearch}
 				/>
 			</div>
 			<div className="flex justify-center m-3">
 				<Link
 					className="link link-common w-50 text-center"
-					href="/itineraries/add"
+					href="/subjects/add"
 				>
 					Adicionar
 				</Link>
@@ -64,16 +64,14 @@ export default function ItinerariesPage() {
 						</tr>
 					</thead>
 					<tbody>
-						{data.map((itinerary) => (
-							<tr key={itinerary.id}>
-								<td>{itinerary.short_name}</td>
-								<td>{itinerary.full_name}</td>
+						{data.map((subject) => (
+							<tr key={subject.id}>
+								<td>{subject.short_name}</td>
+								<td>{subject.full_name}</td>
 								<td>
 									<button
 										className="link link-blue"
-										onClick={() =>
-											handleDelete(itinerary.id)
-										}
+										onClick={() => handleDelete(subject.id)}
 									>
 										Remover
 									</button>

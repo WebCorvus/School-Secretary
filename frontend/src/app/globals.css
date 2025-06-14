@@ -80,7 +80,7 @@ body {
 }
 
 .header {
-	@apply p-1.5 flex flex-row;
+	@apply p-1.5 flex flex-row max-w-screen;
 }
 
 .header li {
@@ -96,7 +96,7 @@ body {
 }
 
 .form {
-	@apply flex flex-col w-[600px] max-w-screen;
+	@apply flex w-[600px] max-w-screen;
 }
 
 .form input {
@@ -108,10 +108,11 @@ body {
 }
 
 .form button {
-	@apply m-1 px-3 rounded-sm;
-	transition: background 0.2s, color 0.2s;
+	@apply m-1 px-3 py-1 rounded-sm
 
-	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
+    text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
+
+	transition: background 0.2s, color 0.2s;
 }
 
 .search-form-container {
@@ -119,7 +120,7 @@ body {
 }
 
 .search-form {
-	@apply w-full flex flex-row;
+	@apply w-full flex flex-row max-w-screen;
 }
 
 .search-form input {

@@ -15,14 +15,14 @@ export default function GroupsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<GroupProps[]>([]);
 	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
-	const [searching, setSearching] = useState(false);
+	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get<GroupProps[]>(`${GROUP_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setSearching(false));
-	}, [searching]);
+			.finally(() => setUpdating(false));
+	}, [updating]);
 
 	useEffect(() => {
 		axios
@@ -34,7 +34,12 @@ export default function GroupsPage() {
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
-		setSearching(true);
+		setUpdating(true);
+	};
+
+	const handleDelete = (value: number) => {
+		axios.delete(`${GROUP_BASE_URL}${value}/`);
+		setUpdating(true);
 	};
 
 	return (
@@ -60,33 +65,38 @@ export default function GroupsPage() {
 				</Link>
 			</div>
 			<div className="flex justify-center">
-				{searching ? (
-					<p>Carregando...</p>
-				) : (
-					<table className="m-3 table table-border">
-						<thead>
-							<tr>
-								<th>Abreviação</th>
-								<th>Nome completo</th>
-								<th>Itinerário</th>
+				<table className="m-3 table table-border">
+					<thead>
+						<tr>
+							<th>Abreviação</th>
+							<th>Nome completo</th>
+							<th>Itinerário</th>
+							<th>Remover</th>
+						</tr>
+					</thead>
+					<tbody>
+						{data.map((group) => (
+							<tr key={group.id}>
+								<td>{group.short_name}</td>
+								<td>{group.full_name}</td>
+								<td>
+									{itineraries.find(
+										(itinerary) =>
+											itinerary.id === group.itinerary
+									)?.full_name || "Não encontrado"}
+								</td>
+								<td>
+									<button
+										className="link link-blue"
+										onClick={() => handleDelete(group.id)}
+									>
+										Remover
+									</button>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{data.map((group) => (
-								<tr key={group.id}>
-									<td>{group.short_name}</td>
-									<td>{group.full_name}</td>
-									<td>
-										{itineraries.find(
-											(itinerary) =>
-												itinerary.id === group.itinerary
-										)?.full_name || "Não encontrado"}
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				)}
+						))}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	);

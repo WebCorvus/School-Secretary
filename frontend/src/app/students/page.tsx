@@ -12,18 +12,23 @@ import { STUDENT_BASE_URL } from "@/config";
 export default function Home() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<StudentProps[]>([]);
-	const [searching, setSearching] = useState(false);
+	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get<StudentProps[]>(`${STUDENT_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setSearching(false));
-	}, [searching]);
+			.finally(() => setUpdating(false));
+	}, [updating]);
 
 	const handleSearch = (value: string) => {
-		setSearching(true);
+		setUpdating(true);
 		setSearch(value);
+	};
+
+	const handleDelete = (value: number) => {
+		axios.delete(`${STUDENT_BASE_URL}${value}/`);
+		setUpdating(true);
 	};
 
 	return (
@@ -49,52 +54,57 @@ export default function Home() {
 				</Link>
 			</div>
 			<div className="flex justify-center">
-				{searching ? (
-					<p>Carregando...</p>
-				) : (
-					<table className="m-3 table table-border">
-						<thead>
-							<tr>
-								<th>Nome</th>
-								<th>Matrícula</th>
-								<th>Telefone</th>
-								<th>Email</th>
-								<th>CPF</th>
-								<th>Nascimento</th>
-								<th>Presença</th>
-								<th>Boletim</th>
+				<table className="m-3 table table-border">
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Matrícula</th>
+							<th>Telefone</th>
+							<th>Email</th>
+							<th>CPF</th>
+							<th>Nascimento</th>
+							<th>Presença</th>
+							<th>Boletim</th>
+							<th>Remover</th>
+						</tr>
+					</thead>
+					<tbody>
+						{data.map((student) => (
+							<tr key={student.id}>
+								<td>{student.full_name}</td>
+								<td>{student.registration_number}</td>
+								<td>{student.phone_number}</td>
+								<td>{student.email}</td>
+								<td>{student.cpf}</td>
+								<td>{student.birthday}</td>
+								<td>
+									<Link
+										className="link link-blue"
+										href={`${STUDENT_BASE_URL}${student.id}/download-presence/`}
+									>
+										Presença
+									</Link>
+								</td>
+								<td>
+									<Link
+										className="link link-blue"
+										href={`${STUDENT_BASE_URL}${student.id}/download-grades/`}
+									>
+										Boletim
+									</Link>
+								</td>
+								<td>
+									<button
+										className="link link-blue"
+										onClick={() => handleDelete(student.id)}
+									>
+										Remover
+									</button>
+								</td>
 							</tr>
-						</thead>
-						<tbody>
-							{data.map((register) => (
-								<tr key={register.id}>
-									<td>{register.full_name}</td>
-									<td>{register.registration_number}</td>
-									<td>{register.phone_number}</td>
-									<td>{register.email}</td>
-									<td>{register.cpf}</td>
-									<td>{register.birthday}</td>
-									<td>
-										<Link
-											className="link link-blue"
-											href={`${STUDENT_BASE_URL}${register.id}/download-presence/`}
-										>
-											Presença
-										</Link>
-									</td>
-									<td>
-										<Link
-											className="link link-blue"
-											href={`${STUDENT_BASE_URL}${register.id}/download-grades/`}
-										>
-											Boletim
-										</Link>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				)}
+						))}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	);

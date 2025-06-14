@@ -76,7 +76,7 @@ export default function Add() {
 			<div className="flex justify-center items-center">
 				<div className="form-container ">
 					<form
-						className="form"
+						className="form flex-col"
 						method="post"
 						onSubmit={handleSubmit}
 					>

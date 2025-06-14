@@ -72,7 +72,7 @@ class Group(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Itinerário da turma",
         related_name="groups",
-        blank=False,
+        blank=True,
         null=True,
     )
 

@@ -1,27 +1,27 @@
 "use client";
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ItineraryProps } from "@/types/itinerary";
-import { ITINERARY_BASE_URL } from "@/config";
+import { SubjectProps } from "@/types/subject";
+import { SUBJECT_BASE_URL } from "@/config";
 
-type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;
+type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
 
-export default function AddItinerary() {
+export default function AddSubject() {
 	const router = useRouter();
-	const [itinerary, setItinerary] = useState<ItineraryPostProps>({
+	const [subject, setSubject] = useState<SubjectPostProps>({
 		short_name: "",
 		full_name: "",
 	});
-	const [loading, setLoading] = useState(false);
+	const [posting, setPosting] = useState(false);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
 		const { name, value } = e.target;
-		setItinerary((prev) => ({
+		setSubject((prev) => ({
 			...prev,
 			[name]: value,
 		}));
@@ -29,46 +29,47 @@ export default function AddItinerary() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setLoading(true);
+		setPosting(true);
 		try {
-			await axios.post(ITINERARY_BASE_URL, itinerary);
-			alert("Itinerário cadastrado com sucesso!");
-			router.push("/itineraries");
+			await axios.post(SUBJECT_BASE_URL, subject);
+			alert("Matéria cadastrada com sucesso!");
+			router.push("/subjects");
 		} catch (error) {
-			alert(`Erro ao cadastrar itinerário: ${error}`);
+			alert(`Erro ao cadastrar matéria: ${error}`);
 		} finally {
-			setLoading(false);
+			setPosting(false);
 		}
 	};
 
 	return (
 		<div className="flex flex-col items-center justify-center m-20">
-			<h1 className="title">Adicionar Itinerário</h1>
+			<h1 className="title">Adicionar Matérias</h1>
 			<div className="form-container ">
 				<form
 					onSubmit={handleSubmit}
-					className="form flex-col p-6 border border-[var(--divide)] rounded-md w-full max-w-sm"
+					className="form flex-col p-6 border border-[var(--divide)] rounded-md w-full max-w-md"
 				>
 					<input
-						type="text"
+						type=""
 						name="short_name"
 						placeholder="Abreviação..."
-						value={itinerary.short_name}
+						value={subject.short_name}
 						onChange={handleChange}
+						className="w-10"
 					/>
 					<input
 						type="text"
 						name="full_name"
 						placeholder="Nome completo..."
-						value={itinerary.full_name}
+						value={subject.full_name}
 						onChange={handleChange}
 					/>
 					<button
 						type="submit"
 						className="btn btn-common w-full"
-						disabled={loading}
+						disabled={posting}
 					>
-						{loading ? "Salvando..." : "Salvar"}
+						{posting ? "Salvando..." : "Salvar"}
 					</button>
 				</form>
 			</div>
