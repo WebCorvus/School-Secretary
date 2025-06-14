@@ -81,7 +81,7 @@ export default function StudentsPage() {
 									<td>{student.birthday}</td>
 									<td>{student.address}</td>
 									<td>
-										{student.group_details?.full_name ||
+										{student?.group_details?.short_name ||
 											"-"}
 									</td>
 
