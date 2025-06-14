@@ -151,6 +151,10 @@ body {
 
 .table {
 	border-collapse: collapse;
+	width: 100%;
+	display: block;
+	overflow-x: auto;
+	min-width: 600px;
 }
 
 .table th,
