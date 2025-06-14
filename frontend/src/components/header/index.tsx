@@ -14,9 +14,6 @@ export default function Header() {
 					<Link href="/professors">Professores</Link>
 				</li>
 				<li>
-					<Link href="/schedule">Horários</Link>
-				</li>
-				<li>
 					<Link href="/subjects">Disciplinas</Link>
 				</li>
 				<li>
@@ -24,6 +21,9 @@ export default function Header() {
 				</li>
 				<li>
 					<Link href="/groups">Turmas</Link>
+				</li>
+				<li>
+					<Link href="/schedule">Horários</Link>
 				</li>
 				<li>
 					<Link href="/books">Livros</Link>
