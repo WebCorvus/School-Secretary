@@ -1,13 +1,11 @@
 "use client";
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { ItineraryProps } from "@/types/itinerary";
+import { ItineraryPostProps } from "@/types/itinerary";
 import { ITINERARY_BASE_URL } from "@/config";
-
-type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;
 
 export default function AddItinerary() {
 	const router = useRouter();

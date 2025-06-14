@@ -62,9 +62,9 @@ export default function Home() {
 							<th>Telefone</th>
 							<th>Email</th>
 							<th>CPF</th>
-							<th>Nascimento</th>
-							<th>Presença</th>
-							<th>Boletim</th>
+							<th>Data de Nascimento</th>
+							<th>Endereço</th>
+							<th>Turma</th>
 							<th>Remover</th>
 						</tr>
 					</thead>
@@ -77,22 +77,11 @@ export default function Home() {
 								<td>{student.email}</td>
 								<td>{student.cpf}</td>
 								<td>{student.birthday}</td>
+								<td>{student.address}</td>
 								<td>
-									<Link
-										className="link link-blue"
-										href={`${STUDENT_BASE_URL}${student.id}/download-presence/`}
-									>
-										Presença
-									</Link>
+									{student.group_details?.full_name || "-"}
 								</td>
-								<td>
-									<Link
-										className="link link-blue"
-										href={`${STUDENT_BASE_URL}${student.id}/download-grades/`}
-									>
-										Boletim
-									</Link>
-								</td>
+
 								<td>
 									<button
 										className="link link-blue"

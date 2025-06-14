@@ -57,32 +57,32 @@ class Group(models.Model):
         max_length=200,
         unique=True,
         blank=False,
-        null=True,
+        null=False,
     )
 
     short_name = models.CharField(
         max_length=200,
         unique=True,
         blank=False,
-        null=True,
+        null=False,
     )
 
     itinerary = models.ForeignKey(
         "school.Itinerary",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Itinerário da turma",
-        related_name="groups",
+        related_name="group",
         blank=True,
         null=True,
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=datetime.now,
         editable=False,
     )
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
 
 class Professor(models.Model):
@@ -107,7 +107,7 @@ class Professor(models.Model):
     address = models.CharField(max_length=100, validators=[cep_validator])
     subject = models.ForeignKey(
         "school.Subject",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Professor's Subject",
         related_name="professor",
         blank=False,
@@ -126,7 +126,7 @@ class Professor(models.Model):
 class SchoolRecord(models.Model):
     student = models.ForeignKey(
         "students.Student",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Student's name",
         related_name="school_record",
         blank=False,
@@ -152,7 +152,7 @@ class Book(models.Model):
     )
     tenant = models.ForeignKey(
         "students.Student",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Tenant's name",
         related_name="alugated_book",
         blank=False,
@@ -180,7 +180,7 @@ class Book(models.Model):
 class Schedule(models.Model):
     professor = models.ForeignKey(
         Professor,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Professor's name",
         related_name="schedule",
         blank=False,

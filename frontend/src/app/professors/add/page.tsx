@@ -4,12 +4,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { ProfessorProps } from "@/types/professor";
+import { ProfessorPostProps } from "@/types/professor";
 import { SubjectProps } from "@/types/subject";
 
 import { SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
-
-type ProfessorPostProps = Omit<ProfessorProps, "id" | "created_at">;
 
 export default function AddProfessor() {
 	const router = useRouter();

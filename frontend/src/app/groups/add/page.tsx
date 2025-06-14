@@ -5,10 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { ItineraryProps } from "@/types/itinerary";
-import { GroupProps } from "@/types/group";
+import { GroupPostProps } from "@/types/group";
 import { GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
-
-type GroupPostProps = Omit<GroupProps, "id" | "created_at">;
 
 export default function AddGroup() {
 	const router = useRouter();

@@ -4,10 +4,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { SubjectProps } from "@/types/subject";
+import { SubjectPostProps } from "@/types/subject";
 import { SUBJECT_BASE_URL } from "@/config";
-
-type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
 
 export default function AddSubject() {
 	const router = useRouter();

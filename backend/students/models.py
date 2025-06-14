@@ -37,17 +37,8 @@ class Student(models.Model):
     address = models.CharField(max_length=100, validators=[cep_validator])
     group = models.ForeignKey(
         "school.Group",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Student's group",
-        related_name="student",
-        blank=False,
-        null=True,
-    )
-
-    itinerary = models.ForeignKey(
-        "school.Itinerary",
-        on_delete=models.CASCADE,
-        verbose_name="Student's itinerary",
         related_name="student",
         blank=False,
         null=True,
@@ -97,7 +88,7 @@ class Guardian(models.Model):
     )
     student = models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Guardian's student",
         related_name="guardian",
         blank=False,
@@ -130,7 +121,7 @@ class Guardian(models.Model):
 class Contract(models.Model):
     guardian = models.ForeignKey(
         Guardian,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Guardian's name",
         related_name="contract",
         blank=False,
@@ -139,7 +130,7 @@ class Contract(models.Model):
 
     student = models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Student's name",
         related_name="contract",
         blank=False,
@@ -167,7 +158,7 @@ class Contract(models.Model):
 class Grade(models.Model):
     student = models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Student's name",
         related_name="grade",
         blank=False,
@@ -176,7 +167,7 @@ class Grade(models.Model):
 
     subject = models.ForeignKey(
         "school.Subject",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Grade's Subject",
         related_name="grade",
         blank=False,
@@ -212,7 +203,7 @@ class Grade(models.Model):
 class Presence(models.Model):
     student = models.ForeignKey(
         Student,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name="Student's name",
         related_name="presence",
         blank=False,

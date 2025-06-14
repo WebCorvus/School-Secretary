@@ -1,3 +1,5 @@
+import { GroupProps } from "./group";
+
 export interface StudentProps {
 	id: number;
 	full_name: string;
@@ -8,6 +10,11 @@ export interface StudentProps {
 	birthday: string;
 	address: string;
 	group: number;
-	itinerary: number;
+	group_details: GroupProps | undefined;
 	created_at: string;
 }
+
+export type StudentPostProps = Omit<
+	StudentProps,
+	"id" | "created_at" | "group_details"
+>;

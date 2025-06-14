@@ -3,13 +3,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import { StudentProps } from "@/types/student";
+import { StudentPostProps } from "@/types/student";
 import { GroupProps } from "@/types/group";
 import { ItineraryProps } from "@/types/itinerary";
 
 import { STUDENT_BASE_URL, GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
-
-type StudentPostProps = Omit<StudentProps, "id" | "created_at">;
 
 export default function Add() {
 	const [groups, setGroups] = useState<GroupProps[]>([]);

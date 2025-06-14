@@ -4,3 +4,5 @@ export interface ItineraryProps {
 	full_name: string;
 	created_at: string;
 }
+
+export type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;

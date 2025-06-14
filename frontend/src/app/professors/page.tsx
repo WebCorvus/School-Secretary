@@ -7,20 +7,12 @@ import axios from "axios";
 import SearchField from "@/components/searchField";
 
 import { ProfessorProps } from "@/types/professor";
-import { SubjectProps } from "@/types/subject";
-import { PROFESSOR_BASE_URL, SUBJECT_BASE_URL } from "@/config";
+import { PROFESSOR_BASE_URL } from "@/config";
 
 export default function ProfessorsPage() {
 	const [data, setData] = useState<ProfessorProps[]>([]);
-	const [subjects, setSubjects] = useState<SubjectProps[]>([]);
 	const [search, setSearch] = useState("");
 	const [updating, setUpdating] = useState(false);
-
-	useEffect(() => {
-		axios.get(SUBJECT_BASE_URL).then((response) => {
-			setSubjects(response.data);
-		});
-	}, []);
 
 	useEffect(() => {
 		axios
@@ -69,7 +61,7 @@ export default function ProfessorsPage() {
 							<th>Telefone</th>
 							<th>Email</th>
 							<th>CPF</th>
-							<th>Nascimento</th>
+							<th>Data de Nascimento</th>
 							<th>Endereço</th>
 							<th>Matéria</th>
 							<th>Remover</th>
@@ -85,10 +77,8 @@ export default function ProfessorsPage() {
 								<td>{professor.birthday}</td>
 								<td>{professor.address}</td>
 								<td>
-									{subjects.find(
-										(subject) =>
-											subject.id === professor.subject
-									)?.full_name || "Não encontrado"}
+									{professor.subject_details?.full_name ||
+										"-"}
 								</td>
 								<td>
 									<button

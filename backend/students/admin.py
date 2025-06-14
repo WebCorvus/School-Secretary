@@ -22,7 +22,6 @@ class StudentsAdmin(admin.ModelAdmin):
         "cpf",
         "birthday",
         "group",
-        "itinerary",
         "download_presence_pdf",
         "download_grades_pdf",
     )

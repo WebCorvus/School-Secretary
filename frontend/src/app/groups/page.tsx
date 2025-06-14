@@ -8,13 +8,11 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/searchField";
 
 import { GroupProps } from "@/types/group";
-import { ItineraryProps } from "@/types/itinerary";
-import { GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
+import { GROUP_BASE_URL } from "@/config";
 
 export default function GroupsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<GroupProps[]>([]);
-	const [itineraries, setItineraries] = useState<ItineraryProps[]>([]);
 	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
@@ -23,14 +21,6 @@ export default function GroupsPage() {
 			.then((response) => setData(response.data))
 			.finally(() => setUpdating(false));
 	}, [updating]);
-
-	useEffect(() => {
-		axios
-			.get<ItineraryProps[]>(`${ITINERARY_BASE_URL}?search=${search}`)
-			.then((response) => {
-				setItineraries(response.data);
-			});
-	}, []);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
@@ -80,10 +70,7 @@ export default function GroupsPage() {
 								<td>{group.short_name}</td>
 								<td>{group.full_name}</td>
 								<td>
-									{itineraries.find(
-										(itinerary) =>
-											itinerary.id === group.itinerary
-									)?.full_name || "Não encontrado"}
+									{group.itinerary_details?.full_name || "-"}
 								</td>
 								<td>
 									<button

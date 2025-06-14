@@ -4,3 +4,5 @@ export interface SubjectProps {
 	short_name: string;
 	created_at: string;
 }
+
+export type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
