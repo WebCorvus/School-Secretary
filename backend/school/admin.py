@@ -81,7 +81,6 @@ class ProfessorsAdmin(admin.ModelAdmin):
         "birthday",
         "address",
         "subject",
-        "group",
     )
     list_display_links = (
         "full_name",

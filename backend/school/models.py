@@ -113,14 +113,6 @@ class Professor(models.Model):
         blank=False,
         null=True,
     )
-    group = models.ForeignKey(
-        "school.Group",
-        on_delete=models.CASCADE,
-        verbose_name="Professor's Group",
-        related_name="professor",
-        blank=False,
-        null=True,
-    )
 
     created_at = models.DateTimeField(
         default=datetime.now(),

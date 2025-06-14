@@ -4,17 +4,15 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { GroupProps } from "@/types/group";
 import { ProfessorProps } from "@/types/professor";
 import { SubjectProps } from "@/types/subject";
 
-import { GROUP_BASE_URL, SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
+import { SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
 
 type ProfessorPostProps = Omit<ProfessorProps, "id" | "created_at">;
 
 export default function AddProfessor() {
 	const router = useRouter();
-	const [groups, setGroups] = useState<GroupProps[]>([]);
 	const [subjects, setSubjects] = useState<SubjectProps[]>([]);
 	const [professor, setProfessor] = useState<ProfessorPostProps>({
 		full_name: "",
@@ -24,11 +22,9 @@ export default function AddProfessor() {
 		birthday: "",
 		address: "",
 		subject: 0,
-		group: 0,
 	});
 
 	useEffect(() => {
-		axios.get(GROUP_BASE_URL).then((response) => setGroups(response.data));
 		axios
 			.get(SUBJECT_BASE_URL)
 			.then((response) => setSubjects(response.data));
@@ -57,7 +53,6 @@ export default function AddProfessor() {
 				birthday: "",
 				address: "",
 				subject: 0,
-				group: 0,
 			});
 			router.push("/professors");
 		} catch (error) {
@@ -121,18 +116,6 @@ export default function AddProfessor() {
 							value={professor.address}
 							onChange={handleChange}
 						/>
-						<select
-							name="group"
-							value={professor.group}
-							onChange={handleChange}
-						>
-							<option value="">Selecione a turma</option>
-							{groups.map((group) => (
-								<option key={group.id} value={group.id}>
-									{group.full_name}
-								</option>
-							))}
-						</select>
 						<select
 							name="subject"
 							value={professor.subject}

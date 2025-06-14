@@ -7,6 +7,5 @@ export interface ProfessorProps {
 	birthday: string;
 	address: string;
 	subject: number;
-	group: number;
 	created_at: string;
 }
