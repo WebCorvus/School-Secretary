@@ -53,47 +53,49 @@ export default function ProfessorsPage() {
 					Adicionar
 				</Link>
 			</div>
-			<div className="flex justify-center">
-				<table className="m-3 table table-border">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Telefone</th>
-							<th>Email</th>
-							<th>CPF</th>
-							<th>Data de Nascimento</th>
-							<th>Endereço</th>
-							<th>Matéria</th>
-							<th>Remover</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((professor) => (
-							<tr key={professor.id}>
-								<td>{professor.full_name}</td>
-								<td>{professor.phone_number}</td>
-								<td>{professor.email}</td>
-								<td>{professor.cpf}</td>
-								<td>{professor.birthday}</td>
-								<td>{professor.address}</td>
-								<td>
-									{professor.subject_details?.full_name ||
-										"-"}
-								</td>
-								<td>
-									<button
-										className="link link-blue"
-										onClick={() =>
-											handleDelete(professor.id)
-										}
-									>
-										Remover
-									</button>
-								</td>
+			<div className="flex justify-center items-center">
+				<div className="table-container">
+					<table className="m-3 table table-border">
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Telefone</th>
+								<th>Email</th>
+								<th>CPF</th>
+								<th>Data de Nascimento</th>
+								<th>Endereço</th>
+								<th>Matéria</th>
+								<th>Remover</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{data.map((professor) => (
+								<tr key={professor.id}>
+									<td>{professor.full_name}</td>
+									<td>{professor.phone_number}</td>
+									<td>{professor.email}</td>
+									<td>{professor.cpf}</td>
+									<td>{professor.birthday}</td>
+									<td>{professor.address}</td>
+									<td>
+										{professor.subject_details?.full_name ||
+											"-"}
+									</td>
+									<td>
+										<button
+											className="link link-blue"
+											onClick={() =>
+												handleDelete(professor.id)
+											}
+										>
+											Remover
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);

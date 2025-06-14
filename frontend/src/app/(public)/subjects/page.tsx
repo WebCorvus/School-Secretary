@@ -55,31 +55,35 @@ export default function SubjectsPage() {
 				</Link>
 			</div>
 			<div className="flex justify-center">
-				<table className="m-3 table table-border">
-					<thead>
-						<tr>
-							<th>Abreviação</th>
-							<th>Nome completo</th>
-							<th>Remover</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((subject) => (
-							<tr key={subject.id}>
-								<td>{subject.short_name}</td>
-								<td>{subject.full_name}</td>
-								<td>
-									<button
-										className="link link-blue"
-										onClick={() => handleDelete(subject.id)}
-									>
-										Remover
-									</button>
-								</td>
+				<div className="table-container">
+					<table className="m-3 table table-border">
+						<thead>
+							<tr>
+								<th>Abreviação</th>
+								<th>Nome completo</th>
+								<th>Remover</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{data.map((subject) => (
+								<tr key={subject.id}>
+									<td>{subject.short_name}</td>
+									<td>{subject.full_name}</td>
+									<td>
+										<button
+											className="link link-blue"
+											onClick={() =>
+												handleDelete(subject.id)
+											}
+										>
+											Remover
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);

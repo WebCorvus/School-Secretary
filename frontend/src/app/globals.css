@@ -149,12 +149,12 @@ body {
 	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 
+.table-container {
+	@apply container flex items-center justify-center w-full;
+}
+
 .table {
-	border-collapse: collapse;
-	width: 100%;
-	display: block;
-	overflow-x: auto;
-	min-width: 600px;
+	@apply block overflow-x-auto;
 }
 
 .table th,
@@ -165,5 +165,6 @@ body {
 
 .table-border th,
 .table-border td {
+	@apply border-collapse;
 	border: 1px solid var(--divide);
 }

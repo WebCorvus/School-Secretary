@@ -54,36 +54,41 @@ export default function GroupsPage() {
 					Adicionar
 				</Link>
 			</div>
-			<div className="flex justify-center">
-				<table className="m-3 table table-border">
-					<thead>
-						<tr>
-							<th>Abreviação</th>
-							<th>Nome completo</th>
-							<th>Itinerário</th>
-							<th>Remover</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((group) => (
-							<tr key={group.id}>
-								<td>{group.short_name}</td>
-								<td>{group.full_name}</td>
-								<td>
-									{group.itinerary_details?.full_name || "-"}
-								</td>
-								<td>
-									<button
-										className="link link-blue"
-										onClick={() => handleDelete(group.id)}
-									>
-										Remover
-									</button>
-								</td>
+			<div className="flex justify-center items-center">
+				<div className="table-container">
+					<table className="m-3 table table-border">
+						<thead>
+							<tr>
+								<th>Abreviação</th>
+								<th>Nome completo</th>
+								<th>Itinerário</th>
+								<th>Remover</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{data.map((group) => (
+								<tr key={group.id}>
+									<td>{group.short_name}</td>
+									<td>{group.full_name}</td>
+									<td>
+										{group.itinerary_details?.full_name ||
+											"-"}
+									</td>
+									<td>
+										<button
+											className="link link-blue"
+											onClick={() =>
+												handleDelete(group.id)
+											}
+										>
+											Remover
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);

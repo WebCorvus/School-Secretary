@@ -52,65 +52,70 @@ export default function StudentsPage() {
 					Adicionar
 				</Link>
 			</div>
-			<div className="flex justify-center">
-				<table className="m-3 table table-border">
-					<thead>
-						<tr>
-							<th>Nome</th>
-							<th>Matrícula</th>
-							<th>Telefone</th>
-							<th>Email</th>
-							<th>CPF</th>
-							<th>Data de Nascimento</th>
-							<th>Endereço</th>
-							<th>Turma</th>
-							<th>Notas</th>
-							<th>Presença</th>
-							<th>Remover</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((student) => (
-							<tr key={student.id}>
-								<td>{student.full_name}</td>
-								<td>{student.registration_number}</td>
-								<td>{student.phone_number}</td>
-								<td>{student.email}</td>
-								<td>{student.cpf}</td>
-								<td>{student.birthday}</td>
-								<td>{student.address}</td>
-								<td>
-									{student.group_details?.full_name || "-"}
-								</td>
-
-								<td>
-									<Link
-										href={`${STUDENT_BASE_URL}${student.id}/download-grades`}
-										className="link link-blue"
-									>
-										Notas
-									</Link>
-								</td>
-								<td>
-									<Link
-										href={`${STUDENT_BASE_URL}${student.id}/download-presence`}
-										className="link link-blue"
-									>
-										Presença
-									</Link>
-								</td>
-								<td>
-									<button
-										className="link link-blue"
-										onClick={() => handleDelete(student.id)}
-									>
-										Remover
-									</button>
-								</td>
+			<div className="flex justify-center items-center">
+				<div className="table-container">
+					<table className="m-3 table table-border">
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Matrícula</th>
+								<th>Telefone</th>
+								<th>Email</th>
+								<th>CPF</th>
+								<th>Data de Nascimento</th>
+								<th>Endereço</th>
+								<th>Turma</th>
+								<th>Notas</th>
+								<th>Presença</th>
+								<th>Remover</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{data.map((student) => (
+								<tr key={student.id}>
+									<td>{student.full_name}</td>
+									<td>{student.registration_number}</td>
+									<td>{student.phone_number}</td>
+									<td>{student.email}</td>
+									<td>{student.cpf}</td>
+									<td>{student.birthday}</td>
+									<td>{student.address}</td>
+									<td>
+										{student.group_details?.full_name ||
+											"-"}
+									</td>
+
+									<td>
+										<Link
+											href={`${STUDENT_BASE_URL}${student.id}/download-grades`}
+											className="link link-blue"
+										>
+											Notas
+										</Link>
+									</td>
+									<td>
+										<Link
+											href={`${STUDENT_BASE_URL}${student.id}/download-presence`}
+											className="link link-blue"
+										>
+											Presença
+										</Link>
+									</td>
+									<td>
+										<button
+											className="link link-blue"
+											onClick={() =>
+												handleDelete(student.id)
+											}
+										>
+											Remover
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);

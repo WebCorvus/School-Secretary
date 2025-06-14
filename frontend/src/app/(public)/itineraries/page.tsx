@@ -54,34 +54,38 @@ export default function ItinerariesPage() {
 					Adicionar
 				</Link>
 			</div>
-			<div className="flex justify-center">
-				<table className="m-3 table table-border">
-					<thead>
-						<tr>
-							<th>Abreviação</th>
-							<th>Nome completo</th>
-							<th>Remover</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((itinerary) => (
-							<tr key={itinerary.id}>
-								<td>{itinerary.short_name}</td>
-								<td>{itinerary.full_name}</td>
-								<td>
-									<button
-										className="link link-blue"
-										onClick={() =>
-											handleDelete(itinerary.id)
-										}
-									>
-										Remover
-									</button>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+			<div>
+				<div className="flex justify-center items-center">
+					<div className="table-container">
+						<table className="m-3 table table-border">
+							<thead>
+								<tr>
+									<th>Abreviação</th>
+									<th>Nome completo</th>
+									<th>Remover</th>
+								</tr>
+							</thead>
+							<tbody>
+								{data.map((itinerary) => (
+									<tr key={itinerary.id}>
+										<td>{itinerary.short_name}</td>
+										<td>{itinerary.full_name}</td>
+										<td>
+											<button
+												className="link link-blue"
+												onClick={() =>
+													handleDelete(itinerary.id)
+												}
+											>
+												Remover
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
