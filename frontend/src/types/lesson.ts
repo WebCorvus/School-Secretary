@@ -1,7 +1,7 @@
 import { ProfessorProps } from "./professor";
 import { SubjectProps } from "./subject";
 
-export interface Lesson {
+export interface LessonProps {
 	id: number;
 	professor: number;
 	professor_details: ProfessorProps;
@@ -11,3 +11,8 @@ export interface Lesson {
 	day: number;
 	created_at: string;
 }
+
+type LessonPostProps = Omit<
+	LessonProps,
+	"id" | "professor_details" | "subject_details" | "created_at"
+>;
