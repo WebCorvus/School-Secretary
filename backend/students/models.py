@@ -176,3 +176,6 @@ class Presence(models.Model):
         default=datetime.now(),
         editable=False,
     )
+
+    def __str__(self):
+        return f"Presence_{self.student}"
