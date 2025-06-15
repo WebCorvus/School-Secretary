@@ -1,7 +1,6 @@
 from django.db import models
 from datetime import datetime
 
-from utils.pdfgen import pdfgen
 from utils.validators import phone_validator, cep_validator, cpf_validator
 from utils.subject_utils import get_subject_names
 
@@ -43,35 +42,6 @@ class Student(models.Model):
         blank=False,
         null=True,
     )
-
-    def generate_presence_pdf(self):
-        presence_records = Presence.objects.filter(student=self)
-        return pdfgen(
-            "presence.html",
-            {
-                "student": self,
-                "data": presence_records,
-            },
-            f"Presence_{self.full_name}.pdf",
-        )
-
-    def generate_grades_pdf(self):
-        subjects = get_subject_names()
-        data = {}
-        for subject in subjects:
-            data[subject] = Grade.objects.filter(
-                student=self,
-                subject__full_name=subject,
-            )
-
-        return pdfgen(
-            "grades.html",
-            {
-                "student": self,
-                "data": data,
-            },
-            f"Grades_{self.full_name}.pdf",
-        )
 
     created_at = models.DateTimeField(
         default=datetime.now(),
@@ -136,15 +106,6 @@ class Contract(models.Model):
         blank=False,
         null=True,
     )
-
-    def generate_contract_pdf(self):
-        return pdfgen(
-            "contract.html",
-            {
-                "data": self,
-            },
-            f"Contract_{self.id}_{self.guardian.full_name}-{self.student.full_name}.pdf",
-        )
 
     created_at = models.DateTimeField(
         default=datetime.now(),

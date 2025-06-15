@@ -9,6 +9,8 @@ from .serializers import (
     ContractSerializer,
     PresenceSerializer,
 )
+from utils.pdfgen import pdfgen
+from utils.subject_utils import get_subject_names
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -26,12 +28,34 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download-grades")
     def download_grades_pdf(self, request, pk=None):
         student = self.get_object()
-        return student.generate_grades_pdf()
+        subjects = get_subject_names()
+        data = {}
+        for subject in subjects:
+            data[subject] = Grade.objects.filter(
+                student=student,
+                subject__full_name=subject,
+            )
+        return pdfgen(
+            "grades.html",
+            {
+                "student": student,
+                "data": data,
+            },
+            f"Grades_{student.full_name}.pdf",
+        )
 
     @action(detail=True, methods=["get"], url_path="download-presence")
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
-        return student.generate_presence_pdf()
+        presence_records = Presence.objects.filter(student=student)
+        return pdfgen(
+            "presence.html",
+            {
+                "student": student,
+                "data": presence_records,
+            },
+            f"Presence_{student.full_name}.pdf",
+        )
 
 
 class GradeViewSet(viewsets.ModelViewSet):
@@ -68,6 +92,17 @@ class ContractViewSet(viewsets.ModelViewSet):
         "guardian__full_name",
         "student__full_name",
     ]
+
+    @action(detail=True, methods=["get"], url_path="download-contract")
+    def download_contract_pdf(self, request, pk=None):
+        contract = self.get_object()
+        return pdfgen(
+            "contract.html",
+            {
+                "data": contract,
+            },
+            f"Contract_{contract.id}_{contract.guardian.full_name}-{contract.student.full_name}.pdf",
+        )
 
 
 class PresenceViewSet(viewsets.ModelViewSet):

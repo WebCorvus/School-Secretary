@@ -1,11 +1,11 @@
 from django.db import models
 from datetime import datetime
 
-from utils.validators import cep_validator, cpf_validator, phone_validator
 
-# Choices para Lesson
-LESSON_TIME_CHOICES = [(i, str(i)) for i in range(1, 7)]
-LESSON_DAY_CHOICES = [
+from utils.validators import cep_validator, cpf_validator, phone_validator
+from utils.day_util import get_day_name
+
+DAY_CHOICES = [
     (0, "Domingo"),
     (1, "Segunda"),
     (2, "Terça"),
@@ -14,6 +14,8 @@ LESSON_DAY_CHOICES = [
     (5, "Sexta"),
     (6, "Sábado"),
 ]
+
+LESSONS_PER_DAY = 6
 
 
 class Subject(models.Model):
@@ -188,8 +190,17 @@ class Book(models.Model):
 
 
 class Lesson(models.Model):
+    group = models.ForeignKey(
+        "school.Group",
+        on_delete=models.SET_NULL,
+        verbose_name="Turma",
+        related_name="lessons",
+        null=True,
+        blank=False,
+    )
+
     professor = models.ForeignKey(
-        Professor,
+        "school.Professor",
         on_delete=models.SET_NULL,
         verbose_name="Professor",
         related_name="lessons",
@@ -197,7 +208,7 @@ class Lesson(models.Model):
         blank=False,
     )
     subject = models.ForeignKey(
-        Subject,
+        "school.Subject",
         on_delete=models.SET_NULL,
         verbose_name="Disciplina",
         related_name="lessons",
@@ -205,13 +216,12 @@ class Lesson(models.Model):
         blank=False,
     )
     time = models.IntegerField(
-        verbose_name="Horário (1 a 6)",
-        choices=LESSON_TIME_CHOICES,
+        verbose_name=f"Horários (1 a {LESSONS_PER_DAY})",
         null=True,
     )
     day = models.IntegerField(
-        verbose_name="Dia da semana (0=Segunda, 6=Domingo)",
-        choices=LESSON_DAY_CHOICES,
+        verbose_name="Dia da semana (0=Domingo, 6=Sábado)",
+        choices=DAY_CHOICES,
         null=True,
     )
     created_at = models.DateTimeField(

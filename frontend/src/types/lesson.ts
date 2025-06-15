@@ -1,8 +1,11 @@
+import { GroupProps } from "./group";
 import { ProfessorProps } from "./professor";
 import { SubjectProps } from "./subject";
 
 export interface LessonProps {
 	id: number;
+	group: number;
+	group_details: GroupProps;
 	professor: number;
 	professor_details: ProfessorProps;
 	subject: number;

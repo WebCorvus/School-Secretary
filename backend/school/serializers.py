@@ -55,6 +55,7 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
+    group_details = GroupSerializer(source="group", read_only=True)
     professor_details = ProfessorSerializer(source="professor", read_only=True)
     subject_details = SubjectSerializer(source="subject", read_only=True)
 

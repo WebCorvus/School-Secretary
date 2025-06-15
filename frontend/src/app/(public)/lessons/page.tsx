@@ -84,32 +84,20 @@ export default function LessonsPage() {
 							<thead>
 								<tr>
 									<th>Dia</th>
-									<th>Horário</th>
-									<th>Matéria</th>
-									<th>Professor</th>
-									<th>Remover</th>
+									<th>1° Horário</th>
+									<th>2° Horário</th>
+									<th>3° Horário</th>
+									<th>4° Horário</th>
+									<th>5° Horário</th>
+									<th>6° Horário</th>
 								</tr>
 							</thead>
 							<tbody>
 								{data.map((lesson) => (
 									<tr key={lesson.id}>
 										<td>{renderDay(lesson.day)}</td>
-										<td>{renderTime(lesson.time)}</td>
 										<td>
-											{lesson.subject_details.full_name}
-										</td>
-										<td>
-											{lesson.professor_details.full_name}
-										</td>
-										<td>
-											<button
-												className="link link-blue"
-												onClick={() =>
-													handleDelete(lesson.id)
-												}
-											>
-												Remover
-											</button>
+											{lesson.subject_details.short_name}
 										</td>
 									</tr>
 								))}

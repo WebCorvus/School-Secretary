@@ -1,4 +1,7 @@
 from rest_framework import viewsets, filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 
 from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson
 from .serializers import (
@@ -51,6 +54,31 @@ class GroupViewSet(viewsets.ModelViewSet):
         "full_name",
         "short_name",
     ]
+
+    @action(detail=True, methods=["get"], url_path="get-lessons")
+    def get_lessons(self, request, pk=None):
+        from .serializers import LessonSerializer
+        from utils.day_util import get_day_name
+        from .models import LESSONS_PER_DAY, Lesson
+
+        group = self.get_object()
+        raw_data = Lesson.objects.filter(group=group)
+        formated_data = []
+        for day in range(7):
+            lessons = []
+            for time in range(LESSONS_PER_DAY):
+                lesson = raw_data.filter(day=day, time=time).first()
+                if lesson:
+                    lessons.append(LessonSerializer(lesson).data)
+                else:
+                    lessons.append(None)
+            formated_data.append(
+                {
+                    "day": get_day_name(day),
+                    "lessons": lessons,
+                }
+            )
+        return Response(formated_data)
 
 
 class SchoolRecordViewSet(viewsets.ModelViewSet):
