@@ -4,27 +4,42 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import SearchField from "@/components/searchField";
+import SelectObject from "@/components/SelectObject";
 import { GROUP_BASE_URL } from "@/config";
-import { DailyLessonsView } from "@/types/group";
+import { DailyLessonsView, GroupProps } from "@/types/group";
 
 export default function LessonsPage() {
 	const [data, setData] = useState<DailyLessonsView[]>([]);
-	const [search, setSearch] = useState<string>("");
+	const [groups, setGroups] = useState<GroupProps[]>();
+	const [selectedGroup, setSelectedGroup] = useState<number>();
 
 	useEffect(() => {
+		if (!selectedGroup) return;
 		axios
-			.get<DailyLessonsView[]>(`${GROUP_BASE_URL}14/get-lessons/`)
+			.get<DailyLessonsView[]>(
+				`${GROUP_BASE_URL}${selectedGroup}/get-lessons/`
+			)
 			.then((response) => {
 				setData(response.data);
 			})
 			.catch((error) => {
 				alert(`Erro ao carregar aulas: ${error}`);
 			});
-	}, [search]);
+	}, [selectedGroup]);
 
-	const handleSearch = (value: string) => {
-		setSearch(value);
+	useEffect(() => {
+		axios
+			.get(GROUP_BASE_URL)
+			.then((response) => {
+				setGroups(response.data);
+			})
+			.catch((error) => {
+				alert(`Erro ao carregar grupos: ${error}`);
+			});
+	}, []);
+
+	const handleSelectedGroup = (value: number | undefined) => {
+		setSelectedGroup(value);
 	};
 
 	return (
@@ -35,12 +50,10 @@ export default function LessonsPage() {
 				</div>
 			</div>
 
-			<div className="flex flex-row items-center justify-center">
-				<SearchField
-					placeholder="Buscar turma..."
-					onSearch={handleSearch}
-				/>
+			<div className="w-full flex justify-center">
+				<SelectObject options={groups} onSelect={handleSelectedGroup} />
 			</div>
+
 			<div className="flex justify-center m-3">
 				<Link
 					className="link link-common w-50 text-center"
@@ -68,8 +81,8 @@ export default function LessonsPage() {
 								{data.map(({ day, lessons }) => (
 									<tr key={day}>
 										<td>{day}</td>
-										{lessons.map((lesson) => (
-											<td>
+										{lessons.map((lesson, idx) => (
+											<td key={idx}>
 												{lesson?.subject_details
 													?.short_name || "-"}
 											</td>
