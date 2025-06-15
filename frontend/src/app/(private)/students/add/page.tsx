@@ -131,7 +131,7 @@ export default function AddStudents() {
 							<option value="">Selecione a turma</option>
 							{groups.map((group) => (
 								<option key={group.id} value={group.id}>
-									{group.full_name}
+									{group.short_name}
 								</option>
 							))}
 						</select>
