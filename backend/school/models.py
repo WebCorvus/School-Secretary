@@ -37,7 +37,7 @@ class Subject(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
 
 class Itinerary(models.Model):
@@ -68,15 +68,13 @@ class Group(models.Model):
     full_name = models.CharField(
         max_length=200,
         unique=True,
-        blank=False,
-        null=False,
+        null=True,
     )
 
     short_name = models.CharField(
         max_length=200,
         unique=True,
-        blank=False,
-        null=False,
+        null=True,
     )
 
     itinerary = models.ForeignKey(
@@ -209,10 +207,12 @@ class Lesson(models.Model):
     time = models.IntegerField(
         verbose_name="Horário (1 a 6)",
         choices=LESSON_TIME_CHOICES,
+        null=True,
     )
     day = models.IntegerField(
         verbose_name="Dia da semana (0=Segunda, 6=Domingo)",
         choices=LESSON_DAY_CHOICES,
+        null=True,
     )
     created_at = models.DateTimeField(
         default=datetime.now(),
