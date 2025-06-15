@@ -80,11 +80,15 @@ body {
 }
 
 .header {
-	@apply p-1.5 flex flex-row w-full max-w-screen;
+	@apply p-1.5 flex flex-row;
 }
 
 .header li {
-	@apply min-w-24 p-1 text-center text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
+	@apply flex min-w-24 text-center text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
+}
+
+.header a {
+	@apply p-1 w-full h-full;
 }
 
 .form-container {
