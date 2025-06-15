@@ -21,6 +21,7 @@ class ProfessorViewSet(viewsets.ModelViewSet):
         "phone_number",
         "email",
         "cpf",
+        "subject__full_name",
     ]
 
 
