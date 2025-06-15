@@ -61,7 +61,7 @@ export default async function Home() {
 					Itinerários Formativos
 				</Link>
 				<Link
-					href="/schedule"
+					href="/lessons"
 					className="btn btn-common text-2xl text-center"
 				>
 					Horários de Aula

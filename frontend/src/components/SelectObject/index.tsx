@@ -17,10 +17,10 @@ export default function SelectObject({
 		onSelect(Number(e.target.value));
 	};
 	return (
-		<div className="form-container ">
-			<form className="form flex-row">
+		<div className="form-container w-full flex justify-center">
+			<form className="form w-full flex justify-center">
 				<select
-					className="max-w-96"
+					className="max-w-56"
 					value={selected}
 					onChange={handleChange}
 					required
@@ -34,7 +34,6 @@ export default function SelectObject({
 						</option>
 					))}
 				</select>
-				<button type="submit">Enviar</button>
 			</form>
 		</div>
 	);

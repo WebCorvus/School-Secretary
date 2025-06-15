@@ -14,7 +14,7 @@ from utils.subject_utils import get_subject_names
 
 
 class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.all()
+    queryset = Student.objects.all().order_by("full_name")
     serializer_class = StudentSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
@@ -23,6 +23,13 @@ class StudentViewSet(viewsets.ModelViewSet):
         "phone_number",
         "email",
         "cpf",
+        "birthday",
+        "address",
+        "group__full_name",
+        "group__short_name",
+        "group__itinerary__full_name",
+        "group__itinerary__short_name",
+        "created_at",
     ]
 
     @action(detail=True, methods=["get"], url_path="download-grades")
@@ -59,38 +66,50 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 
 class GradeViewSet(viewsets.ModelViewSet):
-    queryset = Grade.objects.all()
+    queryset = Grade.objects.all().order_by(
+        "student__full_name", "subject__full_name", "year", "bimester"
+    )
     serializer_class = GradeSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",
-        "subject__name",
+        "student__registration_number",
+        "subject__full_name",
+        "subject__short_name",
         "year",
         "bimester",
         "value",
+        "created_at",
     ]
 
 
 class GuardianViewSet(viewsets.ModelViewSet):
-    queryset = Guardian.objects.all()
+    queryset = Guardian.objects.all().order_by("full_name")
     serializer_class = GuardianSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
         "student__full_name",
+        "student__registration_number",
         "phone_number",
         "cpf",
         "email",
+        "birthday",
+        "address",
+        "created_at",
     ]
 
 
 class ContractViewSet(viewsets.ModelViewSet):
-    queryset = Contract.objects.all()
+    queryset = Contract.objects.all().order_by("-created_at")
     serializer_class = ContractSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "guardian__full_name",
+        "guardian__cpf",
         "student__full_name",
+        "student__registration_number",
+        "created_at",
     ]
 
     @action(detail=True, methods=["get"], url_path="download-contract")
@@ -106,11 +125,13 @@ class ContractViewSet(viewsets.ModelViewSet):
 
 
 class PresenceViewSet(viewsets.ModelViewSet):
-    queryset = Presence.objects.all()
+    queryset = Presence.objects.all().order_by("student__full_name", "date")
     serializer_class = PresenceSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",
+        "student__registration_number",
         "date",
         "presence",
+        "created_at",
     ]
