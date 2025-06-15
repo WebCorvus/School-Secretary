@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Schedule
+from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -54,10 +54,11 @@ class BookSerializer(serializers.ModelSerializer):
         extra_fields = ["tenant_details"]
 
 
-class ScheduleSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     professor_details = ProfessorSerializer(source="professor", read_only=True)
+    subject_details = SubjectSerializer(source="subject", read_only=True)
 
     class Meta:
-        model = Schedule
+        model = Lesson
         fields = "__all__"
-        extra_fields = ["professor_details"]
+        extra_fields = ["professor_details", "subject_details"]

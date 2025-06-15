@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
 
-from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Schedule
+from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson
 from .serializers import (
     ProfessorSerializer,
     SubjectSerializer,
@@ -8,7 +8,7 @@ from .serializers import (
     GroupSerializer,
     SchoolRecordSerializer,
     BookSerializer,
-    ScheduleSerializer,
+    LessonSerializer,
 )
 
 
@@ -74,11 +74,13 @@ class BookViewSet(viewsets.ModelViewSet):
     ]
 
 
-class ScheduleViewSet(viewsets.ModelViewSet):
-    queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+class LessonViewSet(viewsets.ModelViewSet):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "professor__full_name",
-        "descrition",
+        "subject__full_name",
+        "time",
+        "day",
     ]

@@ -3,6 +3,18 @@ from datetime import datetime
 
 from utils.validators import cep_validator, cpf_validator, phone_validator
 
+# Choices para Lesson
+LESSON_TIME_CHOICES = [(i, str(i)) for i in range(1, 7)]
+LESSON_DAY_CHOICES = [
+    (0, "Segunda"),
+    (1, "Terça"),
+    (2, "Quarta"),
+    (3, "Quinta"),
+    (4, "Sexta"),
+    (5, "Sábado"),
+    (6, "Domingo"),
+]
+
 
 class Subject(models.Model):
     short_name = models.CharField(
@@ -177,22 +189,35 @@ class Book(models.Model):
     )
 
 
-class Schedule(models.Model):
+class Lesson(models.Model):
     professor = models.ForeignKey(
         Professor,
         on_delete=models.SET_NULL,
-        verbose_name="Professor's name",
-        related_name="schedule",
-        blank=False,
+        verbose_name="Professor",
+        related_name="lessons",
         null=True,
-    )
-
-    descrition = models.TextField(
         blank=False,
-        null=True,
     )
-
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.SET_NULL,
+        verbose_name="Disciplina",
+        related_name="lessons",
+        null=True,
+        blank=False,
+    )
+    time = models.IntegerField(
+        verbose_name="Horário (1 a 6)",
+        choices=LESSON_TIME_CHOICES,
+    )
+    day = models.IntegerField(
+        verbose_name="Dia da semana (0=Segunda, 6=Domingo)",
+        choices=LESSON_DAY_CHOICES,
+    )
     created_at = models.DateTimeField(
         default=datetime.now(),
         editable=False,
     )
+
+    def __str__(self):
+        return f"{self.professor} - {self.subject} - {self.get_day_display()} - {self.time}"

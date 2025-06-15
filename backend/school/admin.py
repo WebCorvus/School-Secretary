@@ -6,7 +6,7 @@ from school.models import (
     Professor,
     SchoolRecord,
     Book,
-    Schedule,
+    Lesson,
 )
 
 
@@ -125,21 +125,25 @@ class BooksAdmin(admin.ModelAdmin):
     list_filter = ("tenant",)
 
 
-class SchedulesAdmin(admin.ModelAdmin):
+class LessonsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "professor",
-        "descrition",
+        "subject",
+        "time",
+        "day",
     )
     list_display_links = (
         "professor",
-        "descrition",
+        "subject",
     )
     search_fields = (
         "professor",
-        "descrition",
+        "subject",
+        "time",
+        "day",
     )
-    list_filter = ("professor",)
+    list_filter = ("professor", "subject", "time", "day")
 
 
 admin.site.register(
@@ -173,6 +177,6 @@ admin.site.register(
 )
 
 admin.site.register(
-    Schedule,
-    SchedulesAdmin,
+    Lesson,
+    LessonsAdmin,
 )
