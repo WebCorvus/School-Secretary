@@ -4,3 +4,4 @@ export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
 export const STUDENT_BASE_URL = `${API_BASE_URL}/students/data/`;
 export const PROFESSOR_BASE_URL = `${API_BASE_URL}/school/professor/`;
 export const SUBJECT_BASE_URL = `${API_BASE_URL}/school/subject/`;
+export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;

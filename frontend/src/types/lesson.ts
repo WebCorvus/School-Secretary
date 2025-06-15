@@ -12,7 +12,7 @@ export interface LessonProps {
 	created_at: string;
 }
 
-type LessonPostProps = Omit<
+export type LessonPostProps = Omit<
 	LessonProps,
 	"id" | "professor_details" | "subject_details" | "created_at"
 >;

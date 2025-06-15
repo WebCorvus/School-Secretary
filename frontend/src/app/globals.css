@@ -76,19 +76,15 @@ body {
 }
 
 .header-container {
-	@apply container grid;
+	@apply container grid w-full;
 }
 
 .header {
-	@apply p-1.5 flex flex-row max-w-screen;
+	@apply p-1.5 flex flex-row w-full max-w-screen;
 }
 
 .header li {
-	@apply m-1;
-}
-
-.header a {
-	@apply p-1.5 text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
+	@apply min-w-24 p-1 text-center text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
 }
 
 .form-container {

@@ -13,23 +13,22 @@ import { GROUP_BASE_URL } from "@/config";
 export default function GroupsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<GroupProps[]>([]);
-	const [updating, setUpdating] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get<GroupProps[]>(`${GROUP_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setUpdating(false));
-	}, [updating]);
+			.catch((error) => {
+				alert(`Erro ao carregar alunos: ${error}`);
+			});
+	}, [search]);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
-		setUpdating(true);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${GROUP_BASE_URL}${value}/`);
-		setUpdating(true);
 	};
 
 	return (

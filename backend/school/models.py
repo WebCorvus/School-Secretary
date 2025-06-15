@@ -6,13 +6,13 @@ from utils.validators import cep_validator, cpf_validator, phone_validator
 # Choices para Lesson
 LESSON_TIME_CHOICES = [(i, str(i)) for i in range(1, 7)]
 LESSON_DAY_CHOICES = [
-    (0, "Segunda"),
-    (1, "Terça"),
-    (2, "Quarta"),
-    (3, "Quinta"),
-    (4, "Sexta"),
-    (5, "Sábado"),
-    (6, "Domingo"),
+    (0, "Domingo"),
+    (1, "Segunda"),
+    (2, "Terça"),
+    (3, "Quarta"),
+    (4, "Quinta"),
+    (5, "Sexta"),
+    (6, "Sábado"),
 ]
 
 

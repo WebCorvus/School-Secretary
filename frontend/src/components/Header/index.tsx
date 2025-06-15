@@ -1,5 +1,4 @@
 import Link from "next/link";
-import HorizontalLine from "../HorizontalLine";
 
 export default function Header() {
 	return (
@@ -24,7 +23,7 @@ export default function Header() {
 					<Link href="/groups">Turmas</Link>
 				</li>
 				<li>
-					<Link href="/schedule">Horários</Link>
+					<Link href="/lessons">Horários</Link>
 				</li>
 				<li>
 					<Link href="/books">Livros</Link>
