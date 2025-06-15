@@ -1,4 +1,5 @@
 import { ItineraryProps } from "./itinerary";
+import { LessonProps } from "./lesson";
 
 export interface GroupProps {
 	id: number;
@@ -13,3 +14,8 @@ export type GroupPostProps = Omit<
 	GroupProps,
 	"id" | "itinerary_details" | "created_at"
 >;
+
+export type DailyLessonsView = {
+	day: number;
+	lessons: LessonProps[];
+};

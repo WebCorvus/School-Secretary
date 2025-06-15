@@ -5,15 +5,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import SearchField from "@/components/searchField";
-import { LessonProps } from "@/types/lesson";
-import { LESSON_BASE_URL } from "@/config";
+import { GROUP_BASE_URL } from "@/config";
+import { DailyLessonsView } from "@/types/group";
 
 export default function LessonsPage() {
-	const [data, setData] = useState<LessonProps[]>([]);
+	const [data, setData] = useState<DailyLessonsView[]>([]);
 	const [search, setSearch] = useState<string>("");
+
 	useEffect(() => {
 		axios
-			.get<LessonProps[]>(LESSON_BASE_URL)
+			.get<DailyLessonsView[]>(`${GROUP_BASE_URL}14/get-lessons/`)
 			.then((response) => {
 				setData(response.data);
 			})
@@ -22,50 +23,21 @@ export default function LessonsPage() {
 			});
 	}, [search]);
 
-	const renderDay = (value: number) => {
-		switch (value) {
-			case 0:
-				return "Domingo";
-			case 1:
-				return "Segunda-feira";
-			case 2:
-				return "Terça-feira";
-			case 3:
-				return "Quarta-feira";
-			case 4:
-				return "Quinta-feira";
-			case 5:
-				return "Sexta-feira";
-			case 6:
-				return "Sábado";
-			default:
-				return "Dia inválido";
-		}
-	};
-
-	const renderTime = (value: number) => {
-		return `${value}° Horário`;
-	};
-
 	const handleSearch = (value: string) => {
 		setSearch(value);
-	};
-
-	const handleDelete = (value: number) => {
-		axios.delete(`${LESSON_BASE_URL}${value}/`);
 	};
 
 	return (
 		<div>
 			<div className="flex justify-center">
 				<div className="title-container">
-					<h1 className="title">Itinerários</h1>
+					<h1 className="title">Horários da Turma</h1>
 				</div>
 			</div>
 
 			<div className="flex flex-row items-center justify-center">
 				<SearchField
-					placeholder="Buscar itinerário..."
+					placeholder="Buscar turma..."
 					onSearch={handleSearch}
 				/>
 			</div>
@@ -93,12 +65,15 @@ export default function LessonsPage() {
 								</tr>
 							</thead>
 							<tbody>
-								{data.map((lesson) => (
-									<tr key={lesson.id}>
-										<td>{renderDay(lesson.day)}</td>
-										<td>
-											{lesson.subject_details.short_name}
-										</td>
+								{data.map(({ day, lessons }) => (
+									<tr key={day}>
+										<td>{day}</td>
+										{lessons.map((lesson) => (
+											<td>
+												{lesson?.subject_details
+													?.short_name || "-"}
+											</td>
+										))}
 									</tr>
 								))}
 							</tbody>
