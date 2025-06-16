@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-import SearchField from "@/components/searchField";
+import SearchField from "@/components/SearchField";
 
 import { ProfessorProps } from "@/types/professor";
 import { PROFESSOR_BASE_URL } from "@/config";

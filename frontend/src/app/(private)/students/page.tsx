@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 
 import { StudentProps } from "@/types/student";
 import { STUDENT_BASE_URL } from "@/config";
-import SearchField from "@/components/searchField";
+import SearchField from "@/components/SearchField";
 
 export default function StudentsPage() {
 	const [search, setSearch] = useState("");

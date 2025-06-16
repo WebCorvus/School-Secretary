@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
-import SearchField from "@/components/searchField";
+import SearchField from "@/components/SearchField";
 
 import { GroupProps } from "@/types/group";
 import { GROUP_BASE_URL } from "@/config";

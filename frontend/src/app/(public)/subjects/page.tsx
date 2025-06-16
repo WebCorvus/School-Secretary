@@ -5,7 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
-import SearchField from "@/components/searchField";
+import SearchField from "@/components/SearchField";
 
 import { SubjectProps } from "@/types/subject";
 import { SUBJECT_BASE_URL } from "@/config";
