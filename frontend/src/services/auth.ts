@@ -18,11 +18,16 @@ export async function login(
 
 		const { access, refresh } = response.data;
 
-		document.cookie = `access=${access}; path=/;`;
-		document.cookie = `refresh=${refresh}; path=/;`;
+		document.cookie = `access=${access}; path=/; SameSite=Lax`;
+		document.cookie = `refresh=${refresh}; path=/; SameSite=Lax`;
 
 		return { access, refresh };
 	} catch (error) {
 		throw new Error("Login falhou. Verifique usuário e senha.");
 	}
+}
+
+export function logout() {
+	document.cookie = "access=; path=/; max-age=0;";
+	document.cookie = "refresh=; path=/; max-age=0;";
 }
