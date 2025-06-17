@@ -10,6 +10,7 @@ import { DailyLessonsView, GroupProps } from "@/types/group";
 
 export default function LessonsPage() {
 	const [data, setData] = useState<DailyLessonsView[]>([]);
+	const [update, setUpdate] = useState(false);
 	const [groups, setGroups] = useState<GroupProps[]>();
 	const [selectedGroup, setSelectedGroup] = useState<number>();
 
@@ -25,7 +26,9 @@ export default function LessonsPage() {
 			.catch((error) => {
 				alert(`Erro ao carregar aulas: ${error}`);
 			});
-	}, [selectedGroup]);
+
+		setUpdate(false);
+	}, [update]);
 
 	useEffect(() => {
 		axios
@@ -40,6 +43,7 @@ export default function LessonsPage() {
 
 	const handleSelectedGroup = (value: number | undefined) => {
 		setSelectedGroup(value);
+		setUpdate(true);
 	};
 
 	return (

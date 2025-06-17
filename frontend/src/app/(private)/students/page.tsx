@@ -11,23 +11,23 @@ import SearchField from "@/components/SearchField";
 export default function StudentsPage() {
 	const [search, setSearch] = useState("");
 	const [data, setData] = useState<StudentProps[]>([]);
-	const [updating, setUpdating] = useState(false);
+	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get<StudentProps[]>(`${STUDENT_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setUpdating(false));
-	}, [updating]);
+			.finally(() => setUpdate(false));
+	}, [update]);
 
 	const handleSearch = (value: string) => {
-		setUpdating(true);
 		setSearch(value);
+		setUpdate(true);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${STUDENT_BASE_URL}${value}/`);
-		setUpdating(true);
+		setUpdate(true);
 	};
 
 	return (

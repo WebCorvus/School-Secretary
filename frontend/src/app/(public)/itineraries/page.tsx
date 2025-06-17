@@ -12,6 +12,7 @@ import { ITINERARY_BASE_URL } from "@/config";
 
 export default function ItinerariesPage() {
 	const [search, setSearch] = useState("");
+	const [update, setUpdate] = useState(false);
 	const [data, setData] = useState<ItineraryProps[]>([]);
 
 	useEffect(() => {
@@ -21,14 +22,18 @@ export default function ItinerariesPage() {
 			.catch((error) => {
 				alert(`Erro ao carregar itinerários: ${error}`);
 			});
-	}, [search]);
+
+		setUpdate(false);
+	}, [update]);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
+		setUpdate(true);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${ITINERARY_BASE_URL}${value}/`);
+		setUpdate(true);
 	};
 
 	return (

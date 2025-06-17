@@ -11,8 +11,9 @@ import { SubjectProps } from "@/types/subject";
 import { SUBJECT_BASE_URL } from "@/config";
 
 export default function SubjectsPage() {
-	const [search, setSearch] = useState("");
 	const [data, setData] = useState<SubjectProps[]>([]);
+	const [update, setUpdate] = useState(false);
+	const [search, setSearch] = useState("");
 
 	useEffect(() => {
 		axios
@@ -21,14 +22,18 @@ export default function SubjectsPage() {
 			.catch((error) => {
 				alert(`Erro ao carregar matérias: ${error}`);
 			});
-	}, [search]);
+
+		setUpdate(false);
+	}, [update]);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
+		setUpdate(true);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${SUBJECT_BASE_URL}${value}/`);
+		setUpdate(true);
 	};
 
 	return (

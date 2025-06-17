@@ -12,23 +12,23 @@ import { PROFESSOR_BASE_URL } from "@/config";
 export default function ProfessorsPage() {
 	const [data, setData] = useState<ProfessorProps[]>([]);
 	const [search, setSearch] = useState("");
-	const [updating, setUpdating] = useState(false);
+	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get(`${PROFESSOR_BASE_URL}?search=${search}`)
 			.then((response) => setData(response.data))
-			.finally(() => setUpdating(false));
-	}, [updating]);
+			.finally(() => setUpdate(false));
+	}, [update]);
 
 	const handleSearch = (value: string) => {
-		setUpdating(true);
+		setUpdate(true);
 		setSearch(value);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${PROFESSOR_BASE_URL}${value}/`);
-		setUpdating(true);
+		setUpdate(true);
 	};
 
 	return (

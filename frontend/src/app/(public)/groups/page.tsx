@@ -12,6 +12,7 @@ import { GROUP_BASE_URL } from "@/config";
 
 export default function GroupsPage() {
 	const [search, setSearch] = useState("");
+	const [update, setUpdate] = useState(false);
 	const [data, setData] = useState<GroupProps[]>([]);
 
 	useEffect(() => {
@@ -21,14 +22,18 @@ export default function GroupsPage() {
 			.catch((error) => {
 				alert(`Erro ao carregar alunos: ${error}`);
 			});
-	}, [search]);
+
+		setUpdate(false);
+	}, [update]);
 
 	const handleSearch = (value: string) => {
 		setSearch(value);
+		setUpdate(true);
 	};
 
 	const handleDelete = (value: number) => {
 		axios.delete(`${GROUP_BASE_URL}${value}/`);
+		setUpdate(true);
 	};
 
 	return (
