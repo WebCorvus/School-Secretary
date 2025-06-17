@@ -53,8 +53,8 @@ export default function AddProfessor() {
 				subject: 0,
 			});
 			router.push("/professors");
-		} catch (error) {
-			alert(`Erro ao cadastrar: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar: ${error.message}`);
 		}
 	};
 

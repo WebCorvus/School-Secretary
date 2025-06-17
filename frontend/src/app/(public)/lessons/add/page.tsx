@@ -45,8 +45,8 @@ export default function AddLesson() {
 			});
 			alert("Aula cadastrada com sucesso!");
 			router.push("/lessons");
-		} catch (error) {
-			alert(`Erro ao cadastrar aula: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar aula: ${error.message}`);
 		} finally {
 			setPosting(false);
 		}

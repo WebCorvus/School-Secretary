@@ -39,8 +39,8 @@ export default function AddGroup() {
 			await axios.post(GROUP_BASE_URL, group);
 			alert("Turma cadastrada com sucesso!");
 			router.push("/groups");
-		} catch (error) {
-			alert(`Erro ao cadastrar turma: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar turma: ${error.message}`);
 		} finally {
 			setPosting(false);
 		}

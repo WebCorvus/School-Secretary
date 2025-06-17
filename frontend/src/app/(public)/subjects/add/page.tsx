@@ -32,8 +32,8 @@ export default function AddSubject() {
 			await axios.post(SUBJECT_BASE_URL, subject);
 			alert("Matéria cadastrada com sucesso!");
 			router.push("/subjects");
-		} catch (error) {
-			alert(`Erro ao cadastrar matéria: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar matéria: ${error.message}`);
 		} finally {
 			setPosting(false);
 		}

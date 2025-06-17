@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -55,8 +55,8 @@ export default function AddStudents() {
 				group: 0,
 			});
 			router.push("/students");
-		} catch (error) {
-			alert(`Erro ao cadastrar: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar: ${error.message}`);
 		}
 	};
 

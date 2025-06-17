@@ -32,8 +32,8 @@ export default function AddItinerary() {
 			await axios.post(ITINERARY_BASE_URL, itinerary);
 			alert("Itinerário cadastrado com sucesso!");
 			router.push("/itineraries");
-		} catch (error) {
-			alert(`Erro ao cadastrar itinerário: ${error}`);
+		} catch (error: any) {
+			alert(`Erro ao cadastrar itinerário: ${error.message}`);
 		} finally {
 			setLoading(false);
 		}
