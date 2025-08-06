@@ -17,9 +17,9 @@ services:
   #   networks:
   #     - private
 
-  frontend:
+  app:
     build:
-      context: ./frontend
+      context: ./app
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -28,8 +28,8 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./frontend
-          target: /usr/src/frontend
+          path: ./app
+          target: /app
           ignore:
             - node_modules/
             - dist/
@@ -39,17 +39,17 @@ services:
     networks:
       - private
 
-  backend:
+  api:
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
     develop:
       watch:
         - action: sync
-          path: ./backend
-          target: /usr/src/backend
+          path: ./api
+          target: /api
 
     networks:
       - private

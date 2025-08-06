@@ -1,7 +1,7 @@
 FROM python:3.11-slim-bullseye
 
-COPY . /usr/src/backend/
-WORKDIR /usr/src/backend/
+COPY . /api
+WORKDIR /api
 
 RUN pip install -r requirements.txt
 RUN python manage.py makemigrations
