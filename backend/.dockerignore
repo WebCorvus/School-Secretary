@@ -1,0 +1,12 @@
+.git
+README.md
+LICENSE
+.vscode
+npm-debug.log
+coverage
+env
+venv
+.env
+.venv
+.editorconfig
+.aws
