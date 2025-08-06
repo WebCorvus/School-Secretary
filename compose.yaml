@@ -12,28 +12,41 @@ services:
                   path: ./nginx.conf
 
         depends_on:
-            - app
+            - frontend
         networks:
             - public
             - private
 
-    app:
+    frontend:
         build:
-            context: ./app
+            context: ./frontend
             dockerfile: Dockerfile
         environment:
             - NODE_ENV=development
         develop:
             watch:
                 - action: sync
-                  path: ./app
-                  target: /usr/src/app
+                  path: ./frontend
+                  target: /usr/src/frontend
                   ignore:
                       - node_modules/
                       - dist/
 
                 - action: rebuild
                   path: package.json
+        networks:
+            - private
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        develop:
+            watch:
+                - action: sync
+                  path: ./backend
+                  target: /usr/src/backend
+
         networks:
             - private
 
