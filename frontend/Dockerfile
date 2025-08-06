@@ -1,7 +1,7 @@
 FROM node:22.16.0
 
-COPY . /usr/src/app/
-WORKDIR /usr/src/app/
+COPY . /usr/src/frontend/
+WORKDIR /usr/src/frontend/
 
 RUN npm install
 

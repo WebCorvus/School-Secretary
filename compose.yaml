@@ -4,11 +4,9 @@ services:
         image: nginx:latest
         ports:
             - "8080:80"
-        volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf
         develop:
             watch:
-                - action: restart
+                - action: rebuild
                   path: ./nginx.conf
 
         depends_on:

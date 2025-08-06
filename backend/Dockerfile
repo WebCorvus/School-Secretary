@@ -1,7 +1,7 @@
 FROM python:3.11-slim-bullseye
 
-COPY . /usr/bin/app/
-WORKDIR /usr/bin/app/
+COPY . /usr/bin/backend/
+WORKDIR /usr/bin/backend/
 
 RUN pip install -r requirements.txt
 
