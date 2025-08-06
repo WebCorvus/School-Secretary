@@ -1,7 +1,8 @@
 FROM node:22.16.0 AS builder
 
-COPY . /app
 WORKDIR /app
+
+COPY . .
 
 RUN npm install
 
@@ -9,6 +10,21 @@ RUN npm run build
 
 RUN npm prune --production
 
+
+
+FROM node:22.16.0
+
+WORKDIR /app
+
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/package-lock.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/public ./public
+
+RUN npm install --only=production
+
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
