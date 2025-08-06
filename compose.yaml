@@ -1,0 +1,44 @@
+services:
+    nginx:
+        restart: always
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+        develop:
+            watch:
+                - action: restart
+                  path: ./nginx.conf
+
+        depends_on:
+            - app
+        networks:
+            - public
+            - private
+
+    app:
+        build:
+            context: ./app
+            dockerfile: Dockerfile
+        environment:
+            - NODE_ENV=development
+        develop:
+            watch:
+                - action: sync
+                  path: ./app
+                  target: /usr/src/app
+                  ignore:
+                      - node_modules/
+                      - dist/
+
+                - action: rebuild
+                  path: package.json
+        networks:
+            - private
+
+networks:
+    private:
+        driver: bridge
+    public:
+        driver: bridge
