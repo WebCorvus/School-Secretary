@@ -26,7 +26,7 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - ./api/db.sqlite3:/api/db.sqlite3
+            - api_db_data:/api/data
         develop:
             watch:
                 - action: sync
@@ -39,3 +39,6 @@ services:
 networks:
     private:
         driver: bridge
+
+volumes:
+    api_db_data:
