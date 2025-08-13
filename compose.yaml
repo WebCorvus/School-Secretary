@@ -1,22 +1,4 @@
 services:
-    # nginx:
-    #   restart: always
-    #   image: nginx:latest
-    #   ports:
-    #     - "8080:80"
-    #   volumes:
-    #     - ./nginx.conf:/etc/nginx/nginx.conf
-    #   develop:
-    #     watch:
-    #       - action: restart
-    #         path: ./nginx.conf
-
-    #   depends_on:
-    #     - frontend
-    #     - backend
-    #   networks:
-    #     - private
-
     app:
         build: ./app
         image: pinheiroreis/school-secretary-app:latest
@@ -43,6 +25,8 @@ services:
         image: pinheiroreis/school-secretary-api:latest
         ports:
             - "8000:8000"
+        volumes:
+            - ./api/db.sqlite3:/api/db.sqlite3
         develop:
             watch:
                 - action: sync
