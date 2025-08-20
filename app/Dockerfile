@@ -1,4 +1,4 @@
-FROM node:22.16.0 AS builder
+FROM node:22.18.0 AS builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN npm prune --production
 
 
 
-FROM node:22.16.0
+FROM node:22.18.0
 
 WORKDIR /app
 

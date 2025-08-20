@@ -1,44 +1,38 @@
 services:
-    app:
-        build: ./app
-        image: pinheiroreis/school-secretary-app:latest
-        ports:
-            - "3000:3000"
-        environment:
-            - NODE_ENV=development
-        develop:
-            watch:
-                - action: sync
-                  path: ./app
-                  target: /app
-                  ignore:
-                      - node_modules/
-                      - dist/
+  app:
+    build: ./app
+    image: pinheiroreis/school-secretary-app:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    develop:
+      watch:
+        - action: rebuild
+          path: ./app
+          target: /app
+    networks:
+      - private
 
-                - action: rebuild
-                  path: package.json
-        networks:
-            - private
+  api:
+    build: ./api
+    image: pinheiroreis/school-secretary-api:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - db_data:/api/data
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /api
 
-    api:
-        build: ./api
-        image: pinheiroreis/school-secretary-api:latest
-        ports:
-            - "8000:8000"
-        volumes:
-            - api_db_data:/api/data
-        develop:
-            watch:
-                - action: sync
-                  path: ./api
-                  target: /api
-
-        networks:
-            - private
+    networks:
+      - private
 
 networks:
-    private:
-        driver: bridge
+  private:
+    driver: bridge
 
 volumes:
-    api_db_data:
+  db_data:
