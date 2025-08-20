@@ -11,8 +11,9 @@ Sistema simples de gerenciamento escolar usando Django no backend e Next.js no f
 
 ```
 secretaria-escolar/
-├── backend/     # API Django
-├── frontend/    # Interface Next.js
+├── api/            # API Django
+├── app/            # Interface Next.js
+├── compose.yaml    # Docker Compose config
 └── README.md
 ```
 
