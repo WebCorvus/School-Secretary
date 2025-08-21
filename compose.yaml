@@ -1,7 +1,7 @@
 services:
   app:
     build: ./app
-    image: pinheiroreis/school-secretary-app:latest
+    image: webcorvus/school-secretary-app:latest
     ports:
       - "3000:3000"
     environment:
@@ -16,7 +16,7 @@ services:
 
   api:
     build: ./api
-    image: pinheiroreis/school-secretary-api:latest
+    image: webcorvus/school-secretary-api:latest
     ports:
       - "8000:8000"
     volumes:

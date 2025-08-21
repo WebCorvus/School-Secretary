@@ -69,23 +69,23 @@ class GroupViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="get-lessons")
     def get_lessons(self, request, pk=None):
         group = self.get_object()
-        raw_data = Lesson.objects.filter(group=group)
-        formated_data = []
+        group_lessons = Lesson.objects.filter(group=group)
+        week_lessons = []
         for day in range(7):
-            lessons = []
+            day_lessons = []
             for time in range(LESSONS_PER_DAY):
-                lesson = raw_data.filter(day=day, time=time).first()
+                lesson = group_lessons.filter(day=day, time=time).first()
                 if lesson:
-                    lessons.append(LessonSerializer(lesson).data)
+                    day_lessons.append(LessonSerializer(lesson).data)
                 else:
-                    lessons.append(None)
-            formated_data.append(
+                    day_lessons.append(None)
+            week_lessons.append(
                 {
                     "day": get_day_name(day),
-                    "lessons": lessons,
+                    "lessons": day_lessons,
                 }
             )
-        return Response(formated_data)
+        return Response(week_lessons)
 
 
 class SchoolRecordViewSet(viewsets.ModelViewSet):
