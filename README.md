@@ -1,6 +1,6 @@
 # Secretaria Escolar
 
-Sistema simples de gerenciamento escolar usando Django no backend e Next.js no frontend.
+Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no Frontend.
 
 ## Tecnologias
 
@@ -21,15 +21,17 @@ secretaria-escolar/
 
 ## Comunicação
 
-A interface consome a API REST do backend via Axios. Verifique as URLs no arquivo `app/src/config.ts`.
+A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
 
 ### APIs
 
 #### URLs
 
-São a rota para acessar uma ViewSet
+São a rota para acessar uma ViewSet.
 
-As URLs de acesso de dados estão nos arquivos `api/{app}/urls.py`
+Devido ao uso de viewsets - que cobram um sistema de roteamento mais complexo - nesse projeto usamos o `DefaultRouter`.
+
+As URLs de acesso de dados estão nos arquivos `api/{app}/urls.py`.
 
 ```py
 # api/school/urls.py
@@ -45,9 +47,11 @@ router.register(r"lesson", LessonViewSet, basename="lesson") # http://{BASE_URL}
 
 #### ViewSet
 
-Sintetizam uma configuração de saída de dados do BD.
+São uma pré-configuração (de um conjunto de views) de uma saída de dados do BD.
 
-As configurações das saídas de dado do BD estão em `api/{app}/views.py`.
+Servem para lidar com diversos tipos de operação: `create`, `destroy`, `list`, `retrieve`, `update`, `partial_update`.
+
+Tais configurações estão em `api/{app}/views.py`.
 
 ```py
 # api/school/views.py
@@ -65,6 +69,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
 #### Serializers
 
 Os serializers são uma espécie de ponte entre entre dados externos da API (JSON) e internos do BD (objetos do BD).
+
 Nesse caso, serve para transformar, ou validar, dados de objetos de classes definidas em `api/{app}/models.py`.
 
 A seguir, serve para converter dados de objetos da classe Subject (Matéria), incluindo todos os campos do objeto.
@@ -135,7 +140,7 @@ No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `# http
 ### Backend
 
 -   A API fornece tokens JWT usando uma view customizada com `@api_view(['POST'])`.
--   Após o login, o backend retorna os tokens `access` e `refresh`.
+-   Após o login, o Backend retorna os tokens `access` e `refresh`.
 
 Exemplo de endpoint:
 
@@ -174,7 +179,7 @@ export function middleware(request: NextRequest) {
 
 -   A interface da página de login reutiliza o tema e classes definidas em `globals.css`, usando Tailwind.
 
--   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no backend).
+-   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
 
 ## Autor
 
