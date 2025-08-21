@@ -64,8 +64,10 @@ class SubjectViewSet(viewsets.ModelViewSet):
 
 #### Serializers
 
-Os serializers são ferramentas de conversão de dados complexos (do BD) em dados nativos python.
-Nesse caso, serve para transformar dados de objetos da classe Subject, incluindo todos os campos.
+Os serializers são uma espécie de ponte entre entre dados externos da API (JSON) e internos do BD (objetos do BD).
+Nesse caso, serve para transformar, ou validar, dados de objetos de classes definidas em `api/{app}/models.py`.
+
+A seguir, serve para converter dados de objetos da classe Subject (Matéria), incluindo todos os campos do objeto.
 
 ```py
 # api/school/serializers.py
@@ -73,6 +75,24 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = "__all__"
+```
+
+Depois disso, o serializer pode ser usado nas viewsets (como visto anteriormente) ou da seguinte forma:
+
+```py
+subject = Subject.objects.create(full_name="Mathematics")
+serializer = SubjectSerializer(subject)
+print(serializer.data)
+# Output: {'id': 1, 'name': 'Mathematics'}
+
+data = {'full_name': 'Physics'}
+serializer = SubjectSerializer(data=data)
+
+if serializer.is_valid():
+    subject = serializer.save()
+    print(subject)  # <Subject: Physics>
+else:
+    print(serializer.errors)
 ```
 
 ### Viewset Functions
