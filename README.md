@@ -23,9 +23,7 @@ secretaria-escolar/
 
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
 
-### APIs
-
-#### URLs
+### URLs
 
 São a rota para acessar uma ViewSet.
 
@@ -45,7 +43,7 @@ router.register(r"book", BookViewSet, basename="book") # http://{BASE_URL}/schoo
 router.register(r"lesson", LessonViewSet, basename="lesson") # http://{BASE_URL}/school/lesson/
 ```
 
-#### ViewSet
+### ViewSet
 
 São uma pré-configuração (de um conjunto de views) de uma saída de dados do BD.
 
@@ -66,7 +64,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
     ]
 ```
 
-#### Serializers
+### Serializers
 
 Os serializers são uma espécie de ponte entre entre dados externos da API (JSON) e internos do BD (objetos do BD).
 
