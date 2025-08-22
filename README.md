@@ -278,7 +278,7 @@ else:
 
 Há funções em alguns serializers, que servem para propósitos específicos.
 
-No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `# http://{BASE_URL}/school/lesson/{OBJECT_PK}/get-lessons`.
+No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http://{BASE_URL}/school/lesson/{OBJECT_PK}/get-lessons`.
 
 ```py
 # api/school/views.py
