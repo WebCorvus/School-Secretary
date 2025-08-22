@@ -128,6 +128,69 @@ No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `# http
         return Response(week_lessons)
 ```
 
+## Banco de Dados
+
+### Modelos
+
+Os modelos são definidos nos arquivos `api/{app}/models.py`
+
+```py
+class Subject(models.Model):
+    short_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
+    )
+
+    full_name = models.CharField(
+        max_length=200,
+        unique=True,
+        blank=False,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(
+        default=datetime.now(),
+        editable=False,
+    )
+
+    def __str__(self):
+        return self.full_name
+```
+
+Cada campo é criado a partir de um objeto, como `CharField` e `DateTimeField`, classes que recebem dados e os constroem.
+
+Quando o usuário utiliza o comando
+
+```
+python manage.py makemigrations
+```
+
+essas classes de objetos (dos arquivos `models.py`) são lidas e a arquitetura deles é gerada.
+
+Após isso, ao usuário utilizar o comando
+
+```
+python manage.py migrate
+```
+
+essa arquitetura é aplicada no banco de dados, criando as tabelas necessárias.
+
+### Preenchendo o BD
+
+Para colocar dados no BD é necessário utilizar os modelos informados (após o migrate), criar os objetos com os dados e os salvar.
+
+```py
+from school.models import Subject
+
+subject = Subject.objects.create(
+    name="Physics"
+)
+
+print(subject.id)
+```
+
 ## Funcionalidades
 
 -   Cadastro e listagem de alunos, professores, aulas e turmas.
