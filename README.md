@@ -109,7 +109,7 @@ As páginas são o bloco de código que sintetiza o que será exibido na tela.
 No caso do NextJS elas são exibidas como children, com base no layout
 
 ```ts
-// app\src\app\layout.tsx
+// app/src/app/layout.tsx
 export default function RootLayout({
 	children,
 }: Readonly<{
