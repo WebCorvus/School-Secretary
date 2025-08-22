@@ -8,6 +8,8 @@ services:
       - db_data:/var/lib/postgresql/data/
     env_file:
       - default.env
+      - .env.prod
+      - .env.local
     networks:
       - private
     restart: unless-stopped
@@ -22,6 +24,8 @@ services:
       - db_data:/api/data
     env_file:
       - default.env
+      - .env.prod
+      - .env.local
     depends_on:
       - db
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
@@ -43,6 +47,8 @@ services:
       - NODE_ENV=development
     env_file:
       - default.env
+      - .env.prod
+      - .env.local
     develop:
       watch:
         - action: rebuild
