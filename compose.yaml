@@ -7,7 +7,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
-      - default.env
+      - .env.base
       - .env.prod
       - .env.local
     networks:
@@ -23,7 +23,7 @@ services:
     volumes:
       - db_data:/api/data
     env_file:
-      - default.env
+      - .env.base
       - .env.prod
       - .env.local
     depends_on:
@@ -46,7 +46,7 @@ services:
     environment:
       - NODE_ENV=development
     env_file:
-      - default.env
+      - .env.base
       - .env.prod
       - .env.local
     develop:

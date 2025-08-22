@@ -19,6 +19,16 @@ secretaria-escolar/
 └── README.md
 ```
 
+## Configurações
+
+As configurações são injetadas no Backend e Frontend sem a necessidade de mudar código.
+
+Nesse sentido, basta acessar o arquivo `.env.base` para ver as configurações padrão da aplicação.
+
+Depois disso, para inserir novas configurações, basta sobrescrever as variáveis do arquivo base nos arquivos vazios `.env.local` ou `.env.prod`.
+
+Saiba que `.env.local` sobrescreve `.env.prod`, que sobrescreve `.env.base`, nessa ordem.
+
 ## Fluxo de Dados
 
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
