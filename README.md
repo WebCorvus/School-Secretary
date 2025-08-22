@@ -234,7 +234,9 @@ essa arquitetura é aplicada no banco de dados, criando as tabelas necessárias.
 
 ### Preenchendo o BD
 
-Para colocar dados no BD é necessário utilizar os modelos informados (após o migrate), criar os objetos com os dados e os salvar.
+Em diversos pontos do Frontend, um usuário autenticado, consegue fazer registros de determinados objetos.
+
+Entretanto, para colocar dados no BD utilizando o próprio `python` é necessário utilizar os modelos informados (após o migrate), criar os objetos com os dados e os salvar (necessário somente se não usar `create`).
 
 ```py
 from school.models import Subject
