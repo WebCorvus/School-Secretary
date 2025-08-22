@@ -76,7 +76,7 @@ e, se adquirindo os dados, armazena na variável `data`, de forma que os dados p
 </tbody>
 ```
 
-## Comunicação
+## Arquitetura da API
 
 ### URLs
 
@@ -183,7 +183,7 @@ No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `# http
         return Response(week_lessons)
 ```
 
-## Banco de Dados
+## Arquitetura do Banco de Dados
 
 ### Modelos
 
@@ -246,12 +246,7 @@ subject = Subject.objects.create(
 print(subject.id)
 ```
 
-## Funcionalidades
-
--   Cadastro e listagem de alunos, professores, aulas e turmas.
--   Autenticação de usuário (JWT) com rotas protegidas.
-
-## Autenticação
+## Sistema de Autenticação
 
 ### Backend
 
@@ -297,7 +292,7 @@ export function middleware(request: NextRequest) {
 
 -   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
 
-## Autor
+## Autoria
 
 Frontend - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
 
