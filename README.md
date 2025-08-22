@@ -19,9 +19,64 @@ secretaria-escolar/
 └── README.md
 ```
 
-## Comunicação
+## Arquitetura
 
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
+
+Sendo assim, o trecho do Frontend a seguir, executado logo após a renderização da página de matérias
+
+```ts
+// app/src/app/(public)/subjects/page.tsx
+useEffect(() => {
+	axios
+		.get<SubjectProps[]>(`${SUBJECT_BASE_URL}?search=${search}`)
+		.then((response) => setData(response.data))
+		.catch((error) => {
+			alert(`Erro ao carregar matérias: ${error}`);
+		});
+
+	setUpdate(false);
+}, [update]);
+```
+
+se comunica, na URL SUBJECT_BASE_URL, ou http://{BASE_URL}/school/subject/, com o trecho do Backend
+
+```py
+# api/school/views.py
+class SubjectViewSet(viewsets.ModelViewSet):
+    queryset = Subject.objects.all().order_by("full_name")
+    serializer_class = SubjectSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "full_name",
+        "short_name",
+        "created_at",
+    ]
+```
+
+e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em
+
+```ts
+// app/src/app/(public)/page.tsx
+<tbody>
+	{data.map((subject) => (
+		<tr key={subject.id}>
+			<td>{subject.short_name}</td>
+			<td>{subject.full_name}</td>
+			<td>
+				<button
+					className="link link-blue"
+					onClick={() => handleDelete(subject.id)}
+				>
+					Remover
+				</button>
+			</td>
+		</tr>
+	))}
+</tbody>
+```
+
+## Comunicação
 
 ### URLs
 
