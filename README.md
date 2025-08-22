@@ -39,7 +39,7 @@ useEffect(() => {
 }, [update]);
 ```
 
-se comunica, na URL SUBJECT_BASE_URL, ou http://{BASE_URL}/school/subject/, com o trecho do Backend
+se comunica, na URL `SUBJECT_BASE_URL`, ou http://{BASE_URL}/school/subject/, com o trecho do Backend
 
 ```py
 # api/school/views.py
@@ -80,9 +80,9 @@ e, se adquirindo os dados, armazena na variável `data`, de forma que os dados p
 
 ### URLs
 
-São a rota para acessar uma ViewSet.
+São a rota para acessar uma `ViewSet`.
 
-Devido ao uso de viewsets - que cobram um sistema de roteamento mais complexo - nesse projeto usamos o `DefaultRouter`.
+Devido ao uso de `ViewSet` - que cobram um sistema de roteamento mais complexo - nesse projeto usamos o `DefaultRouter`.
 
 As URLs de acesso de dados estão nos arquivos `api/{app}/urls.py`.
 
@@ -100,7 +100,7 @@ router.register(r"lesson", LessonViewSet, basename="lesson") # http://{BASE_URL}
 
 ### ViewSet
 
-São uma pré-configuração (de um conjunto de views) de uma saída de dados do BD.
+São uma pré-configuração (de um conjunto de `ViewSet`) de uma saída de dados do BD.
 
 Servem para lidar com diversos tipos de operação: `create`, `destroy`, `list`, `retrieve`, `update`, `partial_update`.
 
@@ -135,7 +135,7 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = "__all__"
 ```
 
-Depois disso, o serializer pode ser usado nas viewsets (como visto anteriormente) ou da seguinte forma:
+Depois disso, o serializer pode ser usado nas `ViewSet` (como visto anteriormente) ou da seguinte forma:
 
 ```py
 subject = Subject.objects.create(full_name="Mathematics")
