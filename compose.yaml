@@ -3,12 +3,11 @@ services:
     image: postgres:16-alpine
     container_name: school-secretary-db
     ports:
-      - "5432:5432"
+      - "1000:1000"
     volumes:
       - db_data:/var/lib/postgresql/data/
-      # - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     env_file:
-      - .env.prod
+      - default.env
     networks:
       - private
     restart: unless-stopped
@@ -22,7 +21,7 @@ services:
     volumes:
       - db_data:/api/data
     env_file:
-      - .env.prod
+      - default.env
     depends_on:
       - db
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
@@ -43,7 +42,7 @@ services:
     environment:
       - NODE_ENV=development
     env_file:
-      - .env.prod
+      - default.env
     develop:
       watch:
         - action: rebuild

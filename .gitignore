@@ -98,31 +98,18 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
-.env 
-.venv
-.venv-linux
-.venv-windows
-.venv.bak
-.venv-linux.bak
-.venv-windows.bak
+.env
+.env.prod
+.env.local
+.venv/
+.venv-linux/
+.venv-windows/
 env/ 
 venv/ 
 ENV/ 
-env.bak/ 
-venv.bak/ 
-
-# mkdocs documentation 
-/site 
 
 # mypy 
-.mypy_cache/ 
-
-# Sublime Text # 
-*.tmlanguage.cache 
-*.tmPreferences.cache 
-*.stTheme.cache 
-*.sublime-workspace 
-*.sublime-project 
+.mypy_cache/
 
 # sftp configuration file 
 sftp-config.json 
@@ -141,3 +128,29 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+# dependencies
+node_modules
+.pnp
+.pnp.*
+
+# testing
+coverage
+
+# next.js
+.next/
+out/
+
+# production
+build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

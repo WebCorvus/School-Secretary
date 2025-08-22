@@ -6,6 +6,8 @@ LICENSE
 npm-debug.log
 coverage
 .env
+.env.prod
+.env.local
 .editorconfig
 .aws
 dist
