@@ -342,6 +342,7 @@ Mas, para um ambiente de produção, mudar os valores - em especial das credenci
 Os modelos são definidos nos arquivos `api/{app}/models.py`
 
 ```py
+# api/school/models.py
 class Subject(models.Model):
     short_name = models.CharField(
         max_length=200,
@@ -403,11 +404,13 @@ print(subject.id)
 Os dados são salvos de forma persistente dentro do sistema do Docker, ou seja, mesmo excluindo os conteineres eles serão mantidos.
 
 ```yaml
+# compose.yaml
 volumes:
     - db_data:/var/lib/postgresql/data/
 ```
 
 ```yaml
+# compose.yaml
 volumes:
     db_data:
 ```
@@ -430,6 +433,7 @@ POST /api/token/
 -   O login é feito com `axios.post`, e os tokens são armazenados em cookies:
 
 ```ts
+// app/src/services/auth.ts
 document.cookie = `access=${access}; path=/;`;
 document.cookie = `refresh=${refresh}; path=/;`;
 ```
@@ -437,6 +441,7 @@ document.cookie = `refresh=${refresh}; path=/;`;
 -   O middleware (`middleware.ts`) protege as rotas sensíveis:
 
 ```ts
+// app/src/middleware.ts
 export function middleware(request: NextRequest) {
 	const accessToken = request.cookies.get("access")?.value;
 	const pathname = request.nextUrl.pathname;
