@@ -76,6 +76,127 @@ e, se adquirindo os dados, armazena na variável `data`, de forma que os dados p
 </tbody>
 ```
 
+## Arquitetura do APP
+
+O APP utiliza NextJS, um framework web, utilizado na construção dos componentes, juntamente com o React, assim como na função de build e para servir os arquivos estáticos.
+
+### Configurações dos Endpoints
+
+As configurações se dão por constantes do TypeScript
+
+```ts
+// app/src/config.ts
+export const API_BASE_URL = "http://localhost:8000";
+export const LOGIN_BASE_URL = `${API_BASE_URL}/api/token/`;
+export const GROUP_BASE_URL = `${API_BASE_URL}/school/group/`;
+export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
+export const STUDENT_BASE_URL = `${API_BASE_URL}/students/data/`;
+export const PROFESSOR_BASE_URL = `${API_BASE_URL}/school/professor/`;
+export const SUBJECT_BASE_URL = `${API_BASE_URL}/school/subject/`;
+export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;
+```
+
+### Componentes
+
+São blocos de código que podem ser utilizados em diversas páginas, ou seja, são focado em reutilização.
+
+Todos ficam em `app/src/components/`
+
+### Páginas
+
+As páginas são o bloco de código que sintetiza o que será exibido na tela.
+
+No caso do NextJS elas são exibidas como children, com base no layout
+
+```ts
+// app\src\app\layout.tsx
+export default function RootLayout({
+	children,
+}: Readonly<{
+	children: React.ReactNode;
+}>) {
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body className={inter.className}>
+				<Header />
+				<HorizontalLine />
+				<div>{children}</div>
+				<Footer />
+			</body>
+		</html>
+	);
+}
+```
+
+onde há a presença de alguns componenentes também, os quais serão exibidos em todas as rotas (todas as páginas).
+
+As próprias páginas são criadas em `app/src/app` e a estrutura de pastas, a partir desse ponto, define automaticamente as rotas.
+
+```
+app/src/app
+│   favicon.ico
+│   globals.css
+│   layout.tsx
+│
+├───(private)
+│   ├───professors
+│   │   │   page.tsx
+│   │   │
+│   │   └───add
+│   │           page.tsx
+│   │
+│   └───students
+│       │   page.tsx
+│       │
+│       └───add
+│               page.tsx
+│
+└───(public)
+    │   page.tsx
+    │
+    ├───groups
+    │   │   page.tsx
+    │   │
+    │   └───add
+    │           page.tsx
+    │
+    ├───itineraries
+    │   │   page.tsx
+    │   │
+    │   └───add
+    │           page.tsx
+    │
+    ├───lessons
+    │   │   page.tsx
+    │   │
+    │   └───add
+    │           page.tsx
+    │
+    ├───login
+    │       page.tsx
+    │
+    └───subjects
+        │   page.tsx
+        │
+        └───add
+                page.tsx
+```
+
+Considerando que as pastas cujo nome possui os parênteses são ignoradas e somente os `page.tsx` marcam uma rota válida, as rotas são:
+
+```
+{BASE_URL}/
+{BASE_URL}/professors/
+{BASE_URL}/professors/add/
+{BASE_URL}/students/
+{BASE_URL}/students/add/
+{BASE_URL}/groups/
+{BASE_URL}/groups/add/
+{BASE_URL}/itineraries/
+{BASE_URL}/itineraries/add/
+...
+```
+
 ## Arquitetura da API
 
 ### URLs
