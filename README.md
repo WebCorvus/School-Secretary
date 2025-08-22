@@ -6,6 +6,7 @@ Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no F
 
 -   Django + Django REST Framework
 -   Next.js + Axios
+-   PostgreSQL
 
 ## Estrutura
 
@@ -316,6 +317,26 @@ No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http:/
 
 ## Arquitetura do Banco de Dados
 
+O sistema de banco de dados utilizado é o PostgreSQL
+
+### Configuração
+
+O PostgreSQL, é conectado ao Django por meio das configurações em `.env.base`.
+
+```
+# .env.base
+DATABASE_ENGINE=postgresql_psycopg2
+DATABASE_ENGINE=postgresql_psycopg2
+DATABASE_NAME=school_secretary
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=123
+DATABASE_HOST=db
+DATABASE_PORT=1000
+...
+```
+
+Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso em `.env.prod`.
+
 ### Modelos
 
 Os modelos são definidos nos arquivos `api/{app}/models.py`
@@ -377,6 +398,18 @@ subject = Subject.objects.create(
 )
 
 print(subject.id)
+```
+
+Os dados são salvos de forma persistente dentro do sistema do Docker, ou seja, mesmo excluindo os conteineres eles serão mantidos.
+
+```yaml
+volumes:
+    - db_data:/var/lib/postgresql/data/
+```
+
+```yaml
+volumes:
+    db_data:
 ```
 
 ## Sistema de Autenticação
