@@ -19,7 +19,7 @@ secretaria-escolar/
 └── README.md
 ```
 
-## Arquitetura
+## Fluxo de Dados
 
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
 
