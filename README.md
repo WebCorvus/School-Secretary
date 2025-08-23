@@ -28,7 +28,17 @@ Nesse sentido, basta acessar o arquivo `.env.base` para ver as configurações p
 
 Depois disso, para inserir novas configurações, basta sobrescrever as variáveis do arquivo base nos arquivos vazios `.env.local` ou `.env.prod`.
 
-Saiba que `.env.local` sobrescreve `.env.prod`, que sobrescreve `.env.base`, nessa ordem.
+Saiba que `.env.local` sobrescreve `.env.prod`, que sobrescreve `.env.base`, nessa ordem, uma vez que:
+
+```yaml
+# compose.yaml
+. . .
+env_file:
+    - .env.base
+    - .env.prod
+    - .env.local
+. . .
+```
 
 ## Fluxo de Dados
 
@@ -205,7 +215,7 @@ Considerando que as pastas cujo nome possui os parênteses são ignoradas e some
 {BASE_URL}/groups/add/
 {BASE_URL}/itineraries/
 {BASE_URL}/itineraries/add/
-...
+. . .
 ```
 
 ## Arquitetura da API
@@ -332,7 +342,7 @@ DATABASE_USERNAME=root
 DATABASE_PASSWORD=123
 DATABASE_HOST=db
 DATABASE_PORT=1000
-...
+. . .
 ```
 
 Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso em `.env.prod`.
