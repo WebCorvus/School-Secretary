@@ -2,8 +2,6 @@ services:
   db:
     image: postgres:16-alpine
     container_name: school-secretary-db
-    ports:
-      - "1000:1000"
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
@@ -18,8 +16,6 @@ services:
     build: ./api
     image: webcorvus/school-secretary-api:latest
     container_name: school-secretary-api
-    ports:
-      - "8000:8000"
     volumes:
       - db_data:/api/data
     env_file:
@@ -35,6 +31,7 @@ services:
           path: ./api
           target: /api
     networks:
+      - public
       - private
 
   app:
@@ -55,9 +52,11 @@ services:
           path: ./app
           target: /app
     networks:
-      - private
+      - public
 
 networks:
+  public:
+    driver: bridge
   private:
     driver: bridge
 

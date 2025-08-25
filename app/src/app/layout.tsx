@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import type { Metadata } from "next";
 import "./globals.css";
 
 import Header from "@/components/Header";
@@ -20,9 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body
-				className={inter.className}
-			>
+			<body className={inter.className}>
 				<Header />
 				<HorizontalLine />
 				<div>{children}</div>
