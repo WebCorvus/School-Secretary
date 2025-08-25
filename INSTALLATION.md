@@ -23,7 +23,7 @@ Para acessar certas funcionalidades do sistema, é necessário ter um usuário c
 2.  Execute o comando para criar um superusuário dentro do container `school-secretary-api-1`:
 
     ```bash
-    docker compose exec school-secretary-api-1 python manage.py createsuperuser
+    docker exec -it school-secretary-api python manage.py createsuperuser
     ```
 
     Siga as instruções no terminal para definir o nome de usuário, e-mail e senha.
