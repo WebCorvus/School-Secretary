@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:8000";
+export const API_BASE_URL = "http://potential-eureka-4xpgjr6x9vrf77q7-8000.app.github.dev";
 export const LOGIN_BASE_URL = `${API_BASE_URL}/api/token/`;
 export const GROUP_BASE_URL = `${API_BASE_URL}/school/group/`;
 export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
