@@ -1,5 +1,6 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
+
 
 
 from utils.validators import cep_validator, cpf_validator, phone_validator
@@ -34,7 +35,7 @@ class Subject(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
@@ -58,7 +59,7 @@ class Itinerary(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
@@ -89,7 +90,7 @@ class Group(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now,
+        default=timezone.now,
         editable=False,
     )
 
@@ -127,7 +128,7 @@ class Professor(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
@@ -151,7 +152,7 @@ class SchoolRecord(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
@@ -184,7 +185,7 @@ class Book(models.Model):
     )
 
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
@@ -225,9 +226,42 @@ class Lesson(models.Model):
         null=True,
     )
     created_at = models.DateTimeField(
-        default=datetime.now(),
+        default=timezone.now,
         editable=False,
     )
 
     def __str__(self):
         return f"{self.professor} - {self.subject} - {self.get_day_display()} - {self.time}"
+
+
+class AgendaItem(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    date = models.DateField()
+    time = models.TimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['date', 'time']
+
+    def __str__(self):
+        return self.title
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['start_date', 'start_time']
+
+    def __str__(self):
+        return self.title

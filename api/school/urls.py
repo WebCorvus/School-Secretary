@@ -8,6 +8,8 @@ from .views import (
     SchoolRecordViewSet,
     BookViewSet,
     LessonViewSet,
+    AgendaItemViewSet,
+    EventViewSet,
 )
 
 router = DefaultRouter()
@@ -18,5 +20,7 @@ router.register(r"group", GroupViewSet, basename="group")
 router.register(r"schoolrecord", SchoolRecordViewSet, basename="schoolrecord")
 router.register(r"book", BookViewSet, basename="book")
 router.register(r"lesson", LessonViewSet, basename="lesson")
+router.register(r"agendaitem", AgendaItemViewSet, basename="agendaitem")
+router.register(r"event", EventViewSet, basename="event")
 
 urlpatterns = router.urls

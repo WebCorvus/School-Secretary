@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from utils.day_util import get_day_name
 
-from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson
+from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson, AgendaItem, Event
 from .serializers import (
     ProfessorSerializer,
     SubjectSerializer,
@@ -12,6 +12,8 @@ from .serializers import (
     SchoolRecordSerializer,
     BookSerializer,
     LessonSerializer,
+    AgendaItemSerializer,
+    EventSerializer,
 )
 from .models import LESSONS_PER_DAY
 
@@ -128,4 +130,27 @@ class LessonViewSet(viewsets.ModelViewSet):
         "time",
         "day",
         "created_at",
+    ]
+
+
+class AgendaItemViewSet(viewsets.ModelViewSet):
+    queryset = AgendaItem.objects.all().order_by('-date', '-time')
+    serializer_class = AgendaItemSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        'title',
+        'description',
+        'date',
+    ]
+
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all().order_by('-start_date', '-start_time')
+    serializer_class = EventSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        'title',
+        'description',
+        'location',
+        'start_date',
     ]

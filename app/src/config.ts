@@ -7,3 +7,5 @@ export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
 export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;
 export const PROFESSOR_BASE_URL = `${API_BASE_URL}/school/professor/`;
 export const SUBJECT_BASE_URL = `${API_BASE_URL}/school/subject/`;
+export const AGENDA_BASE_URL = `${API_BASE_URL}/school/agendaitem/`;
+export const EVENT_BASE_URL = `${API_BASE_URL}/school/event/`;
