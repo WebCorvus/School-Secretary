@@ -16,6 +16,7 @@ services:
     build: ./api
     image: webcorvus/school-secretary-api:latest
     container_name: school-secretary-api
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - db_data:/api/data
     env_file:
@@ -24,7 +25,6 @@ services:
       - .env.local
     depends_on:
       - db
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     develop:
       watch:
         - action: sync
@@ -40,8 +40,6 @@ services:
     container_name: school-secretary-app
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
     env_file:
       - .env.base
       - .env.prod
