@@ -21,10 +21,12 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
-				<Header />
-				<HorizontalLine />
-				<div>{children}</div>
-				<Footer />
+				<div className="flex h-screen">
+					<Header />
+					<main className="flex-grow overflow-y-auto">
+						{children}
+					</main>
+				</div>
 			</body>
 		</html>
 	);
