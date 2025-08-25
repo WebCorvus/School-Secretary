@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:16-alpine
     container_name: school-secretary-db
+    ports:
+      - "1000:1000"
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
@@ -17,6 +19,8 @@ services:
     image: webcorvus/school-secretary-api:latest
     container_name: school-secretary-api
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
     volumes:
       - db_data:/api/data
     env_file:
