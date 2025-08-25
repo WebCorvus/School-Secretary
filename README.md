@@ -42,6 +42,8 @@ env_file:
 
 ## Fluxo de Dados
 
+O Nginx atua como o ponto de entrada para todas as requisições, direcionando-as para a interface (Frontend) ou para a API (Backend).
+
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
 
 Sendo assim, o trecho do Frontend a seguir, executado logo após a renderização da página de matérias
@@ -103,18 +105,15 @@ O APP utiliza NextJS, um framework web, utilizado na construção dos componente
 
 ### Configurações dos Endpoints
 
-As configurações se dão por constantes do TypeScript
+As configurações se dão por constantes do TypeScript. Note que `API_BASE_URL` aponta para o endereço interno do serviço `api` dentro da rede Docker. Externamente, a aplicação é acessada via Nginx na porta 8080.
 
 ```ts
 // app/src/config.ts
-export const API_BASE_URL = "http://localhost:8000";
-export const LOGIN_BASE_URL = `${API_BASE_URL}/api/token/`;
-export const GROUP_BASE_URL = `${API_BASE_URL}/school/group/`;
+. . .
 export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
 export const STUDENT_BASE_URL = `${API_BASE_URL}/students/data/`;
-export const PROFESSOR_BASE_URL = `${API_BASE_URL}/school/professor/`;
-export const SUBJECT_BASE_URL = `${API_BASE_URL}/school/subject/`;
 export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;
+. . .
 ```
 
 ### Componentes
@@ -424,6 +423,63 @@ volumes:
 volumes:
     db_data:
 ```
+
+## Proxy Reverso (Nginx)
+
+O Nginx atua como um proxy reverso para a aplicação, direcionando as requisições do cliente para o serviço apropriado - app (frontend) ou api (backend). Ele também é responsável por servir arquivos estáticos e gerenciar o tráfego de rede de forma eficiente.
+
+A configuração do Nginx é definida no `compose.yaml` e no `proxy/nginx.conf`.
+
+### Configuração no Docker Compose
+
+No `compose.yaml`, o serviço `proxy` é definido para construir a imagem do Nginx e expor a porta 8080 do host para a porta 80 do contêiner:
+
+```yaml
+# compose.yaml
+services:
+    proxy:
+        build: ./proxy
+        container_name: school-secretary-proxy
+        ports:
+            - "8080:80"
+        depends_on:
+            - api
+            - app
+        networks:
+            - public
+```
+
+### Configuração do Nginx (proxy/nginx.conf)
+
+O arquivo `proxy/nginx.conf` define como o Nginx roteia as requisições:
+
+```nginx
+# proxy/nginx.conf
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://app:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://api:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+-   Requisições para a raiz (`/`) são encaminhadas para o serviço `app` (Next.js) na porta 3000.
+-   Requisições para `/api/` são encaminhadas para o serviço `api` (Django) na porta 8000.
+
+Dessa forma, o usuário precisa de apenas uma URL (e também apenas uma porta) para ter toda a aplicação rodando. Uma vez que, o Nginx permite que tudo fique na rede interna do Docker e que pela rota seja feito acesso ao APP ou API na porta correta.
 
 ## Sistema de Autenticação
 
