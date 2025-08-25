@@ -1,9 +1,55 @@
 services:
+  proxy:
+    build: ./proxy
+    container_name: school-secretary-proxy
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+      - app
+    networks:
+      - public
+
+  app:
+    build: ./app
+    image: webcorvus/school-secretary-app:latest
+    container_name: school-secretary-app
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: rebuild
+          path: ./app
+          target: /app
+    networks:
+      - public
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    image: webcorvus/school-secretary-api:latest
+    container_name: school-secretary-api
+    command: sh -c "python manage.py migrate && gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - db_data:/api/data
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - db
+    networks:
+      - public
+      - private
+    restart: unless-stopped
+
   db:
     image: postgres:16-alpine
     container_name: school-secretary-db
-    ports:
-      - "1000:1000"
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
@@ -13,48 +59,6 @@ services:
     networks:
       - private
     restart: unless-stopped
-
-  api:
-    build: ./api
-    image: webcorvus/school-secretary-api:latest
-    container_name: school-secretary-api
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - "8000:8000"
-    volumes:
-      - db_data:/api/data
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    depends_on:
-      - db
-    develop:
-      watch:
-        - action: sync
-          path: ./api
-          target: /api
-    networks:
-      - public
-      - private
-
-  app:
-    build: ./app
-    image: webcorvus/school-secretary-app:latest
-    container_name: school-secretary-app
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    develop:
-      watch:
-        - action: rebuild
-          path: ./app
-          target: /app
-    networks:
-      - public
 
 networks:
   public:

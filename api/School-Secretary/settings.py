@@ -35,6 +35,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = bool(os.environ.get("DEBUG", True))
 
 ALLOWED_HOSTS = ["localhost",] + os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
+USE_X_FORWARDED_HOST = os.environ.get("USE_X_FORWARDED_HOST", "False").lower() == "true"
 
 # Application definition
 
@@ -62,7 +63,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "https://127.0.0.1").split(",")
 
 REST_FRAMEWORK = {
