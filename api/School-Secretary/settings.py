@@ -29,8 +29,7 @@ DEBUG = bool(os.environ.get("DEBUG", True))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-USE_X_FORWARDED_HOST = os.environ.get("USE_X_FORWARDED_HOST", "False").lower() == "true"
-
+USE_X_FORWARDED_HOST = bool(os.environ.get("USE_X_FORWARDED_HOST", False))
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -56,9 +55,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-CORS_ALLOW_ALL_ORIGINS = (
-    os.environ.get("CORS_ALLOW_ALL_ORIGINS", "True").lower() == "true"
-)
+CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS", True))
 CORS_ALLOWED_ORIGINS = os.environ.get(
     "CORS_ALLOWED_ORIGINS", "https://127.0.0.1"
 ).split(",")
