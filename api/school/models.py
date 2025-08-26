@@ -1,8 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
-
-
 from utils.validators import cep_validator, cpf_validator, phone_validator
 from utils.day_util import get_day_name
 
@@ -243,7 +240,7 @@ class AgendaItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ["date", "time"]
 
     def __str__(self):
         return self.title
@@ -261,7 +258,7 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['start_date', 'start_time']
+        ordering = ["start_date", "start_time"]
 
     def __str__(self):
         return self.title
