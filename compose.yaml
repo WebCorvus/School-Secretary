@@ -10,8 +10,8 @@ services:
     networks:
       - public
     volumes:
-      - static_volume:/vol/web/static/
-      - media_volume:/vol/web/media/
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
 
   app:
     build: ./app
@@ -42,9 +42,8 @@ services:
       python manage.py migrate &&\
       gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - db_data:/api/data
-      - static_volume:/vol/web/static/
-      - media_volume:/vol/web/media/
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
     env_file:
       - .env.base
       - .env.prod
@@ -77,5 +76,5 @@ networks:
 
 volumes:
   db_data:
-  static_volume:
-  media_volume:
+  api_static:
+  api_media:
