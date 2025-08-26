@@ -481,6 +481,45 @@ server {
 
 Dessa forma, o usuário precisa de apenas uma URL (e também apenas uma porta) para ter toda a aplicação rodando. Uma vez que, o Nginx permite que tudo fique na rede interna do Docker e que pela rota seja feito acesso ao APP ou API na porta correta.
 
+## Servidor de Aplicação (Gunicorn)
+
+O Gunicorn (Green Unicorn) é um servidor de aplicação WSGI (Web Server Gateway Interface) para Python. Ele é utilizado para servir a aplicação Django, atuando como uma interface entre o Nginx e a aplicação.
+
+### Funcionamento
+
+Enquanto o servidor de desenvolvimento do Django (`manage.py runserver`) é ideal para o desenvolvimento, ele não é robusto o suficiente para um ambiente de produção. O Gunicorn, por outro lado, é projetado para produção, gerenciando múltiplos processos de trabalho para lidar com requisições concorrentes de forma eficiente.
+
+No `compose.yaml`, o serviço da `api` é configurado para usar o Gunicorn para iniciar a aplicação Django:
+
+```yaml
+# compose.yaml
+services:
+  api:
+    build:
+      context: ./api
+    container_name: school-secretary-api
+    command: gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./api:/usr/src/app/
+      - static_volume:/usr/src/app/static
+    expose:
+      - 8000
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - db
+    networks:
+      - public
+```
+
+O comando `gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000` instrui o Gunicorn a:
+-   Utilizar o arquivo de configuração WSGI da aplicação, localizado em `School-Secretary/wsgi.py`.
+-   Disponibilizar a aplicação em todas as interfaces de rede (`0.0.0.0`) na porta `8000`.
+
+Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do contêiner da `api`, onde o Gunicorn está escutando e gerenciando a aplicação Django.
+
 ## Sistema de Autenticação
 
 ### Backend
