@@ -11,3 +11,6 @@ coverage
 .editorconfig
 .aws
 dist
+db.sqlite3
+media/*
+migrations/*
