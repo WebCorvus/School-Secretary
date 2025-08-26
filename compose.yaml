@@ -17,6 +17,7 @@ services:
     build: ./app
     image: webcorvus/school-secretary-app:latest
     container_name: school-secretary-app
+    command: sh -c "npm run start"
     env_file:
       - .env.base
       - .env.prod

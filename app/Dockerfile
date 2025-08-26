@@ -1,4 +1,6 @@
-FROM node:22.18.0 AS builder
+FROM node:22.18.0 AS base
+
+FROM base AS builder
 
 WORKDIR /app
 
@@ -11,8 +13,7 @@ RUN npm run build
 RUN npm prune --production
 
 
-
-FROM node:22.18.0
+FROM base AS production
 
 WORKDIR /app
 
@@ -26,5 +27,3 @@ COPY --from=builder /app/public ./public
 RUN npm install --only=production
 
 EXPOSE 3000
-
-CMD ["npm", "run", "start"]
