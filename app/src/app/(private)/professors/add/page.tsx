@@ -126,7 +126,7 @@ export default function AddProfessor() {
 								</option>
 							))}
 						</select>
-						<button type="submit" className="btn btn-gray w-full">
+						<button type="submit" className="btn w-full">
 							Concluir
 						</button>
 					</form>

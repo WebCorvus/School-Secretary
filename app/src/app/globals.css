@@ -3,9 +3,12 @@
 :root {
 	--black: rgb(20, 20, 20);
 	--white: rgb(245, 245, 245);
-	--dark-gray: rgb(50, 50, 50);
-	--gray: rgb(100, 100, 100);
-	--light-gray: rgb(150, 150, 150);
+
+	--dark-gray: rgb(190, 190, 190);
+	--gray: rgb(210, 210, 210);
+	--light-gray: rgb(230, 230, 230);
+	--smooth: rgb(170, 170, 170);
+
 	--blue: rgb(0, 0, 255);
 	--dark-blue: rgb(0, 0, 150);
 
@@ -17,15 +20,13 @@
 	--foreground: var(--black);
 	--divide: var(--light-gray);
 
-	--button-bg: var(--black);
-	--button-active: rgb(150, 150, 150);
-	--button-hover: rgb(100, 100, 100);
-	--button-color: var(--white);
+	--button-border: var(--light-gray);
+	--button-bg: var(--light-gray);
+	--button-hover: var(--gray);
+	--button-active: var(--dark-gray);
 
-	--link-bg: var(--background);
-	--link-active: rgb(230, 230, 230);
-	--link-hover: rgb(220, 220, 220);
-	--link-color: var(--foreground);
+	--link-hover: var(--light-gray);
+	--link-active: var(--gray);
 }
 
 @theme inline {
@@ -35,26 +36,26 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--dark-gray: rgb(40, 40, 40);
-		--gray: rgb(60, 60, 60);
-		--light-gray: rgb(80, 80, 80);
+		--dark-gray: rgb(30, 30, 30);
+		--gray: rgb(40, 40, 40);
+		--light-gray: rgb(50, 50, 50);
+		--smooth: rgb(70, 70, 70);
+
 		--blue: rgb(100, 100, 255);
 		--dark-blue: rgb(100, 100, 150);
 
-		--background: var(--dark-gray);
+		--background: rgb(20, 20, 20);
 		--foreground: var(--white);
-
-		--button-bg: var(--gray);
-		--button-active: rgb(150, 150, 150);
-		--button-hover: var(--light-gray);
-		--button-color: var(--white);
-
-		--link-bg: var(--background);
-		--link-active: var(--light-gray);
-		--link-hover: var(--gray);
-		--link-color: var(--foreground);
-
 		--divide: var(--gray);
+
+		--button-border: var(--dark-gray);
+		--button-bg: var(--dark-gray);
+		--button-hover: var(--gray);
+		--button-active: var(--light-gray);
+
+		--link-bg: var(--light-gray);
+		--link-hover: var(--gray);
+		--link-active: var(--light-gray);
 	}
 }
 
@@ -65,12 +66,17 @@ body {
 }
 
 .btn {
-	@apply m-1 px-3 py-1 rounded-md;
+	@apply m-1 px-3 py-1 rounded-md bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
 	transition: background 0.2s, color 0.2s;
 }
 
-.btn-common {
-	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
+.link {
+	@apply m-1 p-1 rounded-sm hover:bg-[var(--link-hover)] active:bg-[var(--link-active)];
+	transition: background 0.2s, color 0.2s;
+}
+
+.link-blue {
+	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 
 .header-container {
@@ -78,7 +84,7 @@ body {
 }
 
 .header-vertical {
-	@apply p-1.5 flex flex-col w-40 bg-[var(--dark-gray)] border-r border-[var(--divide)] p-4;
+	@apply p-1.5 flex flex-col w-40 border-r border-[var(--divide)] p-4;
 }
 
 /* .header-vertical li {
@@ -90,7 +96,11 @@ body {
 }
 
 .header-vertical a {
-	@apply block p-2 rounded hover:bg-[var(--button-hover)];
+	@apply block p-2 rounded hover:bg-[var(--link-hover)] active:bg-[var(--link-active)];
+}
+
+.footer {
+	@apply w-full left-0 text-center text-sm bg-[var(--background)] md:absolute md:bottom-0 md:text-base fixed bottom-0 z-10;
 }
 
 .form-container {
@@ -106,13 +116,11 @@ body {
 }
 
 .form select {
-	@apply m-1.5 w-full p-1.5 bg-[var(--background)] text-[var(--foreground)] border border-[var(--divide)]  rounded-md;
+	@apply m-1.5 w-full p-1.5 bg-[var(--background)] border border-[var(--divide)]  rounded-md;
 }
 
 .form button {
-	@apply m-1 px-3 py-1 rounded-sm
-
-    text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-bg)];
+	@apply m-1 px-3 py-1 rounded-sm bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
 
 	transition: background 0.2s, color 0.2s;
 }
@@ -136,19 +144,6 @@ body {
 
 .title {
 	@apply m-5 text-3xl;
-}
-
-.link {
-	@apply m-1 p-1 rounded-sm;
-	transition: background 0.2s, color 0.2s;
-}
-
-.link-common {
-	@apply text-[var(--button-color)] bg-[var(--button-bg)] hover:bg-[var(--button-hover)] active:bg-[var(--button-active)];
-}
-
-.link-blue {
-	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 
 .table-container {

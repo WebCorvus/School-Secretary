@@ -32,7 +32,7 @@ export default function SearchField({
 					aria-label="Campo de busca"
 					className="max-w-[400px] min-w-[200px] w-full"
 				/>
-				<button className="btn btn-common" type="submit">
+				<button className="btn" type="submit">
 					Buscar
 				</button>
 			</form>

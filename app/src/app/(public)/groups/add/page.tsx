@@ -121,7 +121,7 @@ export default function AddGroup() {
 					</div>
 					<button
 						type="submit"
-						className="btn btn-common w-full"
+						className="btn w-full"
 						disabled={posting}
 					>
 						{posting ? "Salvando..." : "Salvar"}
