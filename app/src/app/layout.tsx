@@ -19,13 +19,14 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="pt-br" suppressHydrationWarning>
 			<body className={inter.className}>
 				<div className="flex h-screen">
 					<Header />
 					<main className="flex-grow overflow-y-auto">
 						{children}
 					</main>
+					<Footer />
 				</div>
 			</body>
 		</html>

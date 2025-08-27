@@ -63,7 +63,7 @@ export default function AddItinerary() {
 					/>
 					<button
 						type="submit"
-						className="btn btn-common w-full"
+						className="btn w-full"
 						disabled={loading}
 					>
 						{loading ? "Salvando..." : "Salvar"}

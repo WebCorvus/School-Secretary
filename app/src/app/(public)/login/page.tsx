@@ -52,7 +52,7 @@ export default function LoginPage() {
 					/>
 					<button
 						type="submit"
-						className="btn btn-common mt-2 w-full"
+						className="btn mt-2 w-full"
 					>
 						Entrar
 					</button>

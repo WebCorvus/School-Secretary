@@ -52,7 +52,7 @@ export default function GroupsPage() {
 			</div>
 			<div className="flex justify-center m-3">
 				<Link
-					className="link link-common w-50 text-center"
+					className="btn w-50 text-center"
 					href="/groups/add"
 				>
 					Adicionar
