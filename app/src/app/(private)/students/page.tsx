@@ -45,10 +45,7 @@ export default function StudentsPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link
-					className="btn w-50 text-center"
-					href="/students/add"
-				>
+				<Link className="btn w-50 text-center" href="/students/add">
 					Adicionar
 				</Link>
 			</div>
@@ -88,7 +85,7 @@ export default function StudentsPage() {
 									<td>
 										<Link
 											href={`${STUDENT_BASE_URL}${student.id}/download-grades`}
-											className="link link-blue"
+											className="link-blue"
 										>
 											Notas
 										</Link>
@@ -96,14 +93,14 @@ export default function StudentsPage() {
 									<td>
 										<Link
 											href={`${STUDENT_BASE_URL}${student.id}/download-presence`}
-											className="link link-blue"
+											className="link-blue"
 										>
 											Presença
 										</Link>
 									</td>
 									<td>
 										<button
-											className="link link-blue"
+											className="link-blue"
 											onClick={() =>
 												handleDelete(student.id)
 											}

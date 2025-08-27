@@ -51,10 +51,7 @@ export default function ItinerariesPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link
-					className="btn w-50 text-center"
-					href="/itineraries/add"
-				>
+				<Link className="btn w-50 text-center" href="/itineraries/add">
 					Adicionar
 				</Link>
 			</div>
@@ -76,7 +73,7 @@ export default function ItinerariesPage() {
 										<td>{itinerary.full_name}</td>
 										<td>
 											<button
-												className="link link-blue"
+												className="link-blue"
 												onClick={() =>
 													handleDelete(itinerary.id)
 												}

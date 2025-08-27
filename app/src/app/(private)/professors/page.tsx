@@ -46,10 +46,7 @@ export default function ProfessorsPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link
-					className="btn w-50 text-center"
-					href="/professors/add"
-				>
+				<Link className="btn w-50 text-center" href="/professors/add">
 					Adicionar
 				</Link>
 			</div>
@@ -83,7 +80,7 @@ export default function ProfessorsPage() {
 									</td>
 									<td>
 										<button
-											className="link link-blue"
+											className="link-blue"
 											onClick={() =>
 												handleDelete(professor.id)
 											}

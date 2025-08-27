@@ -88,7 +88,7 @@ e, se adquirindo os dados, armazena na variável `data`, de forma que os dados p
 			<td>{subject.full_name}</td>
 			<td>
 				<button
-					className="link link-blue"
+					className="link-blue"
 					onClick={() => handleDelete(subject.id)}
 				>
 					Remover
@@ -494,27 +494,28 @@ No `compose.yaml`, o serviço da `api` é configurado para usar o Gunicorn para 
 ```yaml
 # compose.yaml
 services:
-  api:
-    build:
-      context: ./api
-    container_name: school-secretary-api
-    command: gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - ./api:/usr/src/app/
-      - static_volume:/usr/src/app/static
-    expose:
-      - 8000
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    depends_on:
-      - db
-    networks:
-      - public
+    api:
+        build:
+            context: ./api
+        container_name: school-secretary-api
+        command: gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
+        volumes:
+            - ./api:/usr/src/app/
+            - static_volume:/usr/src/app/static
+        expose:
+            - 8000
+        env_file:
+            - .env.base
+            - .env.prod
+            - .env.local
+        depends_on:
+            - db
+        networks:
+            - public
 ```
 
 O comando `gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000` instrui o Gunicorn a:
+
 -   Utilizar o arquivo de configuração WSGI da aplicação, localizado em `School-Secretary/wsgi.py`.
 -   Disponibilizar a aplicação em todas as interfaces de rede (`0.0.0.0`) na porta `8000`.
 

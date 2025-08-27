@@ -76,7 +76,7 @@ body {
 }
 
 .link-blue {
-	@apply text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
+	@apply m-1 p-1 text-[var(--blue)] hover:text-[var(--dark-blue)] underline;
 }
 
 .header-container {
