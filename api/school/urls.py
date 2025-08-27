@@ -13,14 +13,14 @@ from .views import (
 )
 
 router = DefaultRouter()
-router.register(r"professor", ProfessorViewSet, basename="professor")
-router.register(r"subject", SubjectViewSet, basename="subject")
-router.register(r"itinerary", ItineraryViewSet, basename="itinerary")
-router.register(r"group", GroupViewSet, basename="group")
-router.register(r"schoolrecord", SchoolRecordViewSet, basename="schoolrecord")
-router.register(r"book", BookViewSet, basename="book")
-router.register(r"lesson", LessonViewSet, basename="lesson")
-router.register(r"agendaitem", AgendaItemViewSet, basename="agendaitem")
-router.register(r"event", EventViewSet, basename="event")
+router.register(r"professors", ProfessorViewSet, basename="professor")
+router.register(r"subjects", SubjectViewSet, basename="subject")
+router.register(r"itineraries", ItineraryViewSet, basename="itinerary")
+router.register(r"groups", GroupViewSet, basename="group")
+router.register(r"schoolrecords", SchoolRecordViewSet, basename="schoolrecord")
+router.register(r"books", BookViewSet, basename="book")
+router.register(r"lessons", LessonViewSet, basename="lesson")
+router.register(r"agenda", AgendaItemViewSet, basename="agendaitem")
+router.register(r"events", EventViewSet, basename="event")
 
 urlpatterns = router.urls

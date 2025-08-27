@@ -9,10 +9,10 @@ from .views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r"data", StudentViewSet)
-router.register(r"grade", GradeViewSet)
-router.register(r"guardian", GuardianViewSet)
-router.register(r"contract", ContractViewSet)
-router.register(r"presence", PresenceViewSet)
+router.register(r"", StudentViewSet)
+router.register(r"grades", GradeViewSet)
+router.register(r"guardians", GuardianViewSet)
+router.register(r"contracts", ContractViewSet)
+router.register(r"presences", PresenceViewSet)
 
 urlpatterns = router.urls
