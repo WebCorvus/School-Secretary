@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { AgendaItem } from "@/types/agenda";
 import { Event } from "@/types/event";
-import { AGENDA_BASE_URL, EVENT_BASE_URL } from "@/config";
+import { AGENDA_PENDENTS_URL, EVENT_PENDENTS_URL } from "@/config";
 
 export default function Home() {
 	const [agenda, setAgenda] = useState<AgendaItem[]>([]);
@@ -13,7 +13,7 @@ export default function Home() {
 	useEffect(() => {
 		async function getAgenda() {
 			try {
-				const agendaResponse = await axios.get(AGENDA_BASE_URL);
+				const agendaResponse = await axios.get(AGENDA_PENDENTS_URL);
 				if (!agendaResponse) {
 					throw new Error("Agenda unavaible.");
 				}
@@ -25,7 +25,7 @@ export default function Home() {
 
 		async function getEvents() {
 			try {
-				const eventResponse = await axios.get(EVENT_BASE_URL);
+				const eventResponse = await axios.get(EVENT_PENDENTS_URL);
 				if (!eventResponse) {
 					throw new Error("Events unavaible.");
 				}
@@ -51,23 +51,42 @@ export default function Home() {
 			</div>
 
 			<div className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">
+				<h2 className="text-2xl font-semibold">
 					Últimas Atualizações da Agenda
 				</h2>
 				<div className="p-6 rounded-lg shadow-lg">
 					{agenda.length > 0 ? (
-						<ul className="list-disc pl-5">
+						<ul className="list-none pl-5">
 							{agenda.map((item) => (
-								<li key={item.id} className="mb-2">
+								<li
+									key={item.id}
+									className="flex flex-col mb-8"
+								>
 									<span className="font-semibold">
+										{item.subject_details && (
+											<span>
+												{
+													item.subject_details
+														.short_name
+												}
+												:
+											</span>
+										)}{" "}
 										{item.title}
-									</span>{" "}
-									- {item.date} {item.time}
-									{item.description && (
-										<p className="text-sm ml-4">
-											{item.description}
-										</p>
-									)}
+									</span>
+									<span className="text-[var(--smooth)]">
+										{item.date}
+										{item.time && (
+											<span> ás {item.time}</span>
+										)}
+									</span>
+									<span>
+										{item.description && (
+											<p className="text-sm m-2">
+												{item.description}
+											</p>
+										)}
+									</span>
 								</li>
 							))}
 						</ul>
@@ -80,23 +99,37 @@ export default function Home() {
 			</div>
 
 			<div className="mb-8">
-				<h2 className="text-2xl font-semibold mb-4">Últimos Eventos</h2>
+				<h2 className="text-2xl font-semibold">Últimos Eventos</h2>
 				<div className="p-6 rounded-lg shadow-lg">
 					{events.length > 0 ? (
-						<ul className="list-disc pl-5">
+						<ul className="list-none pl-5">
 							{events.map((event) => (
-								<li key={event.id} className="mb-2">
+								<li
+									key={event.id}
+									className="flex flex-col mb-8"
+								>
 									<span className="font-semibold">
 										{event.title}
-									</span>{" "}
-									- {event.start_date} {event.start_time}
+									</span>
+									<span className="text-[var(--smooth)]">
+										{event.start_date}
+										{event.end_date && (
+											<span> até {event.end_date}</span>
+										)}
+									</span>
+									<span className="text-[var(--smooth)]">
+										{event.start_time}
+										{event.end_time && (
+											<span> até {event.end_time}</span>
+										)}
+									</span>
 									{event.location && (
-										<span className="ml-2 text-sm">
-											({event.location})
-										</span>
+										<p className="text-sm m-2">
+											Localização: {event.location}
+										</p>
 									)}
 									{event.description && (
-										<p className="text-sm ml-4">
+										<p className="text-sm m-2">
 											{event.description}
 										</p>
 									)}

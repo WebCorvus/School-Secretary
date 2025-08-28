@@ -233,6 +233,14 @@ class Lesson(models.Model):
 
 class AgendaItem(models.Model):
     title = models.CharField(max_length=200)
+    subject = models.ForeignKey(
+        "school.Subject",
+        on_delete=models.SET_NULL,
+        verbose_name="Agenta item subject",
+        related_name="agenda_item",
+        null=True,
+        blank=False,
+    )
     description = models.TextField(blank=True, null=True)
     date = models.DateField()
     time = models.TimeField(blank=True, null=True)

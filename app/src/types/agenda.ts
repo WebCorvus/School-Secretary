@@ -1,9 +1,13 @@
+import { SubjectProps } from "./subject";
+
 export interface AgendaItem {
-    id: number;
-    title: string;
-    description?: string;
-    date: string; // YYYY-MM-DD
-    time?: string; // HH:MM:SS
-    created_at: string;
-    updated_at: string;
+	id: number;
+	title: string;
+	subject?: number;
+	subject_details?: SubjectProps;
+	description?: string;
+	date: string;
+	time?: string;
+	created_at: string;
+	updated_at: string;
 }

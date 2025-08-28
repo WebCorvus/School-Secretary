@@ -2,8 +2,19 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from utils.day_util import get_day_name
+from django.utils import timezone
 
-from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson, AgendaItem, Event
+from .models import (
+    Professor,
+    Subject,
+    Itinerary,
+    Group,
+    SchoolRecord,
+    Book,
+    Lesson,
+    AgendaItem,
+    Event,
+)
 from .serializers import (
     ProfessorSerializer,
     SubjectSerializer,
@@ -134,23 +145,35 @@ class LessonViewSet(viewsets.ModelViewSet):
 
 
 class AgendaItemViewSet(viewsets.ModelViewSet):
-    queryset = AgendaItem.objects.all().order_by('-date', '-time')
+    queryset = AgendaItem.objects.all().order_by("-date", "-time")
     serializer_class = AgendaItemSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        'title',
-        'description',
-        'date',
+        "title",
+        "description",
+        "date",
     ]
+
+    @action(detail=False, methods=["get"], url_path="pendents")
+    def get_pendents(self, request):
+        pendents = self.get_queryset().filter(date__gte=timezone.now().date()).order_by("date", "time")
+        serializer = self.get_serializer(pendents, many=True)
+        return Response(serializer.data)
 
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all().order_by('-start_date', '-start_time')
+    queryset = Event.objects.all().order_by("-start_date", "-start_time")
     serializer_class = EventSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = [
-        'title',
-        'description',
-        'location',
-        'start_date',
+        "title",
+        "description",
+        "location",
+        "start_date",
     ]
+
+    @action(detail=False, methods=["get"], url_path="pendents")
+    def get_pendents(self, request):
+        pendents = self.get_queryset().filter(start_date__gte=timezone.now().date()).order_by("start_date", "start_time")
+        serializer = self.get_serializer(pendents, many=True)
+        return Response(serializer.data)

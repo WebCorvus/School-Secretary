@@ -96,7 +96,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.{}".format(
             os.environ.get("DATABASE_ENGINE", "sqlite3")
         ),
-        "NAME": os.environ.get("DATABASE_NAME", "school_secretary"),
+        "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "data" / "db.sqlite3"),
         "USER": os.environ.get("DATABASE_USERNAME", "root"),
         "PASSWORD": os.environ.get("DATABASE_PASSWORD", "123"),
         "HOST": os.environ.get("DATABASE_HOST", "127.0.0.1"),
@@ -145,9 +145,9 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = '/vol/web/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = '/vol/web/media/'
+STATIC_ROOT = "/vol/web/static/"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/vol/web/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

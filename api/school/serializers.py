@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import Professor, Subject, Itinerary, Group, SchoolRecord, Book, Lesson, AgendaItem, Event
+from .models import (
+    Professor,
+    Subject,
+    Itinerary,
+    Group,
+    SchoolRecord,
+    Book,
+    Lesson,
+    AgendaItem,
+    Event,
+)
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -62,16 +72,20 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
-        extra_fields = ["professor_details", "subject_details"]
+        extra_fields = ["group_details", "professor_details", "subject_details"]
 
 
 class AgendaItemSerializer(serializers.ModelSerializer):
+    subject_details = SubjectSerializer(source="subject", read_only=True)
+
     class Meta:
         model = AgendaItem
         fields = "__all__"
+        extra_fields = ["subject_details"]
 
 
 class EventSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Event
         fields = "__all__"

@@ -8,4 +8,6 @@ export const LESSON_BASE_URL = `${API_BASE_URL}/school/lessons/`;
 export const PROFESSOR_BASE_URL = `${API_BASE_URL}/school/professors/`;
 export const SUBJECT_BASE_URL = `${API_BASE_URL}/school/subjects/`;
 export const AGENDA_BASE_URL = `${API_BASE_URL}/school/agenda/`;
+export const AGENDA_PENDENTS_URL = `${AGENDA_BASE_URL}pendents/`;
 export const EVENT_BASE_URL = `${API_BASE_URL}/school/events/`;
+export const EVENT_PENDENTS_URL = `${EVENT_BASE_URL}pendents/`;
