@@ -1,26 +1,43 @@
-import Link from "next/link";
+"use client";
+
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { AgendaItem } from "@/types/agenda";
 import { Event } from "@/types/event";
 import { AGENDA_BASE_URL, EVENT_BASE_URL } from "@/config";
 
-export default async function Home() {
-	let agendaItems: AgendaItem[] = [];
-	let events: Event[] = [];
+export default function Home() {
+	const [agenda, setAgenda] = useState<AgendaItem[]>([]);
+	const [events, setEvents] = useState<Event[]>([]);
 
-	try {
-		const agendaResponse = await axios.get<AgendaItem[]>(AGENDA_BASE_URL);
-		agendaItems = agendaResponse.data;
-	} catch (error) {
-		console.error("Error fetching agenda items on server:", error);
-	}
+	useEffect(() => {
+		async function getAgenda() {
+			try {
+				const agendaResponse = await axios.get(AGENDA_BASE_URL);
+				if (!agendaResponse) {
+					throw new Error("Agenda unavaible.");
+				}
+				setAgenda(agendaResponse.data);
+			} catch (error) {
+				console.error("Error fetching agenda items on client:", error);
+			}
+		}
 
-	try {
-		const eventResponse = await axios.get<Event[]>(EVENT_BASE_URL);
-		events = eventResponse.data;
-	} catch (error) {
-		console.error("Error fetching events on server:", error);
-	}
+		async function getEvents() {
+			try {
+				const eventResponse = await axios.get(EVENT_BASE_URL);
+				if (!eventResponse) {
+					throw new Error("Events unavaible.");
+				}
+				setEvents(eventResponse.data);
+			} catch (error) {
+				console.error("Error fetching events on client:", error);
+			}
+		}
+
+		getAgenda();
+		getEvents();
+	}, []);
 
 	return (
 		<div className="flex flex-col flex-grow p-8">
@@ -38,9 +55,9 @@ export default async function Home() {
 					Últimas Atualizações da Agenda
 				</h2>
 				<div className="p-6 rounded-lg shadow-lg">
-					{agendaItems.length > 0 ? (
+					{agenda.length > 0 ? (
 						<ul className="list-disc pl-5">
-							{agendaItems.map((item) => (
+							{agenda.map((item) => (
 								<li key={item.id} className="mb-2">
 									<span className="font-semibold">
 										{item.title}
