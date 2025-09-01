@@ -111,7 +111,7 @@ As configurações se dão por constantes do TypeScript. Note que `API_BASE_URL`
 // app/src/config.ts
 . . .
 export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
-export const STUDENT_BASE_URL = `${API_BASE_URL}/students/data/`;
+export const STUDENT_BASE_URL = `${API_BASE_URL}/students/`;
 export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;
 . . .
 ```
@@ -584,7 +584,7 @@ Existem quatro papéis definidos no sistema:
 
 #### Proteção de Endpoints
 
-A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, as ações relacionadas ao gerenciamento de alunos (`/api/students/data/`) são protegidas da seguinte forma:
+A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, as ações relacionadas ao gerenciamento de alunos (`/api/students/`) são protegidas da seguinte forma:
 
 -   **Listar, Visualizar, Criar, Atualizar e Deletar Alunos**: Acesso restrito a usuários com o papel `STAFF` ou `SUPERUSER`.
 
