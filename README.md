@@ -569,6 +569,27 @@ export function middleware(request: NextRequest) {
 
 -   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
 
+### Níveis de Acesso e Permissões
+
+O sistema utiliza um modelo de controle de acesso baseado em papéis (Role-Based Access Control - RBAC) para proteger os dados e as ações. Cada usuário possui um papel que define seu nível de acesso.
+
+#### Papéis de Usuário
+
+Existem quatro papéis definidos no sistema:
+
+-   **`STUDENT`**: O nível de acesso mais básico. Pode visualizar informações públicas e seus próprios dados, mas não pode modificar dados de outros usuários ou acessar áreas restritas.
+-   **`PROFESSOR`**: Pode gerenciar informações relacionadas às suas próprias turmas e alunos, como lançar notas e registrar presença.
+-   **`STAFF`**: Possui acesso administrativo para gerenciar dados essenciais da escola, como cadastrar novos alunos, turmas e professores.
+-   **`SUPERUSER`**: Possui acesso irrestrito a todo o sistema, incluindo a capacidade de gerenciar todos os outros usuários e configurações do sistema.
+
+#### Proteção de Endpoints
+
+A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, as ações relacionadas ao gerenciamento de alunos (`/api/students/data/`) são protegidas da seguinte forma:
+
+-   **Listar, Visualizar, Criar, Atualizar e Deletar Alunos**: Acesso restrito a usuários com o papel `STAFF` ou `SUPERUSER`.
+
+Esta abordagem garante que um usuário `STUDENT`, por exemplo, não possa adicionar ou remover outros alunos do sistema, mesmo que consiga acessar a interface. A lógica de permissão é centralizada na API para garantir a segurança e a integridade dos dados.
+
 ## Autoria
 
 Frontend - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.

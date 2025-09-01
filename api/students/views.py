@@ -1,5 +1,6 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
+from users.permissions import IsStaff, IsProfessor
 
 from .models import Student, Grade, Guardian, Contract, Presence
 from .serializers import (
@@ -16,6 +17,7 @@ from utils.subject_utils import get_subject_names
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all().order_by("full_name")
     serializer_class = StudentSerializer
+    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
@@ -70,6 +72,7 @@ class GradeViewSet(viewsets.ModelViewSet):
         "student__full_name", "subject__full_name", "year", "bimester"
     )
     serializer_class = GradeSerializer
+    permission_classes = [IsProfessor]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",
@@ -86,6 +89,7 @@ class GradeViewSet(viewsets.ModelViewSet):
 class GuardianViewSet(viewsets.ModelViewSet):
     queryset = Guardian.objects.all().order_by("full_name")
     serializer_class = GuardianSerializer
+    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
@@ -103,6 +107,7 @@ class GuardianViewSet(viewsets.ModelViewSet):
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = Contract.objects.all().order_by("-created_at")
     serializer_class = ContractSerializer
+    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "guardian__full_name",
@@ -127,6 +132,7 @@ class ContractViewSet(viewsets.ModelViewSet):
 class PresenceViewSet(viewsets.ModelViewSet):
     queryset = Presence.objects.all().order_by("student__full_name", "date")
     serializer_class = PresenceSerializer
+    permission_classes = [IsProfessor]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",

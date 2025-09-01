@@ -4,8 +4,8 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
-migrations
+media/
+migrations/
 
 # Backup files # 
 *.bak 
@@ -154,4 +154,3 @@ npm-debug.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
