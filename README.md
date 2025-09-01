@@ -590,6 +590,80 @@ A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API
 
 Esta abordagem garante que um usuário `STUDENT`, por exemplo, não possa adicionar ou remover outros alunos do sistema, mesmo que consiga acessar a interface. A lógica de permissão é centralizada na API para garantir a segurança e a integridade dos dados.
 
+### Estrutura do Usuário
+
+O modelo de usuário (`User`) é a base do sistema de autenticação e autorização. Ele é definido em `api/users/models.py` e estende as funcionalidades padrão do Django para se adequar às necessidades específicas da aplicação.
+
+#### Modelo `User`
+
+Nosso modelo `User` é construído a partir de `AbstractBaseUser` e `PermissionsMixin`.
+
+```python
+# api/users/models.py
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+
+class User(AbstractBaseUser, PermissionsMixin):
+    class Role(models.TextChoices):
+        STUDENT = "STUDENT", "Student"
+        PROFESSOR = "PROFESSOR", "Professor"
+        STAFF = "STAFF", "Staff"
+        SUPERUSER = "SUPERUSER", "Superuser"
+
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=255)
+    role = models.CharField(max_length=50, choices=Role.choices, default=Role.STUDENT)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    # ... (rest of the model, including __str__ and save methods) ...
+```
+
+-   **`AbstractBaseUser`**: Fornece a implementação central de um modelo de usuário, incluindo senhas com hash e autenticação baseada em token. Ele não inclui campos relacionados a permissões.
+-   **`PermissionsMixin`**: É uma classe mixin que adiciona campos e métodos relacionados a permissões ao modelo de usuário. Ao herdar de `PermissionsMixin`, nosso modelo `User` automaticamente ganha:
+    -   `is_superuser`: Um campo booleano que indica se o usuário tem todas as permissões sem ser explicitamente atribuído.
+    -   `groups`: Um campo Many-to-Many para gerenciar grupos de usuários.
+    -   `user_permissions`: Um campo Many-to-Many para gerenciar permissões individuais do usuário.
+    -   Métodos como `has_perm`, `has_module_perms`, etc., para verificação de permissões.
+
+Além desses, nosso modelo `User` inclui campos personalizados como `email` (usado como campo de nome de usuário), `name`, e `role` (para definir o papel do usuário no sistema: `STUDENT`, `PROFESSOR`, `STAFF`, `SUPERUSER`).
+
+#### `UserManager`
+
+O `UserManager` (definido em `api/users/models.py`) é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
+
+```python
+# api/users/models.py
+from django.contrib.auth.models import BaseUserManager
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', self.model.Role.SUPERUSER)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get('role') is not self.model.Role.SUPERUSER:
+            raise ValueError('Superuser must have role of Superuser.')
+
+        return self.create_user(email, password, **extra_fields)
+```
+
+-   **Criação de Usuários**: Ele fornece métodos especializados como `create_user()` e `create_superuser()`. Esses métodos são cruciais porque o modelo de usuário personalizado não usa o campo `username` padrão do Django. O `UserManager` garante que os usuários sejam criados corretamente com `email` e `password`, e que os superusuários tenham os sinalizadores `is_staff` e `is_superuser` (e o `role` apropriado) definidos.
+-   **`extra_fields`**: Nos métodos `create_user()` e `create_superuser()` do `UserManager`, o parâmetro `**extra_fields` permite que campos adicionais do modelo `User` (como `name` ou `role`) sejam passados durante a criação do usuário. Isso torna os métodos de criação flexíveis, permitindo que você defina quaisquer outros campos necessários para o seu modelo de usuário.
+
 ## Autoria
 
 Frontend - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
