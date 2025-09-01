@@ -11,7 +11,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action == "create":
-            self.permission_classes = [AllowAny]
+            self.permission_classes = [IsStaff]
         elif self.action == "list":
             self.permission_classes = [IsStaff]
         elif self.action in ["update", "partial_update", "retrieve"]:
