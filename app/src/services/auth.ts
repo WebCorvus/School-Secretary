@@ -7,12 +7,12 @@ interface LoginResponse {
 }
 
 export async function login(
-	username: string,
+	email: string,
 	password: string
 ): Promise<LoginResponse> {
 	try {
 		const response = await axios.post(LOGIN_BASE_URL, {
-			username,
+			email,
 			password,
 		});
 
@@ -23,7 +23,7 @@ export async function login(
 
 		return { access, refresh };
 	} catch (error) {
-		throw new Error("Login falhou. Verifique usuário e senha.");
+		throw new Error("Login falhou. Verifique email e senha.");
 	}
 }
 

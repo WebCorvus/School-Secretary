@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
 
 export default function LoginPage() {
-	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const router = useRouter();
@@ -15,7 +15,7 @@ export default function LoginPage() {
 		setError("");
 
 		try {
-			await login(username, password);
+			await login(email, password);
 			router.push("/");
 		} catch (err: any) {
 			setError(err.message);
@@ -39,8 +39,8 @@ export default function LoginPage() {
 					<input
 						type="text"
 						placeholder="Email"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
 					<input
@@ -50,10 +50,7 @@ export default function LoginPage() {
 						onChange={(e) => setPassword(e.target.value)}
 						required
 					/>
-					<button
-						type="submit"
-						className="btn mt-2 w-full"
-					>
+					<button type="submit" className="btn mt-2 w-full">
 						Entrar
 					</button>
 				</form>
