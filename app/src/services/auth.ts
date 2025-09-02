@@ -11,18 +11,10 @@ export async function login(
 	password: string
 ): Promise<LoginResponse> {
 	try {
-		const response = await axios.post(
-			LOGIN_BASE_URL,
-			{
-				email,
-				password,
-			},
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
+		const response = await axios.post(LOGIN_BASE_URL, {
+			email,
+			password,
+		});
 
 		const { access, refresh } = response.data;
 
