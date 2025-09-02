@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .serializers import UserSerializer
 from .permissions import IsStaff, IsOwnerOrStaff
 
@@ -28,5 +28,5 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
 
 
-class CustomTokenRefreshView(TokenObtainPairView):
+class CustomTokenRefreshView(TokenRefreshView):
     permission_classes = [AllowAny]
