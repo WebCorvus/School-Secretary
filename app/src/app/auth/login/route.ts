@@ -11,18 +11,17 @@ export async function POST(req: NextRequest) {
 		const { email, password } = await req.json();
 		console.log("Corpo da requisição JSON lido com sucesso.");
 
-		    const response = await api.post(
-      DJANGO_LOGIN_URL,
-      {
-        email,
-        password,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+		const response = await api.post(
+			DJANGO_LOGIN_URL,
+			{
+				email,
+				password,
+			},
+			{
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
 		);
 
 		const { access, refresh } = response.data;
