@@ -1,6 +1,7 @@
 services:
   proxy:
     build: ./proxy
+    image: webcorvus/school-secretary-proxy:latest
     container_name: school-secretary-proxy
     ports:
       - "8080:80"
