@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { StudentPostProps } from "@/types/student";
 import { GroupProps } from "@/types/group";
 
-import { STUDENT_BASE_URL, GROUP_BASE_URL } from "@/config";
+import { STUDENT_ROUTE, GROUP_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddStudents() {
 	const router = useRouter();
@@ -24,7 +24,7 @@ export default function AddStudents() {
 	});
 
 	useEffect(() => {
-		axios.get(GROUP_BASE_URL).then((response) => {
+		axios.get(EXTERNAL_API_HOST + GROUP_ROUTE).then((response) => {
 			setGroups(response.data);
 		});
 	}, []);
@@ -42,7 +42,7 @@ export default function AddStudents() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await axios.post(STUDENT_BASE_URL, student);
+			await axios.post(EXTERNAL_API_HOST + STUDENT_ROUTE, student);
 			alert("Aluno cadastrado com sucesso!");
 			setStudent({
 				full_name: "",

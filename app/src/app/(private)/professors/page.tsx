@@ -7,7 +7,7 @@ import axios from "axios";
 import SearchField from "@/components/SearchField";
 
 import { ProfessorProps } from "@/types/professor";
-import { PROFESSOR_BASE_URL } from "@/config";
+import { PROFESSOR_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function ProfessorsPage() {
 	const [data, setData] = useState<ProfessorProps[]>([]);
@@ -16,7 +16,7 @@ export default function ProfessorsPage() {
 
 	useEffect(() => {
 		axios
-			.get(`${PROFESSOR_BASE_URL}?search=${search}`)
+			.get(`${EXTERNAL_API_HOST}${PROFESSOR_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setUpdate(false));
 	}, [update]);
@@ -27,7 +27,7 @@ export default function ProfessorsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${PROFESSOR_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${PROFESSOR_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

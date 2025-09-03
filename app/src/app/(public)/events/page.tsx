@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/SearchField";
 
 import { EventProps } from "@/types/event";
-import { EVENT_BASE_URL } from "@/config";
+import { EVENT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function EventsPage() {
 	const [update, setUpdate] = useState(false);
@@ -16,7 +16,7 @@ export default function EventsPage() {
 
 	useEffect(() => {
 		axios
-			.get<EventProps[]>(`${EVENT_BASE_URL}`)
+			.get<EventProps[]>(`${EXTERNAL_API_HOST}${EVENT_ROUTE}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar eventos: ${error}`);
@@ -26,7 +26,7 @@ export default function EventsPage() {
 	}, [update]);
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EVENT_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${EVENT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

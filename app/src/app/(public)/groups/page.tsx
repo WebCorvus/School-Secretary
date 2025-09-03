@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/SearchField";
 
 import { GroupProps } from "@/types/group";
-import { GROUP_BASE_URL } from "@/config";
+import { GROUP_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function GroupsPage() {
 	const [search, setSearch] = useState("");
@@ -17,7 +17,7 @@ export default function GroupsPage() {
 
 	useEffect(() => {
 		axios
-			.get<GroupProps[]>(`${GROUP_BASE_URL}?search=${search}`)
+			.get<GroupProps[]>(`${EXTERNAL_API_HOST}${GROUP_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar alunos: ${error}`);
@@ -32,7 +32,7 @@ export default function GroupsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${GROUP_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${GROUP_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

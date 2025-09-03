@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 import { StudentProps } from "@/types/student";
-import { STUDENT_BASE_URL } from "@/config";
+import { STUDENT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 import SearchField from "@/components/SearchField";
 
 export default function StudentsPage() {
@@ -15,7 +15,7 @@ export default function StudentsPage() {
 
 	useEffect(() => {
 		axios
-			.get<StudentProps[]>(`${STUDENT_BASE_URL}?search=${search}`)
+			.get<StudentProps[]>(`${EXTERNAL_API_HOST}${STUDENT_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setUpdate(false));
 	}, [update]);
@@ -26,7 +26,7 @@ export default function StudentsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${STUDENT_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${STUDENT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 
@@ -84,7 +84,7 @@ export default function StudentsPage() {
 
 									<td>
 										<Link
-											href={`${STUDENT_BASE_URL}${student.id}/download-grades`}
+											href={`${EXTERNAL_API_HOST}${STUDENT_ROUTE}${student.id}/download-grades`}
 											className="link-blue"
 										>
 											Notas
@@ -92,7 +92,7 @@ export default function StudentsPage() {
 									</td>
 									<td>
 										<Link
-											href={`${STUDENT_BASE_URL}${student.id}/download-presence`}
+											href={`${EXTERNAL_API_HOST}${STUDENT_ROUTE}${student.id}/download-presence`}
 											className="link-blue"
 										>
 											Presença

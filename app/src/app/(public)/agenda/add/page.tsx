@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { AgendaItemPostProps } from "@/types/agenda";
 import { SubjectProps } from "@/types/subject";
-import { AGENDA_BASE_URL, SUBJECT_BASE_URL } from "@/config";
+import { AGENDA_ROUTE, SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddAgendaItem() {
 	const router = useRouter();
@@ -21,7 +21,7 @@ export default function AddAgendaItem() {
 	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
-		axios.get(SUBJECT_BASE_URL).then((response) => {
+		axios.get(EXTERNAL_API_HOST + SUBJECT_ROUTE).then((response) => {
 			setSubjects(response.data);
 		});
 	}, []);
@@ -42,7 +42,7 @@ export default function AddAgendaItem() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(AGENDA_BASE_URL, agendaItem);
+			await axios.post(EXTERNAL_API_HOST + AGENDA_ROUTE, agendaItem);
 			alert("Item da agenda cadastrado com sucesso!");
 			router.push("/agenda");
 		} catch (error: any) {

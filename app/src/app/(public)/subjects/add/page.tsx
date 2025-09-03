@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { SubjectPostProps } from "@/types/subject";
-import { SUBJECT_BASE_URL } from "@/config";
+import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddSubject() {
 	const router = useRouter();
@@ -29,7 +29,7 @@ export default function AddSubject() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(SUBJECT_BASE_URL, subject);
+			await axios.post(EXTERNAL_API_HOST + SUBJECT_ROUTE, subject);
 			alert("Matéria cadastrada com sucesso!");
 			router.push("/subjects");
 		} catch (error: any) {

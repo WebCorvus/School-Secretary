@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-	LESSON_BASE_URL,
-	GROUP_BASE_URL,
-	SUBJECT_BASE_URL,
-	PROFESSOR_BASE_URL,
+	LESSON_ROUTE,
+	GROUP_ROUTE,
+	SUBJECT_ROUTE,
+	PROFESSOR_ROUTE,
+	EXTERNAL_API_HOST,
 } from "@/config";
 import { GroupProps } from "@/types/group";
 import { SubjectProps } from "@/types/subject";
@@ -30,9 +31,9 @@ export default function AddLesson() {
 	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
-		axios.get(GROUP_BASE_URL).then((res) => setGroups(res.data));
-		axios.get(SUBJECT_BASE_URL).then((res) => setSubjects(res.data));
-		axios.get(PROFESSOR_BASE_URL).then((res) => setProfessors(res.data));
+		axios.get(EXTERNAL_API_HOST + GROUP_ROUTE).then((res) => setGroups(res.data));
+		axios.get(EXTERNAL_API_HOST + SUBJECT_ROUTE).then((res) => setSubjects(res.data));
+		axios.get(EXTERNAL_API_HOST + PROFESSOR_ROUTE).then((res) => setProfessors(res.data));
 	}, []);
 
 	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -47,7 +48,7 @@ export default function AddLesson() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(LESSON_BASE_URL, lesson);
+			await axios.post(EXTERNAL_API_HOST + LESSON_ROUTE, lesson);
 			alert("Aula cadastrada com sucesso!");
 			router.push("/lessons");
 		} catch (error: any) {

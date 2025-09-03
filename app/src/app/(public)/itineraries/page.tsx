@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/SearchField";
 
 import { ItineraryProps } from "@/types/itinerary";
-import { ITINERARY_BASE_URL } from "@/config";
+import { ITINERARY_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function ItinerariesPage() {
 	const [search, setSearch] = useState("");
@@ -17,7 +17,7 @@ export default function ItinerariesPage() {
 
 	useEffect(() => {
 		axios
-			.get<ItineraryProps[]>(`${ITINERARY_BASE_URL}?search=${search}`)
+			.get<ItineraryProps[]>(`${EXTERNAL_API_HOST}${ITINERARY_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar itinerários: ${error}`);
@@ -32,7 +32,7 @@ export default function ItinerariesPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${ITINERARY_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${ITINERARY_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

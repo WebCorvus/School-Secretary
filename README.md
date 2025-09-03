@@ -105,15 +105,32 @@ O APP utiliza NextJS, um framework web, utilizado na construção dos componente
 
 ### Configurações dos Endpoints
 
-As configurações se dão por constantes do TypeScript. Note que `API_BASE_URL` aponta para o endereço interno do serviço `api` dentro da rede Docker. Externamente, a aplicação é acessada via Nginx na porta 8080.
+As configurações dos endpoints da API são definidas em `app/src/config.ts`. Anteriormente, as URLs completas eram construídas diretamente neste arquivo. Agora, para maior flexibilidade e clareza, as constantes exportadas representam apenas as **rotas relativas** (`_ROUTE`) para os endpoints da API.
+
+A concatenação com o host base da API (`EXTERNAL_API_HOST` ou `INTERNAL_API_HOST`) é realizada no ponto de uso, geralmente nas chamadas `axios` dentro dos componentes ou serviços do frontend.
+
+-   `EXTERNAL_API_HOST`: Define o prefixo para chamadas de API que são roteadas externamente, geralmente via Nginx (`/api/`).
+-   `INTERNAL_API_HOST`: Define o endereço interno direto para o serviço da API (e.g., `http://api:8080/`), usado em contextos específicos onde a comunicação direta é necessária (como em rotas de API do Next.js que atuam como proxy).
+
+Exemplo de como as rotas são definidas em `app/src/config.ts`:
 
 ```ts
 // app/src/config.ts
 . . .
-export const ITINERARY_BASE_URL = `${API_BASE_URL}/school/itinerary/`;
-export const STUDENT_BASE_URL = `${API_BASE_URL}/students/`;
-export const LESSON_BASE_URL = `${API_BASE_URL}/school/lesson/`;
+export const ITINERARY_ROUTE = SCHOOL_ROUTE + "itineraries/";
+export const STUDENT_ROUTE = "students/";
+export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
 . . .
+```
+
+E como são utilizadas em um componente do frontend (ex: `app/src/app/(public)/subjects/page.tsx`):
+
+```ts
+// app/src/app/(public)/subjects/page.tsx
+import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config";
+// ...
+axios.get(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
+// ...
 ```
 
 ### Componentes

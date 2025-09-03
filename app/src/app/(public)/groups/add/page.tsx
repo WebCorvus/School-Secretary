@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { ItineraryProps } from "@/types/itinerary";
 import { GroupPostProps } from "@/types/group";
-import { GROUP_BASE_URL, ITINERARY_BASE_URL } from "@/config";
+import { GROUP_ROUTE, ITINERARY_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddGroup() {
 	const router = useRouter();
@@ -17,7 +17,7 @@ export default function AddGroup() {
 	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
-		axios.get(ITINERARY_BASE_URL).then((response) => {
+		axios.get(EXTERNAL_API_HOST + ITINERARY_ROUTE).then((response) => {
 			setItineraries(response.data);
 		});
 	}, []);
@@ -36,7 +36,7 @@ export default function AddGroup() {
 			itinerary: itinerary,
 		};
 		try {
-			await axios.post(GROUP_BASE_URL, group);
+			await axios.post(EXTERNAL_API_HOST + GROUP_ROUTE, group);
 			alert("Turma cadastrada com sucesso!");
 			router.push("/groups");
 		} catch (error: any) {

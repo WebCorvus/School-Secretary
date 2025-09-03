@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { EventPostProps } from "@/types/event";
-import { EVENT_BASE_URL } from "@/config";
+import { EVENT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddEvent() {
 	const router = useRouter();
@@ -34,7 +34,7 @@ export default function AddEvent() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(EVENT_BASE_URL, event);
+			await axios.post(EXTERNAL_API_HOST + EVENT_ROUTE, event);
 			alert("Evento cadastrado com sucesso!");
 			router.push("/events");
 		} catch (error: any) {

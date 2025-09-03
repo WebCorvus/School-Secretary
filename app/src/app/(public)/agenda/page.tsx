@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/SearchField";
 
 import { AgendaItemProps } from "@/types/agenda";
-import { AGENDA_BASE_URL } from "@/config";
+import { AGENDA_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AgendaPage() {
 	const [update, setUpdate] = useState(false);
@@ -16,7 +16,7 @@ export default function AgendaPage() {
 
 	useEffect(() => {
 		axios
-			.get<AgendaItemProps[]>(`${AGENDA_BASE_URL}`)
+			.get<AgendaItemProps[]>(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar itens da agenda: ${error}`);
@@ -26,7 +26,7 @@ export default function AgendaPage() {
 	}, [update]);
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${AGENDA_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

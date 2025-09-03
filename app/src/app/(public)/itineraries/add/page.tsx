@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { ItineraryPostProps } from "@/types/itinerary";
-import { ITINERARY_BASE_URL } from "@/config";
+import { ITINERARY_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddItinerary() {
 	const router = useRouter();
@@ -29,7 +29,7 @@ export default function AddItinerary() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			await axios.post(ITINERARY_BASE_URL, itinerary);
+			await axios.post(EXTERNAL_API_HOST + ITINERARY_ROUTE, itinerary);
 			alert("Itinerário cadastrado com sucesso!");
 			router.push("/itineraries");
 		} catch (error: any) {

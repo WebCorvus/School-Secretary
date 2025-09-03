@@ -1,19 +1,22 @@
-export const API_BASE_URL = "/api/";
-export const USERS_BASE_URL = `${API_BASE_URL}users/`;
-export const LOGIN_BASE_URL = `${USERS_BASE_URL}token/`;
-export const REFRESH_BASE_URL = `${USERS_BASE_URL}token/refresh/`;
+export const EXTERNAL_API_HOST = "/api/";
+export const INTERNAL_API_HOST = "http://api:8080/";
 
-export const STUDENT_BASE_URL = `${API_BASE_URL}students/`;
 
-export const SCHOOL_BASE_URL = `${API_BASE_URL}school/`;
-export const GROUP_BASE_URL = `${SCHOOL_BASE_URL}groups/`;
-export const ITINERARY_BASE_URL = `${SCHOOL_BASE_URL}itineraries/`;
-export const LESSON_BASE_URL = `${SCHOOL_BASE_URL}lessons/`;
-export const PROFESSOR_BASE_URL = `${SCHOOL_BASE_URL}professors/`;
-export const SUBJECT_BASE_URL = `${SCHOOL_BASE_URL}subjects/`;
+export const USERS_ROUTE = "users/";
+export const LOGIN_ROUTE = USERS_ROUTE + "token/";
+export const REFRESH_ROUTE = USERS_ROUTE + "token/refresh/";
 
-export const AGENDA_BASE_URL = `${SCHOOL_BASE_URL}agenda/`;
-export const AGENDA_PENDENTS_URL = `${AGENDA_BASE_URL}pendents/`;
+export const STUDENT_ROUTE = "students/";
 
-export const EVENT_BASE_URL = `${SCHOOL_BASE_URL}events/`;
-export const EVENT_PENDENTS_URL = `${EVENT_BASE_URL}pendents/`;
+export const SCHOOL_ROUTE = "school/";
+export const GROUP_ROUTE = SCHOOL_ROUTE + "groups/";
+export const ITINERARY_ROUTE = SCHOOL_ROUTE + "itineraries/";
+export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
+export const PROFESSOR_ROUTE = SCHOOL_ROUTE + "professors/";
+export const SUBJECT_ROUTE = SCHOOL_ROUTE + "subjects/";
+
+export const AGENDA_ROUTE = SCHOOL_ROUTE + "agenda/";
+export const AGENDA_PENDENTS_ROUTE = AGENDA_ROUTE + "pendents/";
+
+export const EVENT_ROUTE = SCHOOL_ROUTE + "events/";
+export const EVENT_PENDENTS_ROUTE = EVENT_ROUTE + "pendents/";

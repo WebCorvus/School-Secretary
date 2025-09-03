@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import SearchField from "@/components/SearchField";
 
 import { SubjectProps } from "@/types/subject";
-import { SUBJECT_BASE_URL } from "@/config";
+import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function SubjectsPage() {
 	const [data, setData] = useState<SubjectProps[]>([]);
@@ -17,7 +17,7 @@ export default function SubjectsPage() {
 
 	useEffect(() => {
 		axios
-			.get<SubjectProps[]>(`${SUBJECT_BASE_URL}?search=${search}`)
+			.get<SubjectProps[]>(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar matérias: ${error}`);
@@ -32,7 +32,7 @@ export default function SubjectsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${SUBJECT_BASE_URL}${value}/`);
+		axios.delete(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

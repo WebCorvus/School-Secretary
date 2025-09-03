@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ProfessorPostProps } from "@/types/professor";
 import { SubjectProps } from "@/types/subject";
 
-import { SUBJECT_BASE_URL, PROFESSOR_BASE_URL } from "@/config";
+import { SUBJECT_ROUTE, PROFESSOR_ROUTE, EXTERNAL_API_HOST } from "@/config";
 
 export default function AddProfessor() {
 	const router = useRouter();
@@ -24,7 +24,7 @@ export default function AddProfessor() {
 
 	useEffect(() => {
 		axios
-			.get(SUBJECT_BASE_URL)
+			.get(EXTERNAL_API_HOST + SUBJECT_ROUTE)
 			.then((response) => setSubjects(response.data));
 	}, []);
 
@@ -41,7 +41,7 @@ export default function AddProfessor() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await axios.post(PROFESSOR_BASE_URL, professor);
+			await axios.post(EXTERNAL_API_HOST + PROFESSOR_ROUTE, professor);
 			alert("Professor cadastrado com sucesso!");
 			setProfessor({
 				full_name: "",

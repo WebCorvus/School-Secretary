@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import SelectObject from "@/components/SelectObject";
-import { GROUP_BASE_URL } from "@/config";
+import { GROUP_ROUTE, EXTERNAL_API_HOST } from "@/config";
 import { DailyLessonsViewProps, GroupProps } from "@/types/group";
 
 export default function LessonsPage() {
@@ -18,7 +18,7 @@ export default function LessonsPage() {
 		if (!selectedGroup) return;
 		axios
 			.get<DailyLessonsViewProps[]>(
-				`${GROUP_BASE_URL}${selectedGroup}/get-lessons/`
+				`${EXTERNAL_API_HOST}${GROUP_ROUTE}${selectedGroup}/get-lessons/`
 			)
 			.then((response) => {
 				setData(response.data);
@@ -32,7 +32,7 @@ export default function LessonsPage() {
 
 	useEffect(() => {
 		axios
-			.get(GROUP_BASE_URL)
+		.get(EXTERNAL_API_HOST + GROUP_ROUTE)
 			.then((response) => {
 				setGroups(response.data);
 			})
