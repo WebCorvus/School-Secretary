@@ -4,7 +4,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { AgendaItemProps } from "@/types/agenda";
 import { EventProps } from "@/types/event";
-import { AGENDA_PENDENTS_URL, EVENT_PENDENTS_URL } from "@/config";
+import {
+	EXTERNAL_API_HOST,
+	AGENDA_PENDENTS_ROUTE,
+	EVENT_PENDENTS_ROUTE,
+} from "@/config";
 
 export default function Home() {
 	const [agenda, setAgenda] = useState<AgendaItemProps[]>([]);
@@ -13,7 +17,9 @@ export default function Home() {
 	useEffect(() => {
 		async function getAgenda() {
 			try {
-				const agendaResponse = await axios.get(AGENDA_PENDENTS_URL);
+				const agendaResponse = await axios.get(
+					EXTERNAL_API_HOST + AGENDA_PENDENTS_ROUTE
+				);
 				if (!agendaResponse) {
 					throw new Error("Agenda unavaible.");
 				}
@@ -25,7 +31,9 @@ export default function Home() {
 
 		async function getEvents() {
 			try {
-				const eventResponse = await axios.get(EVENT_PENDENTS_URL);
+				const eventResponse = await axios.get(
+					EXTERNAL_API_HOST + EVENT_PENDENTS_ROUTE
+				);
 				if (!eventResponse) {
 					throw new Error("Events unavaible.");
 				}
