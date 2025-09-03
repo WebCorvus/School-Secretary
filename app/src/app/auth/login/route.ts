@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import api from "@/services/api";
 import { setCookie } from "cookies-next";
 import { LOGIN_ROUTE } from "@/config";
 
@@ -11,17 +11,18 @@ export async function POST(req: NextRequest) {
 		const { email, password } = await req.json();
 		console.log("Corpo da requisição JSON lido com sucesso.");
 
-		const response = await axios.post(
-			DJANGO_LOGIN_URL,
-			{
-				email,
-				password,
-			},
-			{
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
+		    const response = await api.post(
+      DJANGO_LOGIN_URL,
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 		);
 
 		const { access, refresh } = response.data;

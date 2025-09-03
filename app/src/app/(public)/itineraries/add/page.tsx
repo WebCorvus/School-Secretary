@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ export default function AddItinerary() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			await axios.post(EXTERNAL_API_HOST + ITINERARY_ROUTE, itinerary);
+			await api.post(EXTERNAL_API_HOST + ITINERARY_ROUTE, itinerary);
 			alert("Itinerário cadastrado com sucesso!");
 			router.push("/itineraries");
 		} catch (error: any) {

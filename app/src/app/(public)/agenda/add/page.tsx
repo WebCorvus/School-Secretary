@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -21,7 +21,7 @@ export default function AddAgendaItem() {
 	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
-		axios.get(EXTERNAL_API_HOST + SUBJECT_ROUTE).then((response) => {
+		api.get(EXTERNAL_API_HOST + SUBJECT_ROUTE).then((response) => {
 			setSubjects(response.data);
 		});
 	}, []);
@@ -42,7 +42,7 @@ export default function AddAgendaItem() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(EXTERNAL_API_HOST + AGENDA_ROUTE, agendaItem);
+			await api.post(EXTERNAL_API_HOST + AGENDA_ROUTE, agendaItem);
 			alert("Item da agenda cadastrado com sucesso!");
 			router.push("/agenda");
 		} catch (error: any) {

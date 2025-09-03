@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -34,7 +34,7 @@ export default function AddEvent() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(EXTERNAL_API_HOST + EVENT_ROUTE, event);
+			await api.post(EXTERNAL_API_HOST + EVENT_ROUTE, event);
 			alert("Evento cadastrado com sucesso!");
 			router.push("/events");
 		} catch (error: any) {

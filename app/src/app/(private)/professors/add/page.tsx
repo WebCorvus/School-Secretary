@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -23,8 +23,8 @@ export default function AddProfessor() {
 	});
 
 	useEffect(() => {
-		axios
-			.get(EXTERNAL_API_HOST + SUBJECT_ROUTE)
+		api
+		.get(EXTERNAL_API_HOST + SUBJECT_ROUTE)
 			.then((response) => setSubjects(response.data));
 	}, []);
 
@@ -41,7 +41,7 @@ export default function AddProfessor() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await axios.post(EXTERNAL_API_HOST + PROFESSOR_ROUTE, professor);
+			await api.post(EXTERNAL_API_HOST + PROFESSOR_ROUTE, professor);
 			alert("Professor cadastrado com sucesso!");
 			setProfessor({
 				full_name: "",

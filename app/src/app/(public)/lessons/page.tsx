@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -16,7 +16,7 @@ export default function LessonsPage() {
 
 	useEffect(() => {
 		if (!selectedGroup) return;
-		axios
+		api
 			.get<DailyLessonsViewProps[]>(
 				`${EXTERNAL_API_HOST}${GROUP_ROUTE}${selectedGroup}/get-lessons/`
 			)
@@ -31,7 +31,7 @@ export default function LessonsPage() {
 	}, [update]);
 
 	useEffect(() => {
-		axios
+		api
 		.get(EXTERNAL_API_HOST + GROUP_ROUTE)
 			.then((response) => {
 				setGroups(response.data);

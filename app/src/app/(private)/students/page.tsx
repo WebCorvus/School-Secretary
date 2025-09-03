@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
@@ -14,7 +14,7 @@ export default function StudentsPage() {
 	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
-		axios
+		api
 			.get<StudentProps[]>(`${EXTERNAL_API_HOST}${STUDENT_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setUpdate(false));
@@ -26,7 +26,7 @@ export default function StudentsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EXTERNAL_API_HOST}${STUDENT_ROUTE}${value}/`);
+		api.delete(`${EXTERNAL_API_HOST}${STUDENT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

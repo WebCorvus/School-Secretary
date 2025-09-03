@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ export default function SubjectsPage() {
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
-		axios
+		api
 			.get<SubjectProps[]>(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
@@ -32,7 +32,7 @@ export default function SubjectsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}${value}/`);
+			api.delete(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

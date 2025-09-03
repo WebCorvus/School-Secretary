@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ export default function EventsPage() {
 	const [data, setData] = useState<EventProps[]>([]);
 
 	useEffect(() => {
-		axios
+		api
 			.get<EventProps[]>(`${EXTERNAL_API_HOST}${EVENT_ROUTE}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
@@ -26,7 +26,7 @@ export default function EventsPage() {
 	}, [update]);
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EXTERNAL_API_HOST}${EVENT_ROUTE}${value}/`);
+		api.delete(`${EXTERNAL_API_HOST}${EVENT_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

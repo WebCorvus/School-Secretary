@@ -1,6 +1,7 @@
 "use client";
 
-import axios, { AxiosError } from "axios";
+import api from "@/services/api";
+import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -24,7 +25,7 @@ export default function AddStudents() {
 	});
 
 	useEffect(() => {
-		axios.get(EXTERNAL_API_HOST + GROUP_ROUTE).then((response) => {
+		api.get(EXTERNAL_API_HOST + GROUP_ROUTE).then((response) => {
 			setGroups(response.data);
 		});
 	}, []);
@@ -42,7 +43,7 @@ export default function AddStudents() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
-			await axios.post(EXTERNAL_API_HOST + STUDENT_ROUTE, student);
+			await api.post(EXTERNAL_API_HOST + STUDENT_ROUTE, student);
 			alert("Aluno cadastrado com sucesso!");
 			setStudent({
 				full_name: "",

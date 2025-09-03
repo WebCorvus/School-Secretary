@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -29,7 +29,7 @@ export default function AddSubject() {
 		e.preventDefault();
 		setPosting(true);
 		try {
-			await axios.post(EXTERNAL_API_HOST + SUBJECT_ROUTE, subject);
+			await api.post(EXTERNAL_API_HOST + SUBJECT_ROUTE, subject);
 			alert("Matéria cadastrada com sucesso!");
 			router.push("/subjects");
 		} catch (error: any) {

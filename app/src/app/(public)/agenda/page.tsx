@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -15,7 +15,7 @@ export default function AgendaPage() {
 	const [data, setData] = useState<AgendaItemProps[]>([]);
 
 	useEffect(() => {
-		axios
+		api
 			.get<AgendaItemProps[]>(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
@@ -26,7 +26,7 @@ export default function AgendaPage() {
 	}, [update]);
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}${value}/`);
+		api.delete(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

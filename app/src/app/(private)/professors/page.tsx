@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/services/api";
 
 import SearchField from "@/components/SearchField";
 
@@ -15,7 +15,7 @@ export default function ProfessorsPage() {
 	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
-		axios
+		api
 			.get(`${EXTERNAL_API_HOST}${PROFESSOR_ROUTE}?search=${search}`)
 			.then((response) => setData(response.data))
 			.finally(() => setUpdate(false));
@@ -27,7 +27,7 @@ export default function ProfessorsPage() {
 	};
 
 	const handleDelete = (value: number) => {
-		axios.delete(`${EXTERNAL_API_HOST}${PROFESSOR_ROUTE}${value}/`);
+		api.delete(`${EXTERNAL_API_HOST}${PROFESSOR_ROUTE}${value}/`);
 		setUpdate(true);
 	};
 

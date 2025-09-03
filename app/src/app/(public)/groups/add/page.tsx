@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/services/api";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,7 @@ export default function AddGroup() {
 	const [posting, setPosting] = useState(false);
 
 	useEffect(() => {
-		axios.get(EXTERNAL_API_HOST + ITINERARY_ROUTE).then((response) => {
+		api.get(EXTERNAL_API_HOST + ITINERARY_ROUTE).then((response) => {
 			setItineraries(response.data);
 		});
 	}, []);
@@ -36,7 +36,7 @@ export default function AddGroup() {
 			itinerary: itinerary,
 		};
 		try {
-			await axios.post(EXTERNAL_API_HOST + GROUP_ROUTE, group);
+			await api.post(EXTERNAL_API_HOST + GROUP_ROUTE, group);
 			alert("Turma cadastrada com sucesso!");
 			router.push("/groups");
 		} catch (error: any) {
