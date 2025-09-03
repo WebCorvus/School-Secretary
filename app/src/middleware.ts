@@ -1,27 +1,29 @@
 import { NextResponse, NextRequest } from "next/server";
 
+const publicRoutes = ["/about", "/login"];
+const loginRoute = "/login";
+
 export function middleware(request: NextRequest) {
-	const accessToken = request.cookies.get("access")?.value;
 	const { pathname } = request.nextUrl;
+	const accessToken = request.cookies.get("access")?.value;
 
-	function hasAddSegment(path: string) {
-		const segments = path.split("/").filter(Boolean);
-		return segments.includes("add");
-	}
+	const isPublicRoute = publicRoutes.some((route) =>
+		pathname.startsWith(route)
+	);
 
-	const isProtected =
-		pathname.startsWith("/professor") ||
-		pathname.startsWith("/student") ||
-		hasAddSegment(pathname);
-
-	if (isProtected && !accessToken) {
-		const loginUrl = new URL("/login", request.url);
+	if (!isPublicRoute && !accessToken) {
+		const loginUrl = new URL(loginRoute, request.url);
+		loginUrl.searchParams.set("from", pathname);
 		return NextResponse.redirect(loginUrl);
 	}
+
+	// if (pathname.startsWith("/login") && accessToken) {
+	// 	return NextResponse.redirect(new URL("/", request.url));
+	// }
 
 	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ["/professor/:path*", "/student/:path*", "/:path*"],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
