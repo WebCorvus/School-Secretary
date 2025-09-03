@@ -586,6 +586,134 @@ export function middleware(request: NextRequest) {
 
 -   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
 
+#### Gerenciamento de Requisições Autenticadas no Frontend
+
+Para garantir que todas as requisições à API Django sejam devidamente autenticadas e que o processo de renovação de tokens seja transparente para o desenvolvedor, foi implementada uma instância centralizada do `axios` com interceptadores.
+
+**O Problema Original:**
+Inicialmente, as chamadas à API eram feitas diretamente usando `axios.get` ou `axios.post` nos componentes do frontend. Embora funcional para requisições não autenticadas, essa abordagem não garantia que o token JWT fosse automaticamente incluído no cabeçalho `Authorization` ou que a renovação do token (em caso de expiração) fosse tratada de forma centralizada. Isso poderia levar a código repetitivo e a falhas de autenticação.
+
+**A Solução: Instância `api` Centralizada (`app/src/services/api.ts`)**
+Para resolver isso, foi criada uma instância customizada do `axios` em `app/src/services/api.ts`. Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação:
+
+1.  **Interceptador de Requisição:** Antes de cada requisição ser enviada, ele verifica a presença de um token de acesso (JWT) nos cookies. Se encontrado, o token é anexado ao cabeçalho `Authorization` no formato `Bearer <token>`.
+2.  **Interceptador de Resposta:** Monitora as respostas da API. Se uma resposta `401 Unauthorized` for recebida (indicando que o token de acesso pode ter expirado), ele tenta usar o token de `refresh` (também armazenado em cookies) para obter um novo token de acesso do backend. Se a renovação for bem-sucedida, a requisição original é repetida com o novo token. Caso contrário, o usuário é redirecionado para a página de login.
+
+**Código da Instância `api`:**
+
+```ts
+// app/src/services/api.ts
+import axios from "axios";
+import { getCookie, setCookie } from "cookies-next";
+import { REFRESH_ROUTE } from "@/config"; // Importa a rota de refresh
+
+const DJANGO_REFRESH_URL = process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
+
+const api = axios.create(); // Cria a instância customizada do axios
+
+api.interceptors.request.use(
+	(config) => {
+		const token = getCookie("access"); // Obtém o token de acesso dos cookies
+		if (token) {
+			config.headers["Authorization"] = `Bearer ${token}`; // Adiciona o token ao cabeçalho
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+api.interceptors.response.use(
+	(response) => response,
+	async (error) => {
+		const originalRequest = error.config;
+		// Se for um erro 401 e a requisição ainda não foi retentada
+		if (error.response.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true; // Marca a requisição como retentada
+			const refreshToken = getCookie("refresh"); // Obtém o token de refresh
+
+			if (refreshToken) {
+				try {
+					// Tenta renovar o token de acesso
+					const response = await axios.post(DJANGO_REFRESH_URL, {
+						refresh: refreshToken,
+					});
+
+					const { access } = response.data;
+					setCookie("access", access, { // Armazena o novo token de acesso
+						path: "/",
+						sameSite: "lax",
+					});
+
+					originalRequest.headers["Authorization"] = `Bearer ${access}`; // Atualiza o cabeçalho da requisição original
+					return api(originalRequest); // Repete a requisição original com o novo token
+				} catch (refreshError) {
+					console.error("Refresh token failed", refreshError);
+					window.location.href = "/login"; // Redireciona para o login em caso de falha na renovação
+					return Promise.reject(refreshError);
+				}
+			}
+		}
+		return Promise.reject(error);
+	}
+);
+
+export default api; // Exporta a instância customizada
+```
+
+**Processo de Uso:**
+Para utilizar essa instância e garantir a autenticação, os componentes e rotas de API do Next.js que interagem com a API Django devem seguir o seguinte padrão:
+
+1.  **Importar a instância `api`:** Em vez de `import axios from "axios";`, utilize `import api from "@/services/api";`.
+2.  **Utilizar `api` para requisições:** Substitua todas as chamadas `axios.get()`, `axios.post()`, `axios.delete()`, etc., pelas suas equivalentes `api.get()`, `api.post()`, `api.delete()`.
+
+**Exemplos de Uso:**
+
+*   **Em um Componente de Página (ex: `app/src/app/(public)/subjects/page.tsx`)**:
+
+    ```ts
+    // app/src/app/(public)/subjects/page.tsx
+    import api from "@/services/api"; // Importa a instância customizada
+    import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config"; // Importa a rota e o host externo
+
+    // ... dentro de um useEffect ou função assíncrona
+    api.get(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
+        .then((response) => setData(response.data))
+        .catch((error) => {
+            alert(`Erro ao carregar matérias: ${error}`);
+        });
+
+    // ... para uma requisição DELETE
+    api.delete(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}${value}/`);
+    ```
+
+*   **Em uma Rota de API do Next.js (ex: `app/src/app/auth/login/route.ts`)**:
+
+    ```ts
+    // app/src/app/auth/login/route.ts
+    import api from "@/services/api"; // Importa a instância customizada
+    import { LOGIN_ROUTE } from "@/config"; // Importa a rota de login
+
+    const DJANGO_LOGIN_URL = process.env.INTERNAL_DJANGO_API_URL + LOGIN_ROUTE;
+
+    export async function POST(req: NextRequest) {
+        // ...
+        const response = await api.post(
+            DJANGO_LOGIN_URL, // Utiliza a URL completa para a API Django
+            { email, password },
+            { headers: { "Content-Type": "application/json" } }
+        );
+        // ...
+    }
+    ```
+
+**Benefícios desta Abordagem:**
+*   **Autenticação Centralizada:** Garante que todos os tokens de acesso sejam incluídos automaticamente e que a lógica de renovação de tokens seja aplicada de forma consistente em toda a aplicação.
+*   **Redução de Código Repetitivo:** Evita a necessidade de escrever manualmente a lógica de autenticação em cada chamada de API.
+*   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em `app/src/services/api.ts`, impactando toda a aplicação de forma transparente.
+*   **Clareza e Padronização:** Promove um padrão claro para todas as interações com a API autenticada.
+
 ### Níveis de Acesso e Permissões
 
 O sistema utiliza um modelo de controle de acesso baseado em papéis (Role-Based Access Control - RBAC) para proteger os dados e as ações. Cada usuário possui um papel que define seu nível de acesso.

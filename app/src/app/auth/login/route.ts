@@ -6,10 +6,8 @@ import { LOGIN_ROUTE } from "@/config";
 const DJANGO_LOGIN_URL = process.env.INTERNAL_DJANGO_API_URL + LOGIN_ROUTE;
 
 export async function POST(req: NextRequest) {
-	console.log("Requisição POST recebida em /auth/login (antes do req.json)");
 	try {
 		const { email, password } = await req.json();
-		console.log("Corpo da requisição JSON lido com sucesso.");
 
 		const response = await api.post(
 			DJANGO_LOGIN_URL,

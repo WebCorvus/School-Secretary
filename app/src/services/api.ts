@@ -9,18 +9,9 @@ const api = axios.create();
 
 api.interceptors.request.use(
 	(config) => {
-		console.log("Interceptor de requisição: Iniciado");
 		const token = getCookie("access");
-		console.log("Interceptor de requisição: Token lido do cookie:", token);
 		if (token) {
 			config.headers["Authorization"] = `Bearer ${token}`;
-			console.log(
-				"Interceptor de requisição: Cabeçalho Authorization adicionado."
-			);
-		} else {
-			console.log(
-				"Interceptor de requisição: Token não encontrado no cookie."
-			);
 		}
 		return config;
 	},
