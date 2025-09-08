@@ -1,0 +1,82 @@
+services:
+  proxy:
+    build: ./proxy
+    image: webcorvus/school-secretary-proxy:latest
+    container_name: school-secretary-proxy-test
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+      - app
+    networks:
+      - public
+    volumes:
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.test
+    image: webcorvus/school-secretary-app:latest
+    container_name: school-secretary-app-test
+    command: sh -c "npm run test:ci"
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: rebuild
+          path: ./app
+          target: /app
+    networks:
+      - public
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.test
+    image: webcorvus/school-secretary-api:latest
+    container_name: school-secretary-api-test
+    command: sh -c "python manage.py collectstatic --noinput &&\
+      python manage.py makemigrations &&\
+      python manage.py migrate &&\
+      gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - db
+    networks:
+      - public
+      - private
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: school-secretary-db-test
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    networks:
+      - private
+    restart: unless-stopped
+
+networks:
+  public:
+    driver: bridge
+  private:
+    driver: bridge
+
+volumes:
+  api_static:
+  api_media:
