@@ -17,10 +17,6 @@ export function middleware(request: NextRequest) {
 		return NextResponse.redirect(loginUrl);
 	}
 
-	// if (pathname.startsWith("/login") && accessToken) {
-	// 	return NextResponse.redirect(new URL("/", request.url));
-	// }
-
 	return NextResponse.next();
 }
 
