@@ -1,3 +1,5 @@
+# Permitir mais campos em POST para deleção em massa no admin
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 """
 Django settings for School-Secretary project.
 
@@ -150,7 +152,7 @@ USE_TZ = os.environ.get("USE_TZ", True)
 
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     "CSRF_TRUSTED_ORIGINS",
-    "https://localhost:8000,https://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8000",
+    "https://localhost:8000,https://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8000,https://potential-eureka-4xpgjr6x9vrf77q7-8080.app.github.dev",
 ).split(",")
 
 STATIC_URL = "static/"

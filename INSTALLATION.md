@@ -27,3 +27,4 @@ Para acessar certas funcionalidades do sistema, é necessário ter um usuário c
     ```
 
     Siga as instruções no terminal para definir o nome de usuário, e-mail e senha.
+BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
