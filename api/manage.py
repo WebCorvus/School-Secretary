@@ -1,7 +1,17 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+
 import os
 import sys
+import warnings
+
+# Suprimir warnings de timezone do Django em dev
+if os.environ.get("DJANGO_SUPPRESS_TZ_WARNING", "1") == "1":
+    warnings.filterwarnings(
+        "ignore",
+        message="DateTimeField .* received a naive datetime while time zone support is active.",
+        category=RuntimeWarning,
+    )
 
 
 def main():

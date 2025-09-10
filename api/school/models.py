@@ -96,6 +96,15 @@ class Group(models.Model):
 
 
 class Professor(models.Model):
+    from django.conf import settings
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="professor_profile",
+        verbose_name="Usuário relacionado",
+    )
     full_name = models.CharField(
         max_length=200,
         verbose_name="Professor's full name",
@@ -123,12 +132,10 @@ class Professor(models.Model):
         blank=False,
         null=True,
     )
-
     created_at = models.DateTimeField(
         default=timezone.now,
         editable=False,
     )
-
     def __str__(self):
         return self.full_name
 

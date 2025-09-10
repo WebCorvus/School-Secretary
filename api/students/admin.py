@@ -13,6 +13,8 @@ from .models import (
 
 
 class StudentsAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    exclude = ("user",)
     list_display = (
         "full_name",
         "registration_number",
@@ -83,6 +85,8 @@ class StudentsAdmin(admin.ModelAdmin):
 
 
 class GuardiansAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    exclude = ("user",)
     list_display = (
         "full_name",
         "student",
@@ -102,6 +106,7 @@ class GuardiansAdmin(admin.ModelAdmin):
 
 
 class ContractsAdmin(admin.ModelAdmin):
+    list_per_page = 1000
     list_display = (
         "id",
         "guardian",
@@ -145,6 +150,7 @@ class ContractsAdmin(admin.ModelAdmin):
 
 
 class GradeAdmin(admin.ModelAdmin):
+    list_per_page = 1000
     list_display = (
         "id",
         "student",
@@ -157,6 +163,7 @@ class GradeAdmin(admin.ModelAdmin):
 
 
 class PresencesAdmin(admin.ModelAdmin):
+    list_per_page = 1000
     list_display = (
         "id",
         "student",

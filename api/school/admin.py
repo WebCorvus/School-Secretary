@@ -73,6 +73,7 @@ class GroupsAdmin(admin.ModelAdmin):
 
 
 class ProfessorsAdmin(admin.ModelAdmin):
+    exclude = ("user",)
     list_display = (
         "full_name",
         "phone_number",
