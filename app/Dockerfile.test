@@ -1,11 +1,19 @@
-FROM cypress/base:22.18.0 
+# TODO fix that file to automate testing in this file
+FROM cypress/browsers:node-22.14.0-chrome-133.0.6943.126-1-ff-135.0.1-edge-133.0.3065.82-1
 
-WORKDIR /app
+RUN addgroup --system cypress && adduser --system --ingroup cypress cypress
+USER cypress
 
-COPY package*.json ./
+WORKDIR /e2e
 
-RUN npm install
+COPY package.json package-lock.json ./
 
-COPY . .
+RUN npm ci
+RUN npx cypress install
 
-CMD [ "npm", "run", 'test:all' ]
+COPY cypress/ ./cypress/
+COPY cypress.config.ts ./
+
+RUN npx cypress verify
+
+CMD ["npx", "cypress", "run"]

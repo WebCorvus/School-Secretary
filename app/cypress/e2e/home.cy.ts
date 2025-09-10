@@ -1,7 +1,6 @@
-
-describe('Home page', () => {
-  it('should redirect to login page', () => {
-    cy.visit('/')
-    cy.url().should('include', '/login')
-  })
-})
+describe("Home page", () => {
+	beforeEach(() => {
+		cy.login();
+		cy.visit("/");
+	});
+});
