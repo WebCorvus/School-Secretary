@@ -2,11 +2,11 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
 	env: {
-		API_URL: "http://localhost:8080/api/",
-		LOGIN_URL: "http://localhost:8080/api/users/token/",
+		API_URL: "http://proxy:80/api/",
+		LOGIN_URL: "http://proxy:80/api/users/token/",
 	},
 	e2e: {
-		baseUrl: "http://localhost:8080",
+		baseUrl: "http://proxy:80",
 		supportFile: "cypress/support/e2e.js",
 		setupNodeEvents(on, config) {},
 	},

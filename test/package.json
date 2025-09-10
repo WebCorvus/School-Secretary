@@ -6,13 +6,14 @@
 	"scripts": {
 		"cy:open": "cypress open",
 		"cy:run": "cypress run --config-file cypress.config.js",
-		"test": "npm run cy:run"
+		"test": "wait-on -t 60000 http://app:3000 http://api:8000/api/admin/login/ && npm run cy:run"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"type": "commonjs",
-	"dependencies": {
-		"cypress": "^15.2.0"
+	"devDependencies": {
+		"cypress": "^15.2.0",
+		"wait-on": "^7.2.0"
 	}
 }
