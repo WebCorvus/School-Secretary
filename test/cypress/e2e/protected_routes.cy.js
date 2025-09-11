@@ -1,33 +1,58 @@
 describe("Protected Routes", () => {
-	it("should redirect to login if not authenticated", () => {
+	it("should redirect from agenda to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/agenda");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from events to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/events");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from groups to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/groups");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from itineraries to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/itineraries");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from lessons to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/lessons");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from professors to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
+		cy.visit("/professors");
+		cy.url().should("include", "/login");
+	});
+
+	it("should redirect from students to login if not authenticated", () => {
 		cy.getCookie("access").should("not.exist");
 		cy.getCookie("refresh").should("not.exist");
 		cy.visit("/students");
 		cy.url().should("include", "/login");
 	});
 
-	it("should allow access to students route if authenticated", () => {
-		cy.login();
-		cy.getCookie("access").should("exist");
-		cy.getCookie("refresh").should("exist");
-		cy.visit("/students");
-		cy.url().should("include", "/students");
-	});
-
-	it("should allow access to professors route if authenticated", () => {
-		cy.login();
-		cy.getCookie("access").should("exist");
-		cy.getCookie("refresh").should("exist");
-		cy.visit("/professors");
-		cy.url().should("include", "/professors");
-	});
-
-	it("should allow access to subjects route if authenticated", () => {
-		cy.login();
-		cy.getCookie("access").should("exist");
-		cy.getCookie("refresh").should("exist");
+	it("should redirect from subjects to login if not authenticated", () => {
+		cy.getCookie("access").should("not.exist");
+		cy.getCookie("refresh").should("not.exist");
 		cy.visit("/subjects");
-		cy.url().should("include", "/subjects");
+		cy.url().should("include", "/login");
 	});
 
 	it("should allow access to agenda route if authenticated", () => {
@@ -70,11 +95,27 @@ describe("Protected Routes", () => {
 		cy.url().should("include", "/lessons");
 	});
 
-	it("should allow access to agenda route if authenticated", () => {
+	it("should allow access to professors route if authenticated", () => {
 		cy.login();
 		cy.getCookie("access").should("exist");
 		cy.getCookie("refresh").should("exist");
-		cy.visit("/agenda");
-		cy.url().should("include", "/agenda");
+		cy.visit("/professors");
+		cy.url().should("include", "/professors");
+	});
+
+	it("should allow access to students route if authenticated", () => {
+		cy.login();
+		cy.getCookie("access").should("exist");
+		cy.getCookie("refresh").should("exist");
+		cy.visit("/students");
+		cy.url().should("include", "/students");
+	});
+
+	it("should allow access to subjects route if authenticated", () => {
+		cy.login();
+		cy.getCookie("access").should("exist");
+		cy.getCookie("refresh").should("exist");
+		cy.visit("/subjects");
+		cy.url().should("include", "/subjects");
 	});
 });
