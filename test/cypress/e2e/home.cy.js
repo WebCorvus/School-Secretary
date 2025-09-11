@@ -1,7 +1,9 @@
-describe("Home page", () => {
-	it("deve exibir corretamente a página", () => {
+describe("Home", () => {
+	it("should render home page elements correctly", () => {
 		cy.login();
 		cy.visit("/");
+
+		cy.contains("h1", "Bem-vindo");
 
 		cy.get("body").then(($body) => {
 			if ($body.find('[data-test="agenda-items"]').length) {
