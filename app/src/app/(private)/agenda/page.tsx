@@ -5,6 +5,7 @@ import api from "@/services/api";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
+// TODO implement search field
 import SearchField from "@/components/SearchField";
 
 import { AgendaItemProps } from "@/types/agenda";
@@ -15,8 +16,7 @@ export default function AgendaPage() {
 	const [data, setData] = useState<AgendaItemProps[]>([]);
 
 	useEffect(() => {
-		api
-			.get<AgendaItemProps[]>(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
+		api.get<AgendaItemProps[]>(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
 			.then((response) => setData(response.data))
 			.catch((error) => {
 				alert(`Erro ao carregar itens da agenda: ${error}`);
