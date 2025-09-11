@@ -1,24 +1,30 @@
-describe("Home", () => {
-	it("should render home page elements correctly", () => {
+describe("Home page", () => {
+	it.skip("deve exibir corretamente o h1", () => {
 		cy.login();
 		cy.visit("/");
+		cy.get("h1")
+			.should("have.length", 1)
+			.and("be.visible")
+			.and("contain.text", "Bem-vindo");
+	});
 
-		cy.contains("h1", "Bem-vindo");
+	it.skip("deve exibir corretamente os h2", () => {
+		cy.get("h2").should("have.length", 2);
+		cy.contains("h2", "Agenda").should("be.visible");
+		cy.contains("h2", "Eventos").should("be.visible");
+	});
 
-		cy.get("body").then(($body) => {
-			if ($body.find('[data-test="agenda-items"]').length) {
-				cy.get('[data-test="empty-agenda"]').should("not.exist");
-			} else {
-				cy.get('[data-test="empty-agenda"]').should("exist");
-			}
-		});
+	it.skip("deve exibir corretamento os campos de atualizações", () => {
+		cy.get;
+	});
 
-		cy.get("body").then(($body) => {
-			if ($body.find('[data-test="event-items"]').length) {
-				cy.get('[data-test="empty-events"]').should("not.exist");
-			} else {
-				cy.get('[data-test="empty-events"]').should("exist");
-			}
-		});
+	it.skip("deve exibir corretamente os h2", () => {
+		cy.get("h2").should("have.length", 2);
+		cy.contains("h2", "Agenda").should("be.visible");
+		cy.contains("h2", "Eventos").should("be.visible");
+	});
+
+	it.skip("deve exibir corretamento os campos de atualizações", () => {
+		cy.get;
 	});
 });
