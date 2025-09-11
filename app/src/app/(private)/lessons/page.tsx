@@ -59,7 +59,7 @@ export default function LessonsPage() {
 			</div>
 
 			<div className="flex justify-center m-3">
-				<Link className="btn w-35 text-center" href="/lessons/add">
+				<Link className="btn w-35 text-center" href="/lessons/add" data-test="add-button">
 					Adicionar
 				</Link>
 			</div>

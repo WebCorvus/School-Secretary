@@ -45,7 +45,7 @@ export default function StudentsPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link className="btn w-50 text-center" href="/students/add">
+				<Link className="btn w-50 text-center" href="/students/add" data-test="add-button">
 					Adicionar
 				</Link>
 			</div>

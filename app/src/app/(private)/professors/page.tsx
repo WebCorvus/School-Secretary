@@ -46,7 +46,7 @@ export default function ProfessorsPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link className="btn w-50 text-center" href="/professors/add">
+				<Link className="btn w-50 text-center" href="/professors/add" data-test="add-button">
 					Adicionar
 				</Link>
 			</div>

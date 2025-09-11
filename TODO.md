@@ -9,3 +9,4 @@
         CAUSA: Erro 500 indica problema no backend ao buscar aulas; investigar stacktrace do backend para detalhes.
     - Tornar o site reativo ao login:
         Quando do usuário faz login no frontend o site deve redirecioná-lo para a página que tentava acessar, com o token já funcionando.
+    - Arrumar TODOs nos código em branches chore

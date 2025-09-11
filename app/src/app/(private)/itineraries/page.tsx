@@ -51,7 +51,7 @@ export default function ItinerariesPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link className="btn w-50 text-center" href="/itineraries/add">
+				<Link className="btn w-50 text-center" href="/itineraries/add" data-test="add-button">
 					Adicionar
 				</Link>
 			</div>
