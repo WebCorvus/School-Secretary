@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { AgendaItemProps } from "@/types/agenda";
 import { EventProps } from "@/types/event";
@@ -9,42 +8,26 @@ import {
 	AGENDA_PENDENTS_ROUTE,
 	EVENT_PENDENTS_ROUTE,
 } from "@/config";
+import api from "@/services/api";
 
-export default function Home() {
+export default function Dashboard() {
 	const [agenda, setAgenda] = useState<AgendaItemProps[]>([]);
 	const [events, setEvents] = useState<EventProps[]>([]);
 
 	useEffect(() => {
-		async function getAgenda() {
-			try {
-				const agendaResponse = await axios.get(
-					EXTERNAL_API_HOST + AGENDA_PENDENTS_ROUTE
-				);
-				if (!agendaResponse) {
-					throw new Error("Agenda unavaible.");
-				}
-				setAgenda(agendaResponse.data);
-			} catch (error) {
-				console.error("Error fetching agenda items on client:", error);
-			}
-		}
+		api.get<AgendaItemProps[]>(
+			`${EXTERNAL_API_HOST}${AGENDA_PENDENTS_ROUTE}`
+		)
+			.then((response) => setAgenda(response.data))
+			.catch((error) =>
+				console.error("Error fetching agenda items on client:", error)
+			);
 
-		async function getEvents() {
-			try {
-				const eventResponse = await axios.get(
-					EXTERNAL_API_HOST + EVENT_PENDENTS_ROUTE
-				);
-				if (!eventResponse) {
-					throw new Error("Events unavaible.");
-				}
-				setEvents(eventResponse.data);
-			} catch (error) {
-				console.error("Error fetching events on client:", error);
-			}
-		}
-
-		getAgenda();
-		getEvents();
+		api.get<EventProps[]>(`${EXTERNAL_API_HOST}${EVENT_PENDENTS_ROUTE}`)
+			.then((response) => setEvents(response.data))
+			.catch((error) =>
+				console.error("Error fetching events on client:", error)
+			);
 	}, []);
 
 	return (
@@ -89,13 +72,11 @@ export default function Home() {
 											<span> ás {item.time}</span>
 										)}
 									</span>
-									<span>
-										{item.description && (
-											<p className="text-sm m-2">
-												{item.description}
-											</p>
-										)}
-									</span>
+									{item.description && (
+										<p className="text-sm m-2">
+											{item.description}
+										</p>
+									)}
 								</li>
 							))}
 						</ul>
