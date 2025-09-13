@@ -1,35 +1,80 @@
-import Link from "next/link";
+import HeaderButton from "./components/HeaderButton";
 
 export default function Header() {
 	return (
 		<div className="header-vertical">
 			<ul>
 				<li>
-					<Link href="/dashboard">Início</Link>
+					<HeaderButton
+						url="/dashboard"
+						icon="/home.svg"
+						mensage="Início"
+						alt="Home"
+					/>
 				</li>
 				<li>
-					<Link href="/students">Estudantes</Link>
+					<HeaderButton
+						url="/students"
+						icon="/student.svg"
+						mensage="Estudantes"
+						alt="Students"
+					/>
 				</li>
 				<li>
-					<Link href="/professors">Professores</Link>
+					<HeaderButton
+						url="/professors"
+						icon="/teacher.svg"
+						mensage="Professores"
+						alt="Professors"
+					/>
 				</li>
 				<li>
-					<Link href="/subjects">Matérias</Link>
+					<HeaderButton
+						url="/subjects"
+						icon="/gear.svg"
+						mensage="Matérias"
+						alt="Subjects"
+					/>
 				</li>
 				<li>
-					<Link href="/itineraries">Itinerários</Link>
+					<HeaderButton
+						url="/itineraries"
+						icon="/calendar.svg"
+						mensage="Itinerários"
+						alt="Itineraries"
+					/>
 				</li>
 				<li>
-					<Link href="/groups">Turmas</Link>
+					<HeaderButton
+						url="/groups"
+						icon="/home.svg"
+						mensage="Turmas"
+						alt="Groups"
+					/>
 				</li>
 				<li>
-					<Link href="/lessons">Horários</Link>
+					<HeaderButton
+						url="/lessons"
+						icon="/calendar.svg"
+						mensage="Horários"
+						alt="Lessons"
+					/>
 				</li>
 				<li>
-					<Link href="/events">Eventos</Link>
+					<HeaderButton
+						url="/events"
+						icon="/calendar.svg"
+						mensage="Eventos"
+						alt="Events"
+					/>
 				</li>
 				<li>
-					<Link href="/agenda">Agenda</Link>
+					<HeaderButton
+						url="/agenda"
+						icon="/agenda.svg"
+						mensage="Agenda"
+						alt="Agenda"
+					/>
 				</li>
 			</ul>
 		</div>
