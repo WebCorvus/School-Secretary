@@ -4,6 +4,10 @@ const publicRoutes = ["/about", "/login", "/auth"];
 const loginRoute = "/login";
 
 export function middleware(request: NextRequest) {
+	if (process.env.NODE_ENV === "development") {
+		return NextResponse.next();
+	}
+
 	const { pathname } = request.nextUrl;
 	const accessToken = request.cookies.get("access")?.value;
 

@@ -5,7 +5,7 @@ export default function Header() {
 		<div className="header-vertical">
 			<ul>
 				<li>
-					<Link href="/">Início</Link>
+					<Link href="/dashboard">Início</Link>
 				</li>
 				<li>
 					<Link href="/students">Estudantes</Link>
