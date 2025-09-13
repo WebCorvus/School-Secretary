@@ -30,40 +30,22 @@ export default function About() {
 			</section>
 
 			<section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-				<Link
-					href="/students"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/students" className="btn text-2xl text-center">
 					Consultar Alunos
 				</Link>
-				<Link
-					href="/professors"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/professors" className="btn text-2xl text-center">
 					Consultar Professores
 				</Link>
-				<Link
-					href="/groups"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/groups" className="btn text-2xl text-center">
 					Ver Turmas
 				</Link>
-				<Link
-					href="/subjects"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/subjects" className="btn text-2xl text-center">
 					Disciplinas Oferecidas
 				</Link>
-				<Link
-					href="/itineraries"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/itineraries" className="btn text-2xl text-center">
 					Itinerários Formativos
 				</Link>
-				<Link
-					href="/lessons"
-					className="btn text-2xl text-center"
-				>
+				<Link href="/lessons" className="btn text-2xl text-center">
 					Horários de Aula
 				</Link>
 			</section>

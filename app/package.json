@@ -8,11 +8,8 @@
 		"start": "next start",
 		"lint": "next lint",
 		"test": "vitest run",
-		"test:e2e": "cypress run --config-file cypress.config.ts",
-		"test:e2e:local": "start-server-and-test dev http://localhost:3000 \"cypress run --config-file cypress.local.config.ts\"",
-		"test:all": "npm test && npm run test:e2e",
-		"test:ci": "start-server-and-test dev http://localhost:3000 'npm run test:all'",
-		"cypress:open": "cypress open"
+		"cy:open": "cypress open",
+		"cy:run": "cypress run --config-file cypress.config.ts"
 	},
 	"dependencies": {
 		"axios": "^1.9.0",
