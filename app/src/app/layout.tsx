@@ -4,6 +4,7 @@ import "./globals.css";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,11 +22,18 @@ export default function RootLayout({
 		<html lang="pt-br" suppressHydrationWarning>
 			<body className={inter.className}>
 				<div className="flex h-screen">
-					<Header />
-					<main className="flex-grow overflow-y-auto">
-						{children}
-					</main>
-					<Footer />
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<Header />
+						<main className="flex-grow overflow-y-auto">
+							{children}
+						</main>
+						<Footer />
+					</ThemeProvider>
 				</div>
 			</body>
 		</html>
