@@ -6,7 +6,7 @@ export default function Header() {
 			<ul>
 				<li>
 					<HeaderButton
-						url="/dashboard"
+						url="/"
 						icon="/home.svg"
 						mensage="Início"
 						alt="Home"

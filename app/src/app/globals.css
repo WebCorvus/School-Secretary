@@ -87,10 +87,6 @@ body {
 	@apply p-1.5 flex flex-col w-40 border-r border-[var(--divide)] p-4;
 }
 
-/* .header-vertical li {
-	@apply flex min-w-24 text-[var(--link-color)] active:bg-[var(--link-active)] hover:bg-[var(--link-hover)] rounded-md;
-} */
-
 .header-vertical ul {
 	@apply flex flex-col space-y-2;
 }
