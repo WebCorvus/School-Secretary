@@ -1,6 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 
-const publicRoutes = ["/about", "/login", "/auth"];
+const protectedRoutes = [
+	"/agenda",
+	"/events",
+	"/groups",
+	"/itineraries",
+	"/lessons",
+	"/subject",
+	"/professors",
+	"/students",
+];
 const loginRoute = "/login";
 
 export function middleware(request: NextRequest) {
@@ -9,13 +18,14 @@ export function middleware(request: NextRequest) {
 	}
 
 	const { pathname } = request.nextUrl;
+
 	const accessToken = request.cookies.get("access")?.value;
 
-	const isPublicRoute = publicRoutes.some((route) =>
+	const isProtectedRoute = protectedRoutes.some((route) =>
 		pathname.startsWith(route)
 	);
 
-	if (!isPublicRoute && !accessToken) {
+	if (isProtectedRoute && !accessToken) {
 		const loginUrl = new URL(loginRoute, request.url);
 		loginUrl.searchParams.set("from", pathname);
 		return NextResponse.redirect(loginUrl);

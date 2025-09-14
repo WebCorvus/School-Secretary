@@ -15,26 +15,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="pt-br" suppressHydrationWarning>
-			<body className={inter.className}>
-				<div className="flex h-screen">
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
+			<body className={`${inter.className} `}>
+				<ThemeProvider>
+					<div className="flex flex-col md:flex-row h-screen">
 						<Header />
 						<main className="flex-grow overflow-y-auto">
 							{children}
 						</main>
 						<Footer />
-					</ThemeProvider>
-				</div>
+					</div>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

@@ -3,58 +3,36 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/services/auth";
+import { LoginForm } from "@/components/LoginForm";
 
 export default function LoginPage() {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
 	const router = useRouter();
+	const [error, setError] = useState<string>("");
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		setError("");
+
+		const form = event.currentTarget;
+		const formData = new FormData(form);
+		const email = formData.get("email") as string;
+		const password = formData.get("password") as string;
 
 		try {
 			await login(email, password);
 			router.push("/");
 		} catch (err: any) {
-			setError(err.message);
+			setError(err.message || "Erro ao realizar login");
 		}
 	};
 
 	return (
-		<div className="flex items-center justify-center">
-			<div className="form-container min-h-screen">
-				<form className="form flex-col" onSubmit={handleSubmit}>
-					<h1 className="title">Login</h1>
-					{error ? (
-						<div className="text-[var(--danger)] text-md text-center mb-2">
-							{error}
-						</div>
-					) : (
-						<div className="text-md text-center mb-2">
-							<p>Insira o email e a senha cadastrados</p>
-						</div>
-					)}
-					<input
-						type="email"
-						placeholder="Email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						required
-					/>
-					<input
-						type="password"
-						placeholder="Senha"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						required
-					/>
-					<button type="submit" className="btn mt-2 w-full">
-						Entrar
-					</button>
-				</form>
-			</div>
+		<div className="flex items-center justify-center min-h-screen bg-[var(--background)]">
+			<LoginForm
+				className="w-full max-w-md"
+				onSubmit={handleSubmit}
+				error={error}
+			/>
 		</div>
 	);
 }
