@@ -6,16 +6,11 @@ import { SearchForm } from "@/components/SearchForm";
 import {
 	Sidebar,
 	SidebarContent,
-	SidebarGroup,
-	SidebarGroupContent,
-	SidebarGroupLabel,
 	SidebarHeader,
-	SidebarMenu,
-	SidebarMenuButton,
-	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/NavMain";
+import { NavSecondary } from "@/components/NavSecondary";
 
 import { Home, Inbox } from "lucide-react";
 
@@ -101,26 +96,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
+				{/* TODO make it functional */}
 				<SearchForm />
 				<NavMain items={data.navMain} />
 			</SidebarHeader>
 			<SidebarContent>
-				{data.navSecondary.map((item) => (
-					<SidebarGroup key={item.title}>
-						<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-						<SidebarGroupContent>
-							<SidebarMenu>
-								{item.items.map((item) => (
-									<SidebarMenuItem key={item.title}>
-										<SidebarMenuButton asChild>
-											<a href={item.url}>{item.title}</a>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
-								))}
-							</SidebarMenu>
-						</SidebarGroupContent>
-					</SidebarGroup>
-				))}
+				<NavSecondary items={data.navSecondary} />
 			</SidebarContent>
 			<SidebarRail />
 		</Sidebar>
