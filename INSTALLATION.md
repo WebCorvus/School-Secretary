@@ -34,6 +34,20 @@ Para acessar certas funcionalidades do sistema, é necessário ter um usuário c
 
 Utilize o comando a seguir para inicializar o projeto e, tomando o container de teste como referencia, realizar uma testagem e depois abortar tudo.
 
+    Siga as instruções no terminal para definir o nome de usuário, e-mail e senha.
+
+### Gerar Usuários de Teste (seed_users)
+
+Para criar usuários de teste automaticamente, execute:
+
+```bash
+docker exec -it school-secretary-api python manage.py seed_users --total 5
+```
+
+Você pode ajustar o número de usuários com o parâmetro `--total` e definir o papel com `--role` (opcional).
+
+BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
+=======
 ```bash
 docker compose up test --build --abort-on-container-exit
 ```
