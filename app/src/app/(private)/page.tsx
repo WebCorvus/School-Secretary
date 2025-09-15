@@ -48,8 +48,11 @@ export default function Home() {
 	}, []);
 
 	return (
-		<div className="flex flex-col flex-grow p-8">
-			<div className="mb-8">
+		<div
+			className="flex flex-col flex-grow p-8"
+			data-test="home-container"
+		>
+			<div className="mb-8" data-test="home-welcome">
 				<h1 className="text-3xl font-bold">
 					Bem-vindo ao School Secretary
 				</h1>
@@ -58,17 +61,21 @@ export default function Home() {
 				</p>
 			</div>
 
-			<div className="mb-8">
+			<div className="mb-8" data-test="home-agenda">
 				<h2 className="text-2xl font-semibold">
 					Últimas Atualizações da Agenda
 				</h2>
 				<div className="p-6 rounded-lg shadow-lg">
 					{agenda.length > 0 ? (
-						<ul className="list-none pl-5">
+						<ul
+							className="list-none pl-5"
+							data-test="agenda-items"
+						>
 							{agenda.map((item) => (
 								<li
 									key={item.id}
 									className="flex flex-col mb-8"
+									data-test={`agenda-item-${item.id}`}
 								>
 									<span className="font-semibold">
 										{item.subject_details && (
@@ -99,22 +106,29 @@ export default function Home() {
 							))}
 						</ul>
 					) : (
-						<p className="text-[var(--smooth)]">
+						<p
+							className="text-[var(--smooth)]"
+							data-test="empty-agenda"
+						>
 							Nenhuma atualização recente na agenda.
 						</p>
 					)}
 				</div>
 			</div>
 
-			<div className="mb-8">
+			<div className="mb-8" data-test="home-events">
 				<h2 className="text-2xl font-semibold">Últimos Eventos</h2>
 				<div className="p-6 rounded-lg shadow-lg">
 					{events.length > 0 ? (
-						<ul className="list-none pl-5">
+						<ul
+							className="list-none pl-5"
+							data-test="event-items"
+						>
 							{events.map((event) => (
 								<li
 									key={event.id}
 									className="flex flex-col mb-8"
+									data-test={`event-item-${event.id}`}
 								>
 									<span className="font-semibold">
 										{event.title}
@@ -145,7 +159,10 @@ export default function Home() {
 							))}
 						</ul>
 					) : (
-						<p className="text-[var(--smooth)]">
+						<p
+							className="text-[var(--smooth)]"
+							data-test="empty-events"
+						>
 							Nenhum evento recente.
 						</p>
 					)}

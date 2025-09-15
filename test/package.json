@@ -1,0 +1,19 @@
+{
+	"name": "test",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"cy:open": "cypress open",
+		"cy:run": "cypress run --config-file cypress.config.js",
+		"test": "wait-on -t 60000 http://app:3000 http://api:8000/api/admin/login/ && npm run cy:run"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "commonjs",
+	"devDependencies": {
+		"cypress": "^15.2.0",
+		"wait-on": "^7.2.0"
+	}
+}

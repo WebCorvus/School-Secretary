@@ -51,7 +51,7 @@ export default function SubjectsPage() {
 				/>
 			</div>
 			<div className="flex justify-center m-3">
-				<Link className="btn w-50 text-center" href="/subjects/add">
+				<Link className="btn w-50 text-center" href="/subjects/add" data-test="add-button">
 					Adicionar
 				</Link>
 			</div>
