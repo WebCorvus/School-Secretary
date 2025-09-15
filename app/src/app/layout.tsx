@@ -1,10 +1,10 @@
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
-
-import Header from "@/components/Header";
-import HorizontalLine from "@/components/HorizontalLine";
-import Footer from "@/components/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { AppSidebar } from "@/components/AppSidebar";
+import SiteHeader from "@/components/SiteHeader";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,19 +15,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
 	return (
 		<html lang="pt-br" suppressHydrationWarning>
-			<body className={inter.className}>
-				<div className="flex h-screen">
-					<Header />
-					<main className="flex-grow overflow-y-auto">
-						{children}
-					</main>
-					<Footer />
-				</div>
+			<body className={`${inter.className} `}>
+				<ThemeProvider>
+					<SidebarProvider>
+						<AppSidebar />
+						<SidebarInset>
+							<SiteHeader />
+							<div className="flex flex-1 flex-col gap-4 p-4">
+								{children}
+							</div>
+						</SidebarInset>
+					</SidebarProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);

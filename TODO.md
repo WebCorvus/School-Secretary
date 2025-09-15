@@ -10,3 +10,5 @@
     - Tornar o site reativo ao login:
         Quando do usuário faz login no frontend o site deve redirecioná-lo para a página que tentava acessar, com o token já funcionando.
     - Arrumar TODOs nos código em branches chore
+    - Fazer o site respeitar a preferencia de tema do usuário
+    - Adicionar testes para todas as páginas
