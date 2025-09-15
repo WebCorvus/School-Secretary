@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 
 import { SearchForm } from "@/components/SearchForm";
@@ -13,11 +15,25 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/ui/sidebar";
-import { Item } from "@radix-ui/react-dropdown-menu";
+import { NavMain } from "@/components/NavMain";
+
+import { Home, Inbox } from "lucide-react";
 
 const data = {
-	versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
 	navMain: [
+		{
+			title: "Início",
+			url: "/dashboard",
+			icon: Home,
+		},
+		{
+			// TODO create inbox
+			title: "Notificações",
+			url: "/inbox",
+			icon: Inbox,
+		},
+	],
+	navSecondary: [
 		{
 			title: "Usuários Cadastrados",
 			url: "#",
@@ -86,19 +102,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		<Sidebar {...props}>
 			<SidebarHeader>
 				<SearchForm />
+				<NavMain items={data.navMain} />
 			</SidebarHeader>
 			<SidebarContent>
-				{data.navMain.map((item) => (
+				{data.navSecondary.map((item) => (
 					<SidebarGroup key={item.title}>
 						<SidebarGroupLabel>{item.title}</SidebarGroupLabel>
 						<SidebarGroupContent>
 							<SidebarMenu>
 								{item.items.map((item) => (
 									<SidebarMenuItem key={item.title}>
-										<SidebarMenuButton
-											asChild
-											isActive={item.isActive}
-										>
+										<SidebarMenuButton asChild>
 											<a href={item.url}>{item.title}</a>
 										</SidebarMenuButton>
 									</SidebarMenuItem>

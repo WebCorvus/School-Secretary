@@ -12,3 +12,4 @@
     - Arrumar TODOs nos código em branches chore
     - Fazer o site respeitar a preferencia de tema do usuário
     - Adicionar testes para todas as páginas
+    - Documentar: Sistema de  testes (front e back), uso do shadcn, configuração do axios em api.ts, funcionamento do middleware
