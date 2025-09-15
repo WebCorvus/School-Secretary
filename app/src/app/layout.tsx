@@ -20,13 +20,9 @@ export default function RootLayout({
 		<html lang="pt-br" suppressHydrationWarning>
 			<body className={`${inter.className} `}>
 				<ThemeProvider>
-					<div className="flex flex-col md:flex-row h-screen">
-						<Header />
-						<main className="flex-grow overflow-y-auto">
-							{children}
-						</main>
-						<Footer />
-					</div>
+					<main className="flex-grow overflow-y-auto">
+						{children}
+					</main>
 				</ThemeProvider>
 			</body>
 		</html>

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 
 const protectedRoutes = [
 	"/agenda",
+	"/dashboard",
 	"/events",
 	"/groups",
 	"/itineraries",
@@ -10,7 +11,7 @@ const protectedRoutes = [
 	"/professors",
 	"/students",
 ];
-const loginRoute = "/login";
+const loginRoute = "/";
 
 export function middleware(request: NextRequest) {
 	if (process.env.NODE_ENV === "development") {
