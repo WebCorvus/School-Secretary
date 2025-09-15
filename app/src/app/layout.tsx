@@ -3,12 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppSidebar } from "@/components/AppSidebar";
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger,
-} from "@/components/ui/sidebar";
+import SiteHeader from "@/components/SiteHeader";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,14 +23,7 @@ export default function RootLayout({
 					<SidebarProvider>
 						<AppSidebar />
 						<SidebarInset>
-							<header className="flex h-14 shrink-0 items-center gap-2">
-								<div className="flex flex-1 items-center gap-2 px-3">
-									<SidebarTrigger />
-								</div>
-								<div className="ml-auto px-3">
-									<ThemeSwitcher />
-								</div>
-							</header>
+							<SiteHeader />
 							<div className="flex flex-1 flex-col gap-4 p-4">
 								{children}
 							</div>
