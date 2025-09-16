@@ -5,20 +5,19 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import type { PermissionProps } from "@/types/permission";
 
-export function UserDocumentsCard() {
-	// TODO implement all get logic
+export function PermissionsCard({ data }: { data: PermissionProps[] }) {
 	return (
 		<Card className="w-1/2">
 			<CardHeader>
-				<CardTitle>Documentos auxiliares</CardTitle>
+				<CardTitle>Suas Permissões no Sistema</CardTitle>
 				<CardDescription>
-					Esses são alguns documentos utilizados, impressos, pela
-					escola
+					Identificam as operações que tem permissão de realizar
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<p></p>
+				<p>{data}</p>
 			</CardContent>
 		</Card>
 	);

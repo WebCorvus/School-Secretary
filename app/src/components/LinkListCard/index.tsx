@@ -5,9 +5,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import type { LinkObjectProps } from "@/types/linkObject";
 
-export function UserPermissionsCard() {
-	// TODO implement all get logic
+export function LinkListCard({ data }: { data: LinkObjectProps[] }) {
 	return (
 		<Card className="w-1/2">
 			<CardHeader>
@@ -17,7 +17,14 @@ export function UserPermissionsCard() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<p></p>
+				<ul>
+					{data.map((item, index) => (
+						// TODO add stilization
+						<li key={index}>
+							<a href={item.url}>{item.title}</a>
+						</li>
+					))}
+				</ul>
 			</CardContent>
 		</Card>
 	);

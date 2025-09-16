@@ -1,10 +1,21 @@
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
-import { UserPermissionsCard } from "@/components/UserPermissionsCard";
-import { UserDocumentsCard } from "@/components/UserDocumentsCard";
+import { PermissionsCard } from "@/components/PermissionsCard";
+import { LinkListCard } from "@/components/LinkListCard";
+import type { UserRoleProps } from "@/types/userRole";
+import type { PermissionProps } from "@/types/permission";
+import type { LinkObjectProps } from "@/types/linkObject";
 
 export default function Page() {
-	const userRole = "Desenvolvedor(a)";
+	// TODO get all this informations from backend
+	const userRole: UserRoleProps = "Desenvolvedor(a)";
+	const permissions: PermissionProps[] = [];
+	const documents: LinkObjectProps[] = [
+		{
+			title: "Test Document",
+			url: "https://testurl.com",
+		},
+	];
 	return (
 		<div>
 			<Header1 text="Dasboard" />
@@ -13,8 +24,8 @@ export default function Page() {
 				className={"text-2xl font-semibold my-5"}
 			/>
 			<div className="flex flex-row gap-3">
-				<UserPermissionsCard />
-				<UserDocumentsCard />
+				<PermissionsCard data={permissions} />
+				<LinkListCard data={documents} />
 			</div>
 		</div>
 	);
