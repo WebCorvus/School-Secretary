@@ -96,7 +96,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
-				{/* TODO make it functional */}
+				{/* TODO make this search form functional */}
 				<SearchForm />
 				<NavMain items={data.navMain} />
 			</SidebarHeader>
