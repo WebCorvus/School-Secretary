@@ -10,12 +10,19 @@ import {
 
 import { Header1 } from "@/components/Header1";
 import { Header2 } from "@/components/Header2";
+import { Paragraph } from "@/components/Paragraph";
 
 export default function Page() {
+	// TODO request api to give required informations: role, permissions, auxiliary documents
+	const userRole = "Desenvolvedor(a)";
 	return (
 		<div>
 			<Header1 text="Dasboard" />
-			<Header2 text="Header 2" />
+			<Paragraph
+				text={`Bem vindo(a), você é: ${userRole}`}
+				className={"text-2xl font-semibold my-5"}
+			/>
+			<Header2 text="Suas informações" />
 			<div className="flex flex-row gap-3">
 				<Card className="w-1/2">
 					<CardHeader>
@@ -31,27 +38,14 @@ export default function Page() {
 				</Card>
 				<Card className="w-1/2">
 					<CardHeader>
-						<CardTitle>Card Title</CardTitle>
-						<CardDescription>Card Description</CardDescription>
+						<CardTitle>Documentos auxiliares</CardTitle>
+						<CardDescription>
+							Esses são alguns documentos utilizados, impressos,
+							pela escola
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing
-							elit. Donec fringilla dapibus purus, ut tincidunt
-							elit euismod ut. Phasellus volutpat velit quis nisi
-							lobortis euismod. Maecenas in auctor lacus. Cras
-							posuere vehicula nisl nec suscipit. Donec sodales
-							varius magna. Pellentesque ac tortor dui.
-							Pellentesque molestie, diam non mollis sodales, urna
-							sem pharetra ex, non tincidunt urna ante ut elit.
-							Vivamus tempus mi eros, eget pellentesque ligula
-							egestas et. Nam ullamcorper porta ex sed blandit.
-							Pellentesque eleifend quam non nulla fermentum
-							mattis. Ut fermentum tempor arcu eget congue.
-							Integer laoreet sem vitae ultricies gravida. Aenean
-							egestas leo quis gravida aliquet. Pellentesque
-							scelerisque.{" "}
-						</p>
+						<p></p>
 					</CardContent>
 				</Card>
 			</div>

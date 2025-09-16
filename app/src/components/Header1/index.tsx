@@ -1,6 +1,14 @@
-export function Header1({ text }: { text: string }) {
+export function Header1({
+	text,
+	className,
+}: {
+	text: string;
+	className?: string;
+}) {
 	return (
-		<h1 className="scroll-m-20 text-4xl font-bold tracking-tight text-balance">
+		<h1
+			className={`scroll-m-20 text-4xl font-bold tracking-tight text-balance ${className}`}
+		>
 			{text}
 		</h1>
 	);
