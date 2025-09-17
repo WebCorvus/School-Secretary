@@ -24,7 +24,7 @@ export function UserInfoCard({
 								className="h-80 object-cover border-1 border-[var(--primary)] shadow-md"
 							/>
 						) : (
-							<User className="w-48 h-48 rounded-full border-4 border-[var(--primary)] shadow-md p-4" />
+							<User className="h-80 w-80 rounded-full border-4 border-[var(--primary)] shadow-md p-4" />
 						)}
 					</div>
 
