@@ -1,5 +1,4 @@
 import type { StudentProps } from "@/types/student";
-import { Paragraph } from "@/components/Paragraph";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "lucide-react";
 
@@ -16,52 +15,47 @@ export function UserInfoCard({
 				<CardTitle>Suas Informações</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<div className="flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-8">
-					<div className="flex justify-center items-center w-full lg:w-1/2">
+				<div className="flex flex-col lg:flex-row gap-3">
+					<div className="flex w-full lg:w-1/2 justify-center items-center">
 						{data.photoUrl ? (
 							<img
 								src={data.photoUrl}
 								alt="User Photo"
-								className="w-48 h-48 object-cover rounded-full"
+								className="w-48 h-48 object-cover border-1 border-[var(--primary)] shadow-md"
 							/>
 						) : (
-							<User className="w-48 h-48 object-cover rounded-full" />
+							<User className="w-48 h-48 rounded-full border-4 border-[var(--primary)] shadow-md p-4" />
 						)}
 					</div>
 
-					<div className="flex justify-center items-center w-full lg:w-1/2">
+					<div className="flex w-full lg:w-1/2 justify-center items-center">
 						<ul className="space-y-2">
 							<li>
-								<Paragraph text={`Nome: ${data.full_name}`} />
+								<strong>Nome:</strong> {data.full_name}
 							</li>
 							<li>
-								<Paragraph
-									text={`Matrícula: ${data.registration_number}`}
-								/>
+								<strong>Matrícula:</strong>{" "}
+								{data.registration_number}
 							</li>
 							<li>
-								<Paragraph
-									text={`Telefone: ${data.phone_number}`}
-								/>
+								<strong>Telefone:</strong> {data.phone_number}
 							</li>
 							<li>
-								<Paragraph text={`Email: ${data.email}`} />
+								<strong>Email:</strong> {data.email}
 							</li>
 							<li>
-								<Paragraph text={`CPF: ${data.cpf}`} />
+								<strong>CPF:</strong> {data.cpf}
 							</li>
 							<li>
-								<Paragraph
-									text={`Data de Nascimento: ${data.birthday}`}
-								/>
+								<strong>Data de Nascimento:</strong>{" "}
+								{data.birthday}
 							</li>
 							<li>
-								<Paragraph text={`Endereço: ${data.address}`} />
+								<strong>Endereço:</strong> {data.address}
 							</li>
 							<li>
-								<Paragraph
-									text={`Turma: ${data.group_details?.full_name}`}
-								/>
+								<strong>Turma:</strong>{" "}
+								{data.group_details?.full_name}
 							</li>
 						</ul>
 					</div>

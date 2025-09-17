@@ -22,7 +22,7 @@ export type DailyLessonsViewProps = {
 
 export const FakeGroup = {
 	id: 1,
-	full_name: "Desenvolvimento de Sistemas",
+	full_name: "3° Ano de Desenvolvimento de Sistemas",
 	short_name: "DS",
 	itinerary: 1,
 	itinerary_details: FakeItinerary,
