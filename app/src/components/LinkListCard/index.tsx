@@ -15,6 +15,7 @@ interface LinkListCardProps {
 	description?: string;
 	data: LinkObjectProps[];
 	handleClick: (title: string, url: string) => void;
+	className?: string;
 }
 
 export function LinkListCard({
@@ -22,9 +23,10 @@ export function LinkListCard({
 	description,
 	data,
 	handleClick,
+	className,
 }: LinkListCardProps) {
 	return (
-		<Card className="w-full">
+		<Card className={`w-full ${className}`}>
 			<CardHeader>
 				<CardTitle>{header}</CardTitle>
 				{description && (
@@ -32,11 +34,11 @@ export function LinkListCard({
 				)}
 			</CardHeader>
 			<CardContent>
-				<ul>
+				<ul className="grid grid-cols-2 gap-3">
 					{data.map((item, index) => (
 						<li key={index}>
 							<Button
-								variant={"outline"}
+								variant="outline"
 								onClick={() =>
 									handleClick(item.title, item.url)
 								}

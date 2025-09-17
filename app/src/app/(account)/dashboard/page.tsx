@@ -9,13 +9,13 @@ import { FakeStudent, type StudentProps } from "@/types/student";
 import { toast } from "sonner";
 
 const handleClick = (title: string, url: string) => {
-	toast.success(`Foi feita a requisição de: ${title} (${url})`);
+	toast.success(`Foi feita a requisição de: ${title}`);
 };
 
 export default function DashboardPage() {
-	// TODO request this from db
+	// TODO get this from backend
 	const userInfo: StudentProps = FakeStudent;
-	const usefulLinks: LinkObjectProps[] = [FakeLinkObject];
+	const requisitionsUrl: LinkObjectProps[] = Array(10).fill(FakeLinkObject);
 
 	return (
 		<div className="space-y-6">
@@ -26,12 +26,16 @@ export default function DashboardPage() {
 			/>
 			<div className="flex flex-col gap-3">
 				<UserInfoCard data={userInfo} />
-				<LinkListCard
-					header="Requisitar Documentos"
-					description="São as requisições que pode fazer à escola"
-					data={usefulLinks}
-					handleClick={handleClick}
-				/>
+				<div className="flex flex-row gap-3">
+					<LinkListCard
+						header="Requisitar Documentos"
+						description="São as requisições que pode fazer à escola"
+						data={requisitionsUrl}
+						handleClick={handleClick}
+						className="w-1/2"
+					/>
+					{/* TODO add another cards */}
+				</div>
 			</div>
 		</div>
 	);
