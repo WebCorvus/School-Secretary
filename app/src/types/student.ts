@@ -32,6 +32,7 @@ export const FakeStudent = {
 	address: "74371420",
 	group: 1,
 	group_details: FakeGroup,
+	// TODO put a real (my personal) test url
 	photoUrl: "https://picsum.photos/200/300",
 	created_at: "2000-06-04",
 };
