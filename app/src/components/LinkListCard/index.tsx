@@ -7,11 +7,19 @@ import {
 } from "@/components/ui/card";
 import type { LinkObjectProps } from "@/types/linkObject";
 
-export function LinkListCard({ data }: { data: LinkObjectProps[] }) {
+export function LinkListCard({
+	header,
+	data,
+	className,
+}: {
+	header: string;
+	data: LinkObjectProps[];
+	className?: string;
+}) {
 	return (
-		<Card className="w-1/2">
+		<Card className={`w-full ${className}`}>
 			<CardHeader>
-				<CardTitle>Suas Permissões no Sistema</CardTitle>
+				<CardTitle>{header}</CardTitle>
 				<CardDescription>
 					Identificam as operações que tem permissão de realizar
 				</CardDescription>
