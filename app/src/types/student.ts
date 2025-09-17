@@ -11,7 +11,7 @@ export interface StudentProps {
 	address: string;
 	group: number;
 	group_details: GroupProps | undefined;
-	// TODO add this field logic to backend
+	// TODO add this field logic in backend
 	photoUrl?: string;
 	created_at: string;
 }

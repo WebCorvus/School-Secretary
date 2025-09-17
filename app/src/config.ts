@@ -1,8 +1,8 @@
 export const EXTERNAL_API_HOST = "/api/";
 export const INTERNAL_API_HOST = "http://api:8080/";
 
-
 export const USERS_ROUTE = "users/";
+export const USERS_INFO_ROUTE = USERS_ROUTE + "/info";
 export const LOGIN_ROUTE = USERS_ROUTE + "token/";
 export const REFRESH_ROUTE = USERS_ROUTE + "token/refresh/";
 
