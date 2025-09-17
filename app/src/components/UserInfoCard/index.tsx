@@ -21,7 +21,7 @@ export function UserInfoCard({
 							<img
 								src={data.photoUrl}
 								alt="User Photo"
-								className="w-48 h-48 object-cover border-1 border-[var(--primary)] shadow-md"
+								className="h-80 object-cover border-1 border-[var(--primary)] shadow-md"
 							/>
 						) : (
 							<User className="w-48 h-48 rounded-full border-4 border-[var(--primary)] shadow-md p-4" />
