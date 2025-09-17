@@ -2,7 +2,7 @@
 
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
-import { LinkListCard } from "@/components/LinkListCard";
+import { LinkGrid } from "@/components/LinkGrid";
 import { UserInfoCard } from "@/components/UserInfoCard";
 import { FakeLinkObject, type LinkObjectProps } from "@/types/linkObject";
 import { FakeStudent, type StudentProps } from "@/types/student";
@@ -27,7 +27,7 @@ export default function DashboardPage() {
 			<div className="flex flex-col gap-3">
 				<UserInfoCard data={userInfo} />
 				<div className="flex flex-row gap-3">
-					<LinkListCard
+					<LinkGrid
 						header="Requisitar Documentos"
 						description="São as requisições que pode fazer à escola"
 						data={requisitionsUrl}

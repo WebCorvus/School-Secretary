@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { LinkObjectProps } from "@/types/linkObject";
 
-interface LinkListCardProps {
+interface LinkGridProps {
 	header: string;
 	description?: string;
 	data: LinkObjectProps[];
@@ -18,13 +18,13 @@ interface LinkListCardProps {
 	className?: string;
 }
 
-export function LinkListCard({
+export function LinkGrid({
 	header,
 	description,
 	data,
 	handleClick,
 	className,
-}: LinkListCardProps) {
+}: LinkGridProps) {
 	return (
 		<Card className={`w-full ${className}`}>
 			<CardHeader>
