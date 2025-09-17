@@ -8,8 +8,8 @@ import { FakeLinkObject, type LinkObjectProps } from "@/types/linkObject";
 import { FakeStudent, type StudentProps } from "@/types/student";
 import { toast } from "sonner";
 
-const handleClick = (title: string) => {
-	toast.success(`Foi feita a requisição de: ${title}`);
+const handleClick = (title: string, url: string) => {
+	toast.success(`Foi feita a requisição de: ${title} (${url})`);
 };
 
 export default function DashboardPage() {

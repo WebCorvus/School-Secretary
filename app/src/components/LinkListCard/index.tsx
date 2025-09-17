@@ -14,7 +14,7 @@ interface LinkListCardProps {
 	header: string;
 	description?: string;
 	data: LinkObjectProps[];
-	handleClick: (title: string) => void;
+	handleClick: (title: string, url: string) => void;
 }
 
 export function LinkListCard({
@@ -37,7 +37,9 @@ export function LinkListCard({
 						<li key={index}>
 							<Button
 								variant={"outline"}
-								onClick={() => handleClick(item.title)}
+								onClick={() =>
+									handleClick(item.title, item.url)
+								}
 								className="w-full text-blue-500 hover:bg-blue-100"
 							>
 								{item.title}

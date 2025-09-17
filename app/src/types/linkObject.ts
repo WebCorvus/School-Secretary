@@ -6,6 +6,6 @@ export interface LinkObjectProps {
 }
 
 export const FakeLinkObject: LinkObjectProps = {
-	title: "Test link object",
+	title: "Test Link",
 	url: "https://testurl.com",
 };
