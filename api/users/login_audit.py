@@ -7,22 +7,22 @@ logger = logging.getLogger("login_audit")
 
 @receiver(user_logged_in)
 def log_user_logged_in(sender, request, user, **kwargs):
-    logger.info({
+    logger.info(str({
         "event": "login_success",
         "user_id": user.id,
         "email": user.email,
         "ip": get_client_ip(request),
         "timestamp": timezone.now().isoformat(),
-    })
+    }))
 
 @receiver(user_login_failed)
 def log_user_login_failed(sender, credentials, request, **kwargs):
-    logger.warning({
+    logger.warning(str({
         "event": "login_failed",
         "email": credentials.get("email"),
         "ip": get_client_ip(request),
         "timestamp": timezone.now().isoformat(),
-    })
+    }))
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')

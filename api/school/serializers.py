@@ -24,13 +24,30 @@ class ProfessorSerializer(serializers.ModelSerializer):
         if self.errors:
             import logging, traceback
             logger = logging.getLogger("api_error_audit")
-            logger.error({
+            logger.error(str({
                 "event": "serializer_validation_error",
                 "serializer": self.__class__.__name__,
                 "errors": self.errors,
                 "data": self.initial_data,
                 "traceback": traceback.format_exc(limit=3),
-            })
+            }))
+            # Registrar inconsistência no model
+            try:
+                from utils.inconsistency_logger import log_inconsistency
+                user = None
+                # Tenta pegar usuário do contexto
+                if hasattr(self, 'context') and self.context.get('request'):
+                    req = self.context['request']
+                    user = req.user if hasattr(req, 'user') and getattr(req.user, 'is_authenticated', False) else None
+                log_inconsistency(
+                    user=user,
+                    form_name="ProfessorForm",
+                    error_type="ValidationError",
+                    error_message=str(self.errors),
+                    data_sent=self.initial_data
+                )
+            except Exception as e:
+                logger.error(f"Erro ao registrar inconsistencia: {e}")
         return result
     subject_details = SubjectSerializer(source="subject", read_only=True)
 

@@ -33,6 +33,37 @@ from .models import LESSONS_PER_DAY
 
 
 class ProfessorViewSet(viewsets.ModelViewSet):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(serializer.data, status=201)
+        else:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="ProfessorForm",
+                error_type="ValidationError",
+                error_message=str(serializer.errors),
+                data_sent=request.data
+            )
+            # Retorna o erro normalmente para o front/admin
+            return Response(serializer.errors, status=400)
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="ProfessorForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
     queryset = Professor.objects.all().order_by("full_name")
     serializer_class = ProfessorSerializer
     permission_classes = [IsStaff]
@@ -50,6 +81,35 @@ class ProfessorViewSet(viewsets.ModelViewSet):
 
 
 class SubjectViewSet(viewsets.ModelViewSet):
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="SubjectForm",
+                error_type=type(e).__name__,
+                error_message=str(e),
+                data_sent=request.data
+            )
+            return Response({"detail": "Ocorreu uma inconsistência ao processar o cadastro de disciplina.", "error": str(e)}, status=400)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except Exception as e:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="SubjectForm",
+                error_type=type(e).__name__,
+                error_message=str(e),
+                data_sent=request.data
+            )
+            return Response({"detail": "Ocorreu uma inconsistência ao atualizar a disciplina.", "error": str(e)}, status=400)
     queryset = Subject.objects.all().order_by("full_name")
     serializer_class = SubjectSerializer
     filter_backends = [filters.SearchFilter]

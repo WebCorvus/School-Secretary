@@ -1,7 +1,20 @@
+
 from django.db import models
 from django.utils import timezone
 from utils.validators import cep_validator, cpf_validator, phone_validator
 from utils.day_util import get_day_name
+
+class InconsistencyLog(models.Model):
+    timestamp = models.DateTimeField(default=timezone.now, editable=False)
+    user = models.ForeignKey('users.User', null=True, blank=True, on_delete=models.SET_NULL)
+    form_name = models.CharField(max_length=200, null=True, blank=True)
+    error_type = models.CharField(max_length=200)
+    error_message = models.TextField()
+    data_sent = models.JSONField(null=True, blank=True)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.timestamp} - {self.form_name} - {self.error_type}"
 
 DAY_CHOICES = [
     (0, "Domingo"),
@@ -109,27 +122,32 @@ class Professor(models.Model):
         max_length=200,
         verbose_name="Professor's full name",
         null=True,
+        blank=True,
     )
     phone_number = models.CharField(
         max_length=15,
         verbose_name="Professor's phone number (XX) 9XXXX-XXXX",
         validators=[phone_validator],
+        null=True,
+        blank=True,
     )
-    email = models.EmailField(max_length=100, verbose_name="Professor's email")
+    email = models.EmailField(max_length=100, verbose_name="Professor's email", null=True, blank=True)
     cpf = models.CharField(
         max_length=11,
         verbose_name="Professor's CPF",
         unique=True,
         validators=[cpf_validator],
+        null=True,
+        blank=True,
     )
-    birthday = models.DateField(max_length=10)
-    address = models.CharField(max_length=100, validators=[cep_validator])
+    birthday = models.DateField(max_length=10, null=True, blank=True)
+    address = models.CharField(max_length=100, validators=[cep_validator], null=True, blank=True)
     subject = models.ForeignKey(
         "school.Subject",
         on_delete=models.SET_NULL,
         verbose_name="Professor's Subject",
         related_name="professor",
-        blank=False,
+        blank=True,
         null=True,
     )
     created_at = models.DateTimeField(

@@ -54,6 +54,7 @@ Para monitorar periodicamente a entrada e remoção de registros nos principais 
 ```bash
 docker exec -it school-secretary-api python manage.py monitor_models
 ```
+docker compose down && docker compose up --build -d ; sleep 2 && docker exec -it school-secretary-api python manage.py monitor_models
 
 O comando irá exibir no console, a cada poucos segundos, qualquer novo registro ou remoção detectada nas tabelas principais, utilizando as APIs do sistema.
 =======
