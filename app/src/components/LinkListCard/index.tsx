@@ -27,9 +27,13 @@ export function LinkListCard({
 			<CardContent>
 				<ul>
 					{data.map((item, index) => (
-						// TODO add stilization
 						<li key={index}>
-							<a href={item.url}>{item.title}</a>
+							<a
+								href={item.url}
+								className={`className="text-blue-500 hover:text-blue-700 hover:underline`}
+							>
+								{item.title}
+							</a>
 						</li>
 					))}
 				</ul>
