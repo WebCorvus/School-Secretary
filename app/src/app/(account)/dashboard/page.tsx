@@ -27,7 +27,7 @@ export default function Page() {
 				<UserInfoCard data={userInfo} />
 				<div className="flex flex-row gap-3">
 					<LinkListCard
-						header="Seus Documentos"
+						header="Requisitar Documentos"
 						data={usefulLinks}
 						className="w-1/2"
 					/>
