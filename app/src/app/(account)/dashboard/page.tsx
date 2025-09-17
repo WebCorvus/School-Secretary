@@ -13,6 +13,7 @@ const handleClick = (title: string, url: string) => {
 };
 
 export default function DashboardPage() {
+	// TODO request this from db
 	const userInfo: StudentProps = FakeStudent;
 	const usefulLinks: LinkObjectProps[] = [FakeLinkObject];
 
