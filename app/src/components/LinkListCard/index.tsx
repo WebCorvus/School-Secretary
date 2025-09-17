@@ -1,25 +1,30 @@
+"use client";
+
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
+	CardDescription,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import type { LinkObjectProps } from "@/types/linkObject";
+
+interface LinkListCardProps {
+	header: string;
+	description?: string;
+	data: LinkObjectProps[];
+	handleClick: (title: string) => void;
+}
 
 export function LinkListCard({
 	header,
 	description,
 	data,
-	className,
-}: {
-	header: string;
-	description?: string;
-	data: LinkObjectProps[];
-	className?: string;
-}) {
+	handleClick,
+}: LinkListCardProps) {
 	return (
-		<Card className={`w-full ${className}`}>
+		<Card className="w-full">
 			<CardHeader>
 				<CardTitle>{header}</CardTitle>
 				{description && (
@@ -30,12 +35,13 @@ export function LinkListCard({
 				<ul>
 					{data.map((item, index) => (
 						<li key={index}>
-							<a
-								href={item.url}
-								className={`className="text-blue-500 hover:text-blue-700 hover:underline`}
+							<Button
+								variant={"outline"}
+								onClick={() => handleClick(item.title)}
+								className="w-full text-blue-500 hover:bg-blue-100"
 							>
 								{item.title}
-							</a>
+							</Button>
 						</li>
 					))}
 				</ul>

@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -24,9 +25,10 @@ export default function RootLayout({
 						<AppSidebar />
 						<SidebarInset>
 							<SiteHeader />
-							<div className="flex flex-1 flex-col gap-4 p-4">
+							<main className="flex flex-1 flex-col gap-4 p-4">
 								{children}
-							</div>
+							</main>
+							<Toaster />
 						</SidebarInset>
 					</SidebarProvider>
 				</ThemeProvider>
