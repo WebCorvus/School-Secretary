@@ -19,6 +19,19 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 
 class ProfessorSerializer(serializers.ModelSerializer):
+    def is_valid(self, raise_exception=False):
+        result = super().is_valid(raise_exception=raise_exception)
+        if self.errors:
+            import logging, traceback
+            logger = logging.getLogger("api_error_audit")
+            logger.error({
+                "event": "serializer_validation_error",
+                "serializer": self.__class__.__name__,
+                "errors": self.errors,
+                "data": self.initial_data,
+                "traceback": traceback.format_exc(limit=3),
+            })
+        return result
     subject_details = SubjectSerializer(source="subject", read_only=True)
 
     class Meta:

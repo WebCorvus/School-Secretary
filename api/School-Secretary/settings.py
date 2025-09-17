@@ -1,3 +1,72 @@
+import logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'api_error_pretty': {
+            'format': (
+                '\n\033[91m========== ERRO DE API =========='
+                '\n[\033[93m{levelname}\033[91m] {asctime} {name}'
+                '\n\033[0mEndpoint: {event} {method} {path}'
+                '\nUsuário: {user}'
+                '\nStatus: {status_code}'
+                '\nPayload: {data}'
+                '\nErro: {error}'
+                '\nTraceback: {traceback}'
+                '\nExtra: {msg}'
+                '\n==================================\033[0m\n'
+            ),
+            'style': '{',
+            'defaults': {
+                'event': '-',
+                'method': '-',
+                'path': '-',
+                'user': '-',
+                'status_code': '-',
+                'data': '-',
+                'error': '-',
+                'traceback': '-',
+                'msg': '-',
+            },
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'api_error_pretty',
+        },
+        'login_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'login_audit.log',
+            'formatter': 'verbose',
+        },
+        'api_error_file': {
+            'class': 'logging.FileHandler',
+            'filename': '/tmp/api_error_audit.log',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'login_audit': {
+            'handlers': ['console', 'login_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'api_error_audit': {
+            'handlers': ['console', 'api_error_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 # Permitir mais campos em POST para deleção em massa no admin
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 """
@@ -16,7 +85,8 @@ from pathlib import Path
 import os
 from datetime import timedelta
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -53,6 +123,7 @@ AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    "users.middleware.APILogExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -66,12 +137,33 @@ CORS_ALLOWED_ORIGINS = os.environ.get(
     "CORS_ALLOWED_ORIGINS", "http://127.0.0.1,https://127.0.0.1"
 ).split(",")
 
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "EXCEPTION_HANDLER": "users.api_error_audit.custom_exception_handler",
 }
+# Logger para erros de API
+LOGGING['formatters']['api_error_pretty'] = {
+    'format': '\n\033[91m========== ERRO DE API =========='
+              '\n[\033[93m{levelname}\033[91m] {asctime} {name}'
+              '\n\033[0mEndpoint: {event} {method} {path}'
+              '\nUsuário: {user}'
+              '\nStatus: {status_code}'
+              '\nPayload: {data}'
+              '\nErro: {error}'
+              '\nTraceback: {traceback}'
+              '\n==================================\033[0m\n',
+    'style': '{',
+}
+LOGGING['loggers']['api_error_audit'] = {
+    'handlers': ['console'],
+    'level': 'ERROR',
+    'propagate': False,
+}
+LOGGING['handlers']['console']['formatter'] = 'api_error_pretty'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),

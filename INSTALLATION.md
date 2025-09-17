@@ -46,7 +46,16 @@ docker exec -it school-secretary-api python manage.py seed_users --total 5
 
 Você pode ajustar o número de usuários com o parâmetro `--total` e definir o papel com `--role` (opcional).
 
-BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
+
+### Monitoramento de Entradas e Remoções de Models
+
+Para monitorar periodicamente a entrada e remoção de registros nos principais models do sistema, execute:
+
+```bash
+docker exec -it school-secretary-api python manage.py monitor_models
+```
+
+O comando irá exibir no console, a cada poucos segundos, qualquer novo registro ou remoção detectada nas tabelas principais, utilizando as APIs do sistema.
 =======
 ```bash
 docker compose up test --build --abort-on-container-exit
