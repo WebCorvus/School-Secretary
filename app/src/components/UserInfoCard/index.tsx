@@ -1,6 +1,7 @@
 import type { StudentProps } from "@/types/student";
 import { Paragraph } from "@/components/Paragraph";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { User } from "lucide-react";
 
 export function UserInfoCard({
 	data,
@@ -17,11 +18,15 @@ export function UserInfoCard({
 			<CardContent>
 				<div className="flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-8">
 					<div className="flex justify-center items-center w-full lg:w-1/2">
-						<img
-							src={"/avatar.svg"}
-							alt="User Photo"
-							className="w-48 h-48 object-cover rounded-full"
-						/>
+						{data.photoUrl ? (
+							<img
+								src={data.photoUrl}
+								alt="User Photo"
+								className="w-48 h-48 object-cover rounded-full"
+							/>
+						) : (
+							<User className="w-48 h-48 object-cover rounded-full" />
+						)}
 					</div>
 
 					<div className="flex justify-center items-center w-full lg:w-1/2">
