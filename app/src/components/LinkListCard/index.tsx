@@ -9,10 +9,12 @@ import type { LinkObjectProps } from "@/types/linkObject";
 
 export function LinkListCard({
 	header,
+	description,
 	data,
 	className,
 }: {
 	header: string;
+	description?: string;
 	data: LinkObjectProps[];
 	className?: string;
 }) {
@@ -20,9 +22,9 @@ export function LinkListCard({
 		<Card className={`w-full ${className}`}>
 			<CardHeader>
 				<CardTitle>{header}</CardTitle>
-				<CardDescription>
-					Identificam as operações que tem permissão de realizar
-				</CardDescription>
+				{description && (
+					<CardDescription>{description}</CardDescription>
+				)}
 			</CardHeader>
 			<CardContent>
 				<ul>
