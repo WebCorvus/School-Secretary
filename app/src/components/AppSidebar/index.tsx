@@ -30,21 +30,7 @@ const data = {
 	],
 	navSecondary: [
 		{
-			title: "Usuários Cadastrados",
-			url: "#",
-			items: [
-				{
-					title: "Professores",
-					url: "/professors",
-				},
-				{
-					title: "Alunos",
-					url: "/students",
-				},
-			],
-		},
-		{
-			title: "Publicar",
+			title: "Anúncios",
 			url: "#",
 			items: [
 				{
@@ -55,27 +41,9 @@ const data = {
 					title: "Eventos",
 					url: "/events",
 				},
-			],
-		},
-		{
-			title: "Escola",
-			url: "#",
-			items: [
-				{
-					title: "Turmas",
-					url: "/groups",
-				},
-				{
-					title: "Itinerários",
-					url: "/itineraries",
-				},
 				{
 					title: "Aulas",
 					url: "/lessons",
-				},
-				{
-					title: "Matérias",
-					url: "/subjects",
 				},
 			],
 		},
@@ -96,8 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
-				{/* TODO make this search form functional */}
-				<SearchForm />
 				<NavMain items={data.navMain} />
 			</SidebarHeader>
 			<SidebarContent>
