@@ -16,7 +16,7 @@ export type EventPostProps = Omit<
 	"id" | "created_at" | "updated_at"
 >;
 
-export const FakeEvent = {
+export const FakeEvent: EventProps = {
 	id: 1,
 	title: "Título de teste",
 	description: "Descrição de teste",

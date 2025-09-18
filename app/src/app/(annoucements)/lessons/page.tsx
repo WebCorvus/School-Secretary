@@ -1,42 +1,36 @@
 "use client";
 
-import api from "@/services/api";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import { FullScreenLoading } from "@/components/FullScreenLoading";
+import { FullScreenError } from "@/components/FullScreenError";
 import SelectObject from "@/components/SelectObject";
-import { GROUP_ROUTE, EXTERNAL_API_HOST } from "@/config";
-import { DailyLessonsViewProps, GroupProps } from "@/types/group";
+import { useGroupLessons } from "@/hooks/useGroupLesson";
+import { useGroups } from "@/hooks/useGroup";
 
 export default function LessonsPage() {
-	const [data, setData] = useState<DailyLessonsViewProps[]>([]);
-	const [update, setUpdate] = useState(false);
-	const [groups, setGroups] = useState<GroupProps[]>();
 	const [selectedGroup, setSelectedGroup] = useState<number>();
+	const { groups, loading: loadingGroups, error: errorGroups } = useGroups();
+	const {
+		data: lessons,
+		loading: loadingLessons,
+		error: errorLessons,
+		refetchLessons,
+	} = useGroupLessons(selectedGroup);
 
-	useEffect(() => {
-		if (!selectedGroup) return;
-		api.get<DailyLessonsViewProps[]>(
-			`${EXTERNAL_API_HOST}${GROUP_ROUTE}${selectedGroup}/get-lessons/`
-		)
-			.then((response) => {
-				setData(response.data);
-			})
-			.finally(() => setUpdate(false));
-	}, [update]);
-
-	useEffect(() => {
-		api.get(EXTERNAL_API_HOST + GROUP_ROUTE)
-			.then((response) => {
-				setGroups(response.data);
-			})
-			.finally(() => setUpdate(false));
-	}, []);
-
-	const handleSelectedGroup = (value: number | undefined) => {
+	const handleSelectedGroup = (value?: number) => {
 		setSelectedGroup(value);
-		setUpdate(true);
+		refetchLessons();
 	};
+
+	if (loadingGroups || loadingLessons) return <FullScreenLoading />;
+
+	if (errorGroups) return <FullScreenError error={errorGroups} />;
+
+	if (errorLessons) return <FullScreenError error={errorLessons} />;
+
+	if (selectedGroup && (!lessons || lessons.length === 0))
+		return <FullScreenError error="Nenhuma aula encontrada." />;
 
 	return (
 		<div>
@@ -50,45 +44,34 @@ export default function LessonsPage() {
 				<SelectObject options={groups} onSelect={handleSelectedGroup} />
 			</div>
 
-			<div className="flex justify-center m-3">
-				<Link
-					className="btn w-35 text-center"
-					href="/lessons/add"
-					data-test="add-button"
-				>
-					Adicionar
-				</Link>
-			</div>
-			<div>
-				<div className="flex justify-center items-center">
-					<div className="table-container">
-						<table className="m-3 table table-border">
-							<thead>
-								<tr>
-									<th>Dia</th>
-									<th>1° Horário</th>
-									<th>2° Horário</th>
-									<th>3° Horário</th>
-									<th>4° Horário</th>
-									<th>5° Horário</th>
-									<th>6° Horário</th>
+			<div className="flex justify-center items-center">
+				<div className="table-container">
+					<table className="m-3 table table-border">
+						<thead>
+							<tr>
+								<th>Dia</th>
+								<th>1° Horário</th>
+								<th>2° Horário</th>
+								<th>3° Horário</th>
+								<th>4° Horário</th>
+								<th>5° Horário</th>
+								<th>6° Horário</th>
+							</tr>
+						</thead>
+						<tbody>
+							{lessons.map(({ day, lessons }) => (
+								<tr key={day}>
+									<td>{day}</td>
+									{lessons.map((lesson, idx) => (
+										<td key={idx}>
+											{lesson?.subject_details
+												?.short_name || "-"}
+										</td>
+									))}
 								</tr>
-							</thead>
-							<tbody>
-								{data.map(({ day, lessons }) => (
-									<tr key={day}>
-										<td>{day}</td>
-										{lessons.map((lesson, idx) => (
-											<td key={idx}>
-												{lesson?.subject_details
-													?.short_name || "-"}
-											</td>
-										))}
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
+							))}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

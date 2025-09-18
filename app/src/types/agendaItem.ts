@@ -19,7 +19,7 @@ export type AgendaItemPostProps = Omit<
 	"id" | "created_at" | "updated_at" | "subject_details"
 >;
 
-export const FakeAgendaItem = {
+export const FakeAgendaItem: AgendaItemProps = {
 	id: 1,
 	title: "Atividade de teste",
 	subject: 1,

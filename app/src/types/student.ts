@@ -21,7 +21,7 @@ export type StudentPostProps = Omit<
 	"id" | "created_at" | "group_details"
 >;
 
-export const FakeStudent = {
+export const FakeStudent: StudentProps = {
 	id: 1,
 	full_name: "Nome do Estudante",
 	registration_number: "773984",

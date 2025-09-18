@@ -7,7 +7,7 @@ export interface ItineraryProps {
 
 export type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;
 
-export const FakeItinerary = {
+export const FakeItinerary: ItineraryProps = {
 	id: 1,
 	short_name: "DS",
 	full_name: "Desenvolvimento de Sistema",

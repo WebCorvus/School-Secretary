@@ -21,15 +21,7 @@ export default function EventsPage() {
 					<h1 className="title">Eventos</h1>
 				</div>
 			</div>
-			<div className="flex justify-center m-3">
-				<Link
-					className="btn w-50 text-center"
-					href="/events/add"
-					data-test="add-button"
-				>
-					Adicionar
-				</Link>
-			</div>
+
 			<div className="flex justify-center items-center">
 				<div className="table-container">
 					<table className="m-3 table table-border">

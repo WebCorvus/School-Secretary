@@ -8,7 +8,7 @@ export function useProfessor() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const generateMockData = useCallback((): ProfessorProps => {
+	const generateMockProfessors = useCallback((): ProfessorProps => {
 		return { ...FakeProfessor };
 	}, []);
 
@@ -23,13 +23,13 @@ export function useProfessor() {
 			const payload = response.data || null;
 
 			if (process.env.NODE_ENV === "development" && !payload) {
-				setData(generateMockData());
+				setData(generateMockProfessors());
 			} else {
 				setData(payload);
 			}
 		} catch {
 			if (process.env.NODE_ENV === "development") {
-				setData(generateMockData());
+				setData(generateMockProfessors());
 				setError(null);
 			} else {
 				setData(null);
@@ -40,7 +40,7 @@ export function useProfessor() {
 		} finally {
 			setLoading(false);
 		}
-	}, [generateMockData]);
+	}, [generateMockProfessors]);
 
 	useEffect(() => {
 		fetchData();

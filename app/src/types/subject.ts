@@ -7,7 +7,7 @@ export interface SubjectProps {
 
 export type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
 
-export const FakeSubject = {
+export const FakeSubject: SubjectProps = {
 	id: 1,
 	full_name: "Matéria de Test",
 	short_name: "MT",

@@ -20,7 +20,7 @@ export type ProfessorPostProps = Omit<
 	"id" | "subject_details" | "created_at"
 >;
 
-export const FakeProfessor = {
+export const FakeProfessor: ProfessorProps = {
 	id: 1,
 	full_name: "Nome do Professor",
 	phone_number: "(62) 99972-1283",

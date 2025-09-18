@@ -8,7 +8,7 @@ export function useAgenda() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const generateMockData = useCallback((): AgendaItemProps[] => {
+	const generateMockAgenda = useCallback((): AgendaItemProps[] => {
 		return Array.from({ length: 10 }, (_, i) => ({
 			...FakeAgendaItem,
 			id: i + 1,
@@ -31,13 +31,13 @@ export function useAgenda() {
 				process.env.NODE_ENV === "development" &&
 				payload.length === 0
 			) {
-				payload = generateMockData();
+				payload = generateMockAgenda();
 			}
 
 			setData(payload);
 		} catch {
 			if (process.env.NODE_ENV === "development") {
-				setData(generateMockData());
+				setData(generateMockAgenda());
 				setError(null);
 			} else {
 				setData([]);
@@ -46,7 +46,7 @@ export function useAgenda() {
 		} finally {
 			setLoading(false);
 		}
-	}, [generateMockData]);
+	}, [generateMockAgenda]);
 
 	useEffect(() => {
 		fetchData();

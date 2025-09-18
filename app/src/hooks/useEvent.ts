@@ -8,7 +8,7 @@ export function useEvent() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const generateMockData = useCallback((): EventProps[] => {
+	const generateMockEvents = useCallback((): EventProps[] => {
 		return Array.from({ length: 10 }, (_, i) => ({
 			...FakeEvent,
 			id: i + 1,
@@ -31,13 +31,13 @@ export function useEvent() {
 				process.env.NODE_ENV === "development" &&
 				payload.length === 0
 			) {
-				payload = generateMockData();
+				payload = generateMockEvents();
 			}
 
 			setData(payload);
 		} catch {
 			if (process.env.NODE_ENV === "development") {
-				setData(generateMockData());
+				setData(generateMockEvents());
 				setError(null);
 			} else {
 				setData([]);
@@ -46,7 +46,7 @@ export function useEvent() {
 		} finally {
 			setLoading(false);
 		}
-	}, [generateMockData]);
+	}, [generateMockEvents]);
 
 	useEffect(() => {
 		fetchData();

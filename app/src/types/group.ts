@@ -20,7 +20,7 @@ export type DailyLessonsViewProps = {
 	lessons: LessonProps[];
 };
 
-export const FakeGroup = {
+export const FakeGroup: GroupProps = {
 	id: 1,
 	full_name: "3° Ano de Desenvolvimento de Sistemas",
 	short_name: "DS",

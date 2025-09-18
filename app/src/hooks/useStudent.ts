@@ -8,7 +8,7 @@ export function useStudent() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const generateMockData = useCallback((): StudentProps => {
+	const generateMockStudents = useCallback((): StudentProps => {
 		return { ...FakeStudent };
 	}, []);
 
@@ -23,13 +23,13 @@ export function useStudent() {
 			const payload = response.data || null;
 
 			if (process.env.NODE_ENV === "development" && !payload) {
-				setData(generateMockData());
+				setData(generateMockStudents());
 			} else {
 				setData(payload);
 			}
 		} catch {
 			if (process.env.NODE_ENV === "development") {
-				setData(generateMockData());
+				setData(generateMockStudents());
 				setError(null);
 			} else {
 				setData(null);
@@ -40,7 +40,7 @@ export function useStudent() {
 		} finally {
 			setLoading(false);
 		}
-	}, [generateMockData]);
+	}, [generateMockStudents]);
 
 	useEffect(() => {
 		fetchData();
