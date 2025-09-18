@@ -1,29 +1,18 @@
 "use client";
 
-import api from "@/services/api";
-
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-
-import SearchField from "@/components/SearchField";
-
-import { EventProps } from "@/types/event";
-import { EVENT_ROUTE, EXTERNAL_API_HOST } from "@/config";
+import { FullScreenLoading } from "@/components/FullScreenLoading";
+import { FullScreenError } from "@/components/FullScreenError";
+import { useEvent } from "@/hooks/useEvent";
+import SearchField from "@/components/SearchField"; // TODO implement search field
 
 export default function EventsPage() {
-	const [update, setUpdate] = useState(false);
-	const [data, setData] = useState<EventProps[]>([]);
+	const { data, loading, error, refetch } = useEvent();
 
-	useEffect(() => {
-		api.get<EventProps[]>(`${EXTERNAL_API_HOST}${EVENT_ROUTE}`)
-			.then((response) => setData(response.data))
-			.finally(() => setUpdate(false));
-	}, [update]);
-
-	const handleDelete = (value: number) => {
-		api.delete(`${EXTERNAL_API_HOST}${EVENT_ROUTE}${value}/`);
-		setUpdate(true);
-	};
+	if (loading) return <FullScreenLoading />;
+	if (error) return <FullScreenError error={error} />;
+	if (!data || data.length === 0)
+		return <FullScreenError error="Nenhum evento encontrado." />;
 
 	return (
 		<div>
@@ -51,7 +40,6 @@ export default function EventsPage() {
 								<th>Data de Início</th>
 								<th>Data de Fim</th>
 								<th>Local</th>
-								<th>Remover</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -62,16 +50,6 @@ export default function EventsPage() {
 									<td>{event.start_date}</td>
 									<td>{event.end_date}</td>
 									<td>{event.location}</td>
-									<td>
-										<button
-											className="link-blue"
-											onClick={() =>
-												handleDelete(event.id)
-											}
-										>
-											Remover
-										</button>
-									</td>
 								</tr>
 							))}
 						</tbody>

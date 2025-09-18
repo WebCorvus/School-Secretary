@@ -15,3 +15,16 @@ export type EventPostProps = Omit<
 	EventProps,
 	"id" | "created_at" | "updated_at"
 >;
+
+export const FakeEvent = {
+	id: 1,
+	title: "Título de teste",
+	description: "Descrição de teste",
+	start_date: "2000-01-01",
+	end_date: "2000-01-01",
+	start_time: "22:00:00",
+	end_time: "22:00:00",
+	location: "Localização de teste",
+	created_at: "2000-01-01",
+	updated_at: "2000-01-01",
+};
