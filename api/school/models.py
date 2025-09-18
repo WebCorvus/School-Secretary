@@ -97,6 +97,7 @@ class Group(models.Model):
 
 class Professor(models.Model):
     from django.conf import settings
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -136,6 +137,7 @@ class Professor(models.Model):
         default=timezone.now,
         editable=False,
     )
+
     def __str__(self):
         return self.full_name
 
@@ -150,7 +152,7 @@ class SchoolRecord(models.Model):
         null=True,
     )
 
-    descrition = models.TextField(
+    description = models.TextField(
         blank=False,
         null=True,
     )
@@ -264,11 +266,11 @@ class AgendaItem(models.Model):
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
+    location = models.CharField(max_length=200, blank=True, null=True)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
     start_time = models.TimeField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
-    location = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

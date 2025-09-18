@@ -7,6 +7,8 @@ from school.models import (
     SchoolRecord,
     Book,
     Lesson,
+    Event,
+    AgendaItem,
 )
 
 
@@ -96,9 +98,9 @@ class SchoolRecordsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "student",
-        "descrition",
+        "description",
     )
-    list_display_links = ("student",)
+    list_display_links = ("student", "description")
     search_fields = ("student",)
     list_filter = ("student",)
 
@@ -147,6 +149,72 @@ class LessonsAdmin(admin.ModelAdmin):
     list_filter = ("professor", "subject", "time", "day")
 
 
+class AgendaItemsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "title",
+        "subject",
+        "description",
+        "date",
+        "time",
+    )
+    list_display_links = (
+        "title",
+        "subject",
+        "description",
+        "date",
+        "time",
+    )
+    search_fields = (
+        "title",
+        "subject",
+        "description",
+        "date",
+        "time",
+    )
+    list_filter = ("title", "subject", "description", "date", "time")
+
+
+class EventsAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "title",
+        "location",
+        "description",
+        "start_date",
+        "end_date",
+        "start_time",
+        "end_time",
+    )
+    list_display_links = (
+        "title",
+        "location",
+        "description",
+        "start_date",
+        "end_date",
+        "start_time",
+        "end_time",
+    )
+    search_fields = (
+        "title",
+        "location",
+        "description",
+        "start_date",
+        "end_date",
+        "start_time",
+        "end_time",
+    )
+    list_filter = (
+        "title",
+        "location",
+        "description",
+        "start_date",
+        "end_date",
+        "start_time",
+        "end_time",
+    )
+
+
 admin.site.register(
     Subject,
     SubjectsAdmin,
@@ -180,4 +248,13 @@ admin.site.register(
 admin.site.register(
     Lesson,
     LessonsAdmin,
+)
+
+admin.site.register(
+    AgendaItem,
+    AgendaItemsAdmin,
+)
+admin.site.register(
+    Event,
+    EventsAdmin,
 )

@@ -19,12 +19,6 @@ export default function AgendaPage() {
 				<h1 className="title">Agenda</h1>
 			</div>
 
-			<div className="flex justify-center m-3">
-				<Link className="btn w-50 text-center" href="/agenda/add">
-					Adicionar
-				</Link>
-			</div>
-
 			<div className="flex justify-center items-center">
 				<div className="table-container">
 					<table className="m-3 table table-border">
