@@ -1,31 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
-import { LinkGrid } from "@/components/LinkGrid";
+import { LinkGrid } from "@/components/ButtonGrid";
 import { UserInfoCard } from "@/components/UserInfoCard";
-import { FakeLinkObject, type LinkObjectProps } from "@/types/linkObject";
-import { FakeStudent, type StudentProps } from "@/types/student";
-import { toast } from "sonner";
-import api from "@/services/api";
-import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
+import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
+import { type StudentProps } from "@/types/student";
+import { DocumentRequest } from "@/types/documentRequest";
+import api from "@/services/api";
 
-const handleClick = (title: string, url: string) => {
-	toast.success(`Foi feita a requisição de: ${title}`);
+const handleClick = (item: DocumentRequest) => {
+	toast.success(`Foi feita a requisição de: ${item.title}`);
 };
 
 export default function DashboardPage() {
 	const [userInfo, setUserInfo] = useState<StudentProps | null>(null);
-	const requisitionsUrl: LinkObjectProps[] = Array(10).fill(FakeLinkObject);
 	const [loading, setLoading] = useState(true);
+	const documentRequests: DocumentRequest[] = [
+		{ title: "Boletim", type: "ADVERTENCE" },
+	];
 
 	useEffect(() => {
 		api.get<StudentProps>(`${EXTERNAL_API_HOST}${USERS_INFO_ROUTE}`)
 			.then((response) => {
 				setUserInfo(response.data);
+				toast.success("Informações carregadas com sucesso.");
 			})
 			.catch((error) => {
 				console.error("Erro ao buscar informações:", error);
@@ -41,7 +44,7 @@ export default function DashboardPage() {
 	}
 
 	if (!userInfo) {
-		return <FullScreenError error="Nenhuma informação encontrada." />;
+		return <FullScreenError error="Nenhuma informação econtrada." />;
 	}
 
 	return (
@@ -57,11 +60,11 @@ export default function DashboardPage() {
 					<LinkGrid
 						header="Requisitar Documentos"
 						description="São as requisições que pode fazer à escola"
-						data={requisitionsUrl}
+						data={documentRequests}
 						handleClick={handleClick}
 						className="w-1/2"
 					/>
-					{/* TODO: adicionar outros cards futuramente */}
+					{/* TODO: add new cards */}
 				</div>
 			</div>
 		</div>

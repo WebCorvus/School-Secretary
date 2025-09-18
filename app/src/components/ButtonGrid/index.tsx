@@ -8,13 +8,12 @@ import {
 	CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { LinkObjectProps } from "@/types/linkObject";
 
-interface LinkGridProps {
+interface ButtonGridProps {
 	header: string;
 	description?: string;
-	data: LinkObjectProps[];
-	handleClick: (title: string, url: string) => void;
+	data: any[];
+	handleClick: (item: any) => void;
 	className?: string;
 }
 
@@ -24,7 +23,7 @@ export function LinkGrid({
 	data,
 	handleClick,
 	className,
-}: LinkGridProps) {
+}: ButtonGridProps) {
 	return (
 		<Card className={`w-full ${className}`}>
 			<CardHeader>
@@ -39,9 +38,7 @@ export function LinkGrid({
 						<li key={index}>
 							<Button
 								variant="outline"
-								onClick={() =>
-									handleClick(item.title, item.url)
-								}
+								onClick={() => handleClick(item)}
 								className="w-full text-blue-500 hover:bg-blue-100"
 							>
 								{item.title}

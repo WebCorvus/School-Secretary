@@ -1,5 +1,3 @@
-import { title } from "process";
-
 export interface LinkObjectProps {
 	title: string;
 	url: string;

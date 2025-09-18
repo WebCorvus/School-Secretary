@@ -13,3 +13,4 @@
     - Fazer o site respeitar a preferencia de tema do usuário
     - Adicionar testes para todas as páginas
     - Documentar: Sistema de  testes (front e back), uso do shadcn, configuração do axios em api.ts, funcionamento do middleware
+    - Criar rota /users/info no backend que entrega as informações do dono do token da requisição

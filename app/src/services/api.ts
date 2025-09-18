@@ -1,30 +1,45 @@
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
 import { REFRESH_ROUTE } from "@/config";
+import { toast } from "sonner";
 
-const DJANGO_REFRESH_URL =
-	process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
+const DJANGO_REFRESH_URL = process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
 
 const api = axios.create();
 
+// TODO use sonner here to show success or errors
+
 api.interceptors.request.use(
-	(config) => {
+	(config: any) => {
+		if (process.env.NODE_ENV === "development") return config;
+
 		const token = getCookie("access");
 		if (token) {
-			config.headers["Authorization"] = `Bearer ${token}`;
+			if (!config.headers) config.headers = {};
+			config.headers.Authorization = `Bearer ${token}`;
 		}
+
 		return config;
 	},
-	(error) => {
-		return Promise.reject(error);
-	}
+	(error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-	(response) => response,
-	async (error) => {
+	(response) => {
+		if (process.env.NODE_ENV === "development") {
+			return { ...response, data: { ...response.data, success: true } };
+		}
+		return response;
+	},
+	async (error: any) => {
+		if (process.env.NODE_ENV === "development") {
+			console.warn("API dev mode: ignorando erro", error.message);
+			return { data: { success: true } };
+		}
+
 		const originalRequest = error.config;
-		if (error.response.status === 401 && !originalRequest._retry) {
+
+		if (error.response?.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
 			const refreshToken = getCookie("refresh");
 
@@ -36,25 +51,27 @@ api.interceptors.response.use(
 
 					const { access } = response.data;
 
-					setCookie("access", access, {
-						path: "/",
-						sameSite: "lax",
-					});
+					setCookie("access", access, { path: "/", sameSite: "lax" });
 
-					originalRequest.headers[
-						"Authorization"
-					] = `Bearer ${access}`;
+					if (!originalRequest.headers) originalRequest.headers = {};
+					originalRequest.headers.Authorization = `Bearer ${access}`;
+
+					toast.success("Token atualizado com sucesso!");
 					return api(originalRequest);
 				} catch (refreshError) {
 					console.error("Refresh token failed", refreshError);
 					window.location.href = "/login";
+					toast.error("Sessão expirada, faça login novamente.");
 					return Promise.reject(refreshError);
 				}
 			}
 		}
-		if (error.response.status === 403) {
+
+		if (error.response?.status === 403) {
 			window.location.href = "/login";
+			toast.error("Acesso negado.");
 		}
+
 		return Promise.reject(error);
 	}
 );

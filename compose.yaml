@@ -48,7 +48,7 @@ services:
       - api
     develop:
       watch:
-        - action: rebuild
+        - action: sync
           path: ./app
           target: /app
     networks:
@@ -66,6 +66,11 @@ services:
     volumes:
       - api_static:/vol/web/static/
       - api_media:/vol/web/media/
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
     env_file:
       - .env.base
       - .env.prod
