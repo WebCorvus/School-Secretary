@@ -4,15 +4,13 @@ import Link from "next/link";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { useAgenda } from "@/hooks/useAgenda";
-import api from "@/services/api";
-import { EXTERNAL_API_HOST, AGENDA_ROUTE } from "@/config";
 
 export default function AgendaPage() {
 	const { data, loading, error, refetch } = useAgenda();
 
 	if (loading) return <FullScreenLoading />;
 	if (error) return <FullScreenError error={error} />;
-	if (!data || data.length === 0)
+	if (data.length === 0)
 		return <FullScreenError error="Nenhuma informação encontrada." />;
 
 	return (
