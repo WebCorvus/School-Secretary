@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
@@ -8,46 +7,30 @@ import { ButtonGrid } from "@/components/ButtonGrid";
 import { UserInfoCard } from "@/components/UserInfoCard";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
-import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
-import { type StudentProps } from "@/types/student";
-import { DocumentRequest } from "@/types/documentRequest";
-import api from "@/services/api";
+import { type DocumentRequest } from "@/types/documentRequest";
+import { useStudent } from "@/hooks/useStudent";
 
-const handleClick = (item: DocumentRequest) => {
-	toast.success(`Foi feita a requisição de: ${item.title}`);
-};
+const documentRequests: DocumentRequest[] = [
+	{ title: "Boletim", type: "BULLETIN" },
+	{ title: "Presenças", type: "PRESENCE" },
+	{ title: "Declaração de Matrícula", type: "DECLARATION" },
+	{ title: "Histórico Acadêmico", type: "HISTORY" },
+];
 
 export default function DashboardPage() {
-	const [userInfo, setUserInfo] = useState<StudentProps | null>(null);
-	const [loading, setLoading] = useState(true);
-	const documentRequests: DocumentRequest[] = [
-		{ title: "Boletim", type: "BULLETIN" },
-		{ title: "Presenças", type: "PRESENCE" },
-		{ title: "Declaração de Matrícula", type: "DECLARATION" },
-		{ title: "Histórico Acadêmico", type: "HISTORY" },
-	];
+	const { data: userInfo, loading, error, refetch } = useStudent();
 
-	useEffect(() => {
-		api.get<StudentProps>(`${EXTERNAL_API_HOST}${USERS_INFO_ROUTE}`)
-			.then((response) => {
-				setUserInfo(response.data);
-			})
-			.catch((error) => {
-				console.error("Erro ao buscar informações:", error);
-				toast.error("Não foi possível carregar suas informações.");
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, []);
+	const handleClick = (item: DocumentRequest) => {
+		toast.success(`Foi feita a requisição de: ${item.title}`);
+	};
 
-	if (loading) {
-		return <FullScreenLoading />;
-	}
-
-	if (!userInfo) {
-		return <FullScreenError error="Nenhuma informação econtrada." />;
-	}
+	if (loading) return <FullScreenLoading />;
+	if (error || !userInfo)
+		return (
+			<FullScreenError
+				error={error || "Nenhuma informação encontrada."}
+			/>
+		);
 
 	return (
 		<div className="space-y-6">

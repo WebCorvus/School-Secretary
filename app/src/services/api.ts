@@ -7,36 +7,21 @@ const DJANGO_REFRESH_URL = process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
 
 const api = axios.create();
 
-// TODO use sonner here to show success or errors
-
 api.interceptors.request.use(
 	(config: any) => {
-		if (process.env.NODE_ENV === "development") return config;
-
 		const token = getCookie("access");
 		if (token) {
 			if (!config.headers) config.headers = {};
 			config.headers.Authorization = `Bearer ${token}`;
 		}
-
 		return config;
 	},
 	(error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-	(response) => {
-		if (process.env.NODE_ENV === "development") {
-			return { ...response, data: { ...response.data, success: true } };
-		}
-		return response;
-	},
+	(response) => response,
 	async (error: any) => {
-		if (process.env.NODE_ENV === "development") {
-			console.warn("API dev mode: ignorando erro", error.message);
-			return { data: { success: true } };
-		}
-
 		const originalRequest = error.config;
 
 		if (error.response?.status === 401 && !originalRequest._retry) {
@@ -48,7 +33,6 @@ api.interceptors.response.use(
 					const response = await axios.post(DJANGO_REFRESH_URL, {
 						refresh: refreshToken,
 					});
-
 					const { access } = response.data;
 
 					setCookie("access", access, { path: "/", sameSite: "lax" });
