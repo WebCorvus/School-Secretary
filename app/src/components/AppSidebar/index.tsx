@@ -14,6 +14,8 @@ import { NavSecondary } from "@/components/NavSecondary";
 
 import { Home, Inbox } from "lucide-react";
 
+import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
+
 const data = {
 	navMain: [
 		{
@@ -48,12 +50,16 @@ const data = {
 			],
 		},
 		{
-			title: "Marketing",
+			title: "Escola",
 			url: "#",
 			items: [
 				{
 					title: "Sobre",
 					url: "/about",
+				},
+				{
+					title: "Painel administrativo",
+					url: `${EXTERNAL_API_HOST}${ADMIN_ROUTE}`,
 				},
 			],
 		},
