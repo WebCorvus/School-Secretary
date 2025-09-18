@@ -10,6 +10,9 @@ import { FullScreenError } from "@/components/FullScreenError";
 import { type DocumentRequest } from "@/types/documentRequest";
 import { useStudent } from "@/hooks/useStudent";
 
+// TODO adapt this page to handle it
+// import { useProfessor } from "@/hooks/useProfessor";
+
 const documentRequests: DocumentRequest[] = [
 	{ title: "Boletim", type: "BULLETIN" },
 	{ title: "Presenças", type: "PRESENCE" },

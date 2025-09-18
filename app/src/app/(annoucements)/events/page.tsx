@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { useEvent } from "@/hooks/useEvent";
-import SearchField from "@/components/SearchField"; // TODO implement search field
+// import SearchField from "@/components/SearchField"; // TODO implement search field
 
 export default function EventsPage() {
 	const { data, loading, error, refetch } = useEvent();
