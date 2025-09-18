@@ -42,7 +42,7 @@ export default function DashboardPage() {
 	}, []);
 
 	if (loading) {
-		return <FullScreenLoading loading={loading} />;
+		return <FullScreenLoading />;
 	}
 
 	if (!userInfo) {
