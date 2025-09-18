@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
-import { LinkGrid } from "@/components/ButtonGrid";
+import { ButtonGrid } from "@/components/ButtonGrid";
 import { UserInfoCard } from "@/components/UserInfoCard";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
 import { type StudentProps } from "@/types/student";
 import { DocumentRequest } from "@/types/documentRequest";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 import api from "@/services/api";
 
 const handleClick = (item: DocumentRequest) => {
@@ -21,7 +22,10 @@ export default function DashboardPage() {
 	const [userInfo, setUserInfo] = useState<StudentProps | null>(null);
 	const [loading, setLoading] = useState(true);
 	const documentRequests: DocumentRequest[] = [
-		{ title: "Boletim", type: "ADVERTENCE" },
+		{ title: "Boletim", type: "BULLETIN" },
+		{ title: "Presenças", type: "PRESENCE" },
+		{ title: "Declaração de Matrícula", type: "DECLARATION" },
+		{ title: "Histórico Acadêmico", type: "HISTORY" },
 	];
 
 	useEffect(() => {
@@ -57,7 +61,7 @@ export default function DashboardPage() {
 			<div className="flex flex-col gap-3">
 				<UserInfoCard data={userInfo} />
 				<div className="flex flex-row gap-3">
-					<LinkGrid
+					<ButtonGrid
 						header="Requisitar Documentos"
 						description="São as requisições que pode fazer à escola"
 						data={documentRequests}

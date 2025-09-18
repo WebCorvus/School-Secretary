@@ -8,6 +8,17 @@ import {
 	CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ButtonGridProps {
 	header: string;
@@ -17,7 +28,7 @@ interface ButtonGridProps {
 	className?: string;
 }
 
-export function LinkGrid({
+export function ButtonGrid({
 	header,
 	description,
 	data,
@@ -33,16 +44,40 @@ export function LinkGrid({
 				)}
 			</CardHeader>
 			<CardContent>
-				<ul className="grid grid-cols-2 gap-3">
+				<ul className="grid grid-cols-2 gap-2">
 					{data.map((item, index) => (
 						<li key={index}>
-							<Button
-								variant="outline"
-								onClick={() => handleClick(item)}
-								className="w-full text-blue-500 hover:bg-blue-100"
-							>
-								{item.title}
-							</Button>
+							<AlertDialog>
+								<AlertDialogTrigger asChild>
+									<Button
+										variant="outline"
+										className="w-full text-blue-500 hover:bg-blue-100"
+									>
+										{item.title}
+									</Button>
+								</AlertDialogTrigger>
+								<AlertDialogContent>
+									<AlertDialogHeader>
+										<AlertDialogTitle>
+											Confirmar ação
+										</AlertDialogTitle>
+										<AlertDialogDescription>
+											Você deseja realmente selecionar{" "}
+											<strong>{item.title}</strong>?
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>
+											Cancelar
+										</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={() => handleClick(item)}
+										>
+											Confirmar
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
 						</li>
 					))}
 				</ul>
