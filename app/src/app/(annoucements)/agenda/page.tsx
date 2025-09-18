@@ -1,29 +1,61 @@
 "use client";
 
 import api from "@/services/api";
-
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-
-// TODO implement search field
-import SearchField from "@/components/SearchField";
-
+import { FullScreenError } from "@/components/FullScreenError";
 import { AgendaItemProps } from "@/types/agenda";
 import { AGENDA_ROUTE, EXTERNAL_API_HOST } from "@/config";
+import { FullScreenLoading } from "@/components/FullScreenLoading";
 
 export default function AgendaPage() {
 	const [update, setUpdate] = useState(false);
-	const [data, setData] = useState<AgendaItemProps[]>([]);
+	const [data, setData] = useState<AgendaItemProps[] | null>(null);
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true); // novo estado de loading
 
 	useEffect(() => {
-		api.get<AgendaItemProps[]>(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
-			.then((response) => setData(response.data))
-			.finally(() => setUpdate(false));
+		setLoading(true); // começa carregando
+
+		api.get(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`)
+			.then((response) => {
+				const payload = Array.isArray(response.data)
+					? response.data
+					: response.data.results || [];
+				setData(payload);
+				setError(null);
+			})
+			.catch(() => {
+				setError(
+					"Não foi possível carregar a agenda. Tente novamente mais tarde."
+				);
+				setData(null);
+			})
+			.finally(() => {
+				setLoading(false);
+				setUpdate(false);
+			});
 	}, [update]);
 
+	if (loading) {
+		return <FullScreenLoading loading={loading} />;
+	}
+
+	if (error) {
+		return <FullScreenError error={error} />;
+	}
+
+	if (data && data.length === 0) {
+		return <FullScreenError error="Nenhuma informação encontrada." />;
+	}
+
 	const handleDelete = (value: number) => {
-		api.delete(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}${value}/`);
-		setUpdate(true);
+		setLoading(true); // mostra loading até atualizar
+		api.delete(`${EXTERNAL_API_HOST}${AGENDA_ROUTE}${value}/`).finally(
+			() => {
+				setUpdate(true);
+			}
+		);
 	};
 
 	return (
@@ -56,7 +88,7 @@ export default function AgendaPage() {
 							</tr>
 						</thead>
 						<tbody>
-							{data.map((item) => (
+							{data?.map((item) => (
 								<tr key={item.id}>
 									<td>{item.title}</td>
 									<td>{item.description}</td>

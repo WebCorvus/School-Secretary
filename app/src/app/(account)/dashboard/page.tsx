@@ -11,7 +11,6 @@ import { FullScreenError } from "@/components/FullScreenError";
 import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
 import { type StudentProps } from "@/types/student";
 import { DocumentRequest } from "@/types/documentRequest";
-import { AlertDialog } from "@/components/ui/alert-dialog";
 import api from "@/services/api";
 
 const handleClick = (item: DocumentRequest) => {
@@ -32,7 +31,6 @@ export default function DashboardPage() {
 		api.get<StudentProps>(`${EXTERNAL_API_HOST}${USERS_INFO_ROUTE}`)
 			.then((response) => {
 				setUserInfo(response.data);
-				toast.success("Informações carregadas com sucesso.");
 			})
 			.catch((error) => {
 				console.error("Erro ao buscar informações:", error);
