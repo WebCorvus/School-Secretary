@@ -1,8 +1,7 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from users.permissions import IsStaff, IsProfessor, IsStudent
-
+from users.permissions import IsStaff, IsProfessor
 from .models import Student, Grade, Guardian, Contract, Presence
 from .serializers import (
     StudentSerializer,
@@ -35,18 +34,18 @@ class StudentViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in [
+            "list",
+            "retrieve",
+            "download_grades_pdf",
+            "download_presence_pdf",
+        ]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
 
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="download-grades",
-        permission_classes=[IsStudent],
-    )
+    @action(detail=True, methods=["get"], url_path="download-grades")
     def download_grades_pdf(self, request, pk=None):
         student = self.get_object()
         subjects = get_subject_names()
@@ -62,12 +61,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             f"Grades_{student.full_name}.pdf",
         )
 
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="download-presence",
-        permission_classes=[IsStudent],
-    )
+    @action(detail=True, methods=["get"], url_path="download-presence")
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
         presence_records = Presence.objects.filter(student=student)
@@ -140,18 +134,13 @@ class ContractViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in ["list", "retrieve", "download_contract_pdf"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
 
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="download-contract",
-        permission_classes=[IsStaff],
-    )
+    @action(detail=True, methods=["get"], url_path="download-contract")
     def download_contract_pdf(self, request, pk=None):
         contract = self.get_object()
         return pdfgen(

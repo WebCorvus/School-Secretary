@@ -2,7 +2,7 @@ from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from users.permissions import IsStaff, IsProfessor, IsStudent
+from users.permissions import IsStaff, IsProfessor
 from django.utils import timezone
 from utils.day_util import get_day_name
 
@@ -89,18 +89,13 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in ["list", "retrieve", "get_lessons"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
 
-    @action(
-        detail=True,
-        methods=["get"],
-        url_path="get-lessons",
-        permission_classes=[IsStudent],
-    )
+    @action(detail=True, methods=["get"], url_path="get-lessons")
     def get_lessons(self, request, pk=None):
         group = self.get_object()
         group_lessons = Lesson.objects.filter(group=group)
@@ -181,18 +176,13 @@ class AgendaItemViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description", "date"]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "pendents"]:
+        if self.action in ["list", "retrieve", "get_pendents"]:
             self.permission_classes = [IsAuthenticated]
         else:
-            self.permission_classes = [IsProfessor]  # PROFESSOR + STAFF + SUPERUSER
+            self.permission_classes = [IsProfessor]
         return super().get_permissions()
 
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="pendents",
-        permission_classes=[IsStudent],
-    )
+    @action(detail=False, methods=["get"], url_path="pendents")
     def get_pendents(self, request):
         pendents = (
             self.get_queryset()
@@ -210,18 +200,13 @@ class EventViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description", "location", "start_date"]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "pendents"]:
+        if self.action in ["list", "retrieve", "get_pendents"]:
             self.permission_classes = [IsAuthenticated]
         else:
-            self.permission_classes = [IsStaff]  # STAFF + SUPERUSER
+            self.permission_classes = [IsStaff]
         return super().get_permissions()
 
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path="pendents",
-        permission_classes=[IsStudent],
-    )
+    @action(detail=False, methods=["get"], url_path="pendents")
     def get_pendents(self, request):
         pendents = (
             self.get_queryset()
