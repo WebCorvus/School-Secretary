@@ -34,8 +34,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     class Role(models.TextChoices):
         STUDENT = "STUDENT", "Student"
-        PROFESSOR = "PROFESSOR", "Professor"
         GUARDIAN = "GUARDIAN", "Guardian"
+        PROFESSOR = "PROFESSOR", "Professor"
         STAFF = "STAFF", "Staff"
         SUPERUSER = "SUPERUSER", "Superuser"
 

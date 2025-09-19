@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 from utils.validators import phone_validator, cep_validator, cpf_validator
-from utils.subject_utils import get_subject_names
 
 BIMESTER_CHOICES = [
     ("1B", "1º Bimestre"),
@@ -14,12 +13,13 @@ BIMESTER_CHOICES = [
 
 class Student(models.Model):
     from django.conf import settings
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="student_profile",
+        related_name="profile",
         verbose_name="Usuário relacionado",
     )
     full_name = models.CharField(
@@ -54,12 +54,14 @@ class Student(models.Model):
         default=timezone.now,
         editable=False,
     )
+
     def __str__(self):
         return self.full_name
 
 
 class Guardian(models.Model):
     from django.conf import settings
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -97,6 +99,7 @@ class Guardian(models.Model):
         default=timezone.now,
         editable=False,
     )
+
     def __str__(self):
         return self.full_name
 
