@@ -19,7 +19,7 @@ class Student(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name="profile",
+        related_name="student_profile",
         verbose_name="Usuário relacionado",
     )
     full_name = models.CharField(

@@ -86,7 +86,7 @@ class GradeAdmin(admin.ModelAdmin):
 
 class PresenceAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ("id", "student", "date", "presence")
+    list_display = ("id", "student", "date", "presence", "created_at")
     list_display_links = ("student", "date")
     search_fields = ("student__full_name", "student__user__email")
     list_filter = ("presence", "date")

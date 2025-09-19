@@ -21,11 +21,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "name", "role", "profile"]
 
     def get_profile(self, obj):
-        try:
-            from students.serializers import StudentSerializer
-        except ImportError:
-            return None
-
-        if hasattr(obj, "profile") and obj.profile:
-            return StudentSerializer(obj.profile, context=self.context).data
+        profile = obj.profile
+        if profile:
+            if obj.role == get_user_model().Role.STUDENT:
+                from students.serializers import StudentSerializer
+                return StudentSerializer(profile, context=self.context).data
+            elif obj.role == get_user_model().Role.GUARDIAN:
+                from students.serializers import GuardianSerializer
+                return GuardianSerializer(profile, context=self.context).data
+            elif obj.role == get_user_model().Role.PROFESSOR:
+                from school.serializers import ProfessorSerializer
+                return ProfessorSerializer(profile, context=self.context).data
         return None

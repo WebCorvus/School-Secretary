@@ -61,5 +61,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.is_superuser = False
         super().save(*args, **kwargs)
 
+    @property
+    def profile(self):
+        try:
+            if self.role == self.Role.STUDENT:
+                return self.student_profile
+            elif self.role == self.Role.GUARDIAN:
+                return self.guardian_profile
+            elif self.role == self.Role.PROFESSOR:
+                return self.professor_profile
+        except AttributeError:
+            return None
+        return None
+
     def __str__(self):
         return self.email
