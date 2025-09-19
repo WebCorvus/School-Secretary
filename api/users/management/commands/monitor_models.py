@@ -50,12 +50,20 @@ class Command(BaseCommand):
     def print_inconsistencies(self, last_id):
         from django.db import connection
         with connection.cursor() as cursor:
-            cursor.execute("SELECT id, timestamp, form_name, error_type, error_message, resolved FROM school_inconsistencylog WHERE id > %s ORDER BY id ASC;", [last_id])
+            cursor.execute("SELECT i.id, i.timestamp, i.form_name, i.error_type, i.error_message, i.resolved, u.email FROM school_inconsistencylog i LEFT JOIN users_user u ON i.user_id = u.id WHERE i.id > %s ORDER BY i.id ASC;", [last_id])
             rows = cursor.fetchall()
             print('\033[93m===== INCONSISTÊNCIAS RECENTES =====\033[0m')
             if rows:
                 for r in rows:
-                    print(f"[{r[1]}] Form: {r[2]} | Tipo: {r[3]} | Resolvido: {r[5]}\nMensagem: {r[4]}\n---")
+                    user_email = r[6] if r[6] else 'Desconhecido'
+                    print(f"\033[1;36m[INCONSISTÊNCIA]\033[0m")
+                    print(f"  \033[1;33mData/Hora:\033[0m {r[1]}")
+                    print(f"  \033[1;33mUsuário:\033[0m \033[1;35m{user_email}\033[0m")
+                    print(f"  \033[1;33mFormulário:\033[0m {r[2]}")
+                    print(f"  \033[1;33mTipo:\033[0m {r[3]}")
+                    print(f"  \033[1;33mResolvido:\033[0m {r[5]}")
+                    print(f"  \033[1;33mMensagem:\033[0m {r[4]}")
+                    print("  " + "-"*60)
                 last_id = rows[-1][0]
             else:
                 print('(Nenhuma inconsistência nova)')

@@ -34,6 +34,24 @@ class StudentViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def create(self, request, *args, **kwargs):
+        from school.test_create_methods import generic_create
+        return generic_create(self, request, "StudentForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="StudentForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
+
     @action(detail=True, methods=["get"], url_path="download-grades")
     def download_grades_pdf(self, request, pk=None):
         student = self.get_object()
@@ -85,6 +103,24 @@ class GradeViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def create(self, request, *args, **kwargs):
+        from school.test_create_methods import generic_create
+        return generic_create(self, request, "GradeForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="GradeForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
+
 
 class GuardianViewSet(viewsets.ModelViewSet):
     queryset = Guardian.objects.all().order_by("full_name")
@@ -103,6 +139,24 @@ class GuardianViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def create(self, request, *args, **kwargs):
+        from school.test_create_methods import generic_create
+        return generic_create(self, request, "GuardianForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="GuardianForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
+
 
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = Contract.objects.all().order_by("-created_at")
@@ -116,6 +170,24 @@ class ContractViewSet(viewsets.ModelViewSet):
         "student__registration_number",
         "created_at",
     ]
+
+    def create(self, request, *args, **kwargs):
+        from school.test_create_methods import generic_create
+        return generic_create(self, request, "ContractForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="ContractForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
 
     @action(detail=True, methods=["get"], url_path="download-contract")
     def download_contract_pdf(self, request, pk=None):
@@ -141,3 +213,21 @@ class PresenceViewSet(viewsets.ModelViewSet):
         "presence",
         "created_at",
     ]
+
+    def create(self, request, *args, **kwargs):
+        from school.test_create_methods import generic_create
+        return generic_create(self, request, "PresenceForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="PresenceForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response

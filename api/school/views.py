@@ -34,22 +34,8 @@ from .models import LESSONS_PER_DAY
 
 class ProfessorViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            self.perform_create(serializer)
-            return Response(serializer.data, status=201)
-        else:
-            from utils.inconsistency_logger import log_inconsistency
-            user = request.user if request.user.is_authenticated else None
-            log_inconsistency(
-                user=user,
-                form_name="ProfessorForm",
-                error_type="ValidationError",
-                error_message=str(serializer.errors),
-                data_sent=request.data
-            )
-            # Retorna o erro normalmente para o front/admin
-            return Response(serializer.errors, status=400)
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "ProfessorForm")
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
@@ -82,19 +68,8 @@ class ProfessorViewSet(viewsets.ModelViewSet):
 
 class SubjectViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except Exception as e:
-            from utils.inconsistency_logger import log_inconsistency
-            user = request.user if request.user.is_authenticated else None
-            log_inconsistency(
-                user=user,
-                form_name="SubjectForm",
-                error_type=type(e).__name__,
-                error_message=str(e),
-                data_sent=request.data
-            )
-            return Response({"detail": "Ocorreu uma inconsistência ao processar o cadastro de disciplina.", "error": str(e)}, status=400)
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "SubjectForm")
 
     def update(self, request, *args, **kwargs):
         try:
@@ -137,15 +112,27 @@ class ItineraryViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "ItineraryForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="ItineraryForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
 
 
 class GroupViewSet(viewsets.ModelViewSet):
+
     queryset = Group.objects.all().order_by("full_name")
     serializer_class = GroupSerializer
     filter_backends = [filters.SearchFilter]
@@ -156,6 +143,10 @@ class GroupViewSet(viewsets.ModelViewSet):
         "itinerary__short_name",
         "created_at",
     ]
+
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "GroupForm")
 
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
@@ -198,6 +189,24 @@ class SchoolRecordViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "SchoolRecordForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="SchoolRecordForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
+
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all().order_by("name")
@@ -212,12 +221,23 @@ class BookViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "BookForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="BookForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
 
 
 class LessonViewSet(viewsets.ModelViewSet):
@@ -236,12 +256,23 @@ class LessonViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "LessonForm")
+
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="LessonForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
 
 
 class AgendaItemViewSet(viewsets.ModelViewSet):
@@ -254,18 +285,23 @@ class AgendaItemViewSet(viewsets.ModelViewSet):
         "date",
     ]
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'pendents']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsProfessor]
-        return super().get_permissions()
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "AgendaItemForm")
 
-    @action(detail=False, methods=["get"], url_path="pendents")
-    def get_pendents(self, request):
-        pendents = self.get_queryset().filter(date__gte=timezone.now().date()).order_by("date", "time")
-        serializer = self.get_serializer(pendents, many=True)
-        return Response(serializer.data)
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="AgendaItemForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -279,15 +315,20 @@ class EventViewSet(viewsets.ModelViewSet):
         "start_date",
     ]
 
-    def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'pendents']:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
+    def create(self, request, *args, **kwargs):
+        from .test_create_methods import generic_create
+        return generic_create(self, request, "EventForm")
 
-    @action(detail=False, methods=["get"], url_path="pendents")
-    def get_pendents(self, request):
-        pendents = self.get_queryset().filter(start_date__gte=timezone.now().date()).order_by("start_date", "start_time")
-        serializer = self.get_serializer(pendents, many=True)
-        return Response(serializer.data)
+    def update(self, request, *args, **kwargs):
+        response = super().update(request, *args, **kwargs)
+        if response.status_code == 400:
+            from utils.inconsistency_logger import log_inconsistency
+            user = request.user if request.user.is_authenticated else None
+            log_inconsistency(
+                user=user,
+                form_name="EventForm",
+                error_type="ValidationError",
+                error_message=str(response.data),
+                data_sent=request.data
+            )
+        return response
