@@ -23,10 +23,10 @@ export type StudentPostProps = Omit<
 
 export const FakeStudent: StudentProps = {
 	id: 1,
-	full_name: "Nome do Estudante",
+	full_name: "Nome de Teste do Estudante",
 	registration_number: "773984",
 	phone_number: "(62) 99972-1283",
-	email: "test@email.com",
+	email: "teste@email.com",
 	cpf: "30210244089",
 	birthday: "2000-06-04",
 	address: "74371420",
