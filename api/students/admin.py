@@ -44,6 +44,7 @@ class GuardianAdmin(admin.ModelAdmin):
     list_per_page = 1000
     autocomplete_fields = ("user",)
     list_display = (
+        "user",
         "full_name",
         "student",
         "phone_number",
