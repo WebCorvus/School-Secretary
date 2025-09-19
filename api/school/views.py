@@ -104,7 +104,7 @@ class GroupViewSet(viewsets.ModelViewSet):
         for day in range(7):
             day_lessons = []
             for time in range(LESSONS_PER_DAY):
-                lesson = group_lessons.filter(day=day, time=time).first()
+                lesson = group_lessons.filter(day=day, time=time + 1).first()
                 day_lessons.append(LessonSerializer(lesson).data if lesson else None)
             week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
 
