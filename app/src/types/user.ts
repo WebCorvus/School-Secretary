@@ -1,6 +1,6 @@
-import { StudentProps } from "./student";
-import { ProfessorProps } from "./professor";
-import { GuardianProps } from "./guardian";
+import { StudentProps, FakeStudent } from "./student";
+import { ProfessorProps, FakeProfessor } from "./professor";
+import { GuardianProps, FakeGuardian } from "./guardian";
 
 export enum UserRole {
 	STUDENT = "STUDENT",
@@ -42,9 +42,47 @@ export interface SuperuserUser extends BaseUser {
 	profile?: null;
 }
 
-export type UserType =
+export type UserProps =
 	| StudentUser
 	| GuardianUser
 	| ProfessorUser
 	| StaffUser
 	| SuperuserUser;
+
+export const FakeStudentUser: StudentUser = {
+	id: 1,
+	email: "teste@email.com",
+	name: "João Teste",
+	role: UserRole.STUDENT,
+	profile: FakeStudent,
+};
+
+export const FakeGuardianUser: GuardianUser = {
+	id: 1,
+	email: "guardian@test.com",
+	name: "Responsável Teste",
+	role: UserRole.GUARDIAN,
+	profile: FakeGuardian,
+};
+
+export const FakeProfessorUser: ProfessorUser = {
+	id: 1,
+	email: "professor@test.com",
+	name: "Professor Teste",
+	role: UserRole.PROFESSOR,
+	profile: FakeProfessor,
+};
+
+export const FakeStaffUser: StaffUser = {
+	id: 1,
+	email: "staff@test.com",
+	name: "Staff Teste",
+	role: UserRole.STAFF,
+};
+
+export const FakeSuperuserUser: SuperuserUser = {
+	id: 1,
+	email: "admin@test.com",
+	name: "Admin Teste",
+	role: UserRole.SUPERUSER,
+};
