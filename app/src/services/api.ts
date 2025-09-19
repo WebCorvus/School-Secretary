@@ -40,20 +40,22 @@ api.interceptors.response.use(
 					if (!originalRequest.headers) originalRequest.headers = {};
 					originalRequest.headers.Authorization = `Bearer ${access}`;
 
+					console.log("Token refreshed!");
 					toast.success("Token atualizado com sucesso!");
 					return api(originalRequest);
 				} catch (refreshError) {
 					console.error("Refresh token failed", refreshError);
-					window.location.href = "/login";
 					toast.error("Sessão expirada, faça login novamente.");
+					window.location.href = "/";
 					return Promise.reject(refreshError);
 				}
 			}
 		}
 
 		if (error.response?.status === 403) {
-			window.location.href = "/login";
+			window.location.href = "/";
 			toast.error("Acesso negado.");
+			console.error("Access error", error);
 		}
 
 		return Promise.reject(error);

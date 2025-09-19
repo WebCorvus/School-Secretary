@@ -1,9 +1,8 @@
-
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from users.permissions import IsStaff, IsProfessor
+from users.permissions import IsStaff, IsProfessor, IsStudent
 from django.utils import timezone
 from utils.day_util import get_day_name
 
@@ -53,14 +52,10 @@ class SubjectViewSet(viewsets.ModelViewSet):
     queryset = Subject.objects.all().order_by("full_name")
     serializer_class = SubjectSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "full_name",
-        "short_name",
-        "created_at",
-    ]
+    search_fields = ["full_name", "short_name", "created_at"]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -71,14 +66,10 @@ class ItineraryViewSet(viewsets.ModelViewSet):
     queryset = Itinerary.objects.all().order_by("full_name")
     serializer_class = ItinerarySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "full_name",
-        "short_name",
-        "created_at",
-    ]
+    search_fields = ["full_name", "short_name", "created_at"]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -98,31 +89,30 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
 
-    @action(detail=True, methods=["get"], url_path="get-lessons")
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="get-lessons",
+        permission_classes=[IsStudent],
+    )
     def get_lessons(self, request, pk=None):
         group = self.get_object()
         group_lessons = Lesson.objects.filter(group=group)
         week_lessons = []
+
         for day in range(7):
             day_lessons = []
             for time in range(LESSONS_PER_DAY):
                 lesson = group_lessons.filter(day=day, time=time).first()
-                if lesson:
-                    day_lessons.append(LessonSerializer(lesson).data)
-                else:
-                    day_lessons.append(None)
-            week_lessons.append(
-                {
-                    "day": get_day_name(day),
-                    "lessons": day_lessons,
-                }
-            )
+                day_lessons.append(LessonSerializer(lesson).data if lesson else None)
+            week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
+
         return Response(week_lessons)
 
 
@@ -134,7 +124,7 @@ class SchoolRecordViewSet(viewsets.ModelViewSet):
     search_fields = [
         "student__full_name",
         "student__registration_number",
-        "descrition",
+        "description",
         "created_at",
     ]
 
@@ -153,7 +143,7 @@ class BookViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -177,7 +167,7 @@ class LessonViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ["list", "retrieve"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -188,22 +178,27 @@ class AgendaItemViewSet(viewsets.ModelViewSet):
     queryset = AgendaItem.objects.all().order_by("-date", "-time")
     serializer_class = AgendaItemSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "title",
-        "description",
-        "date",
-    ]
+    search_fields = ["title", "description", "date"]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'pendents']:
+        if self.action in ["list", "retrieve", "pendents"]:
             self.permission_classes = [IsAuthenticated]
         else:
-            self.permission_classes = [IsProfessor]
+            self.permission_classes = [IsProfessor]  # PROFESSOR + STAFF + SUPERUSER
         return super().get_permissions()
 
-    @action(detail=False, methods=["get"], url_path="pendents")
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="pendents",
+        permission_classes=[IsStudent],
+    )
     def get_pendents(self, request):
-        pendents = self.get_queryset().filter(date__gte=timezone.now().date()).order_by("date", "time")
+        pendents = (
+            self.get_queryset()
+            .filter(date__gte=timezone.now().date())
+            .order_by("date", "time")
+        )
         serializer = self.get_serializer(pendents, many=True)
         return Response(serializer.data)
 
@@ -212,22 +207,26 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all().order_by("-start_date", "-start_time")
     serializer_class = EventSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "title",
-        "description",
-        "location",
-        "start_date",
-    ]
+    search_fields = ["title", "description", "location", "start_date"]
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'pendents']:
+        if self.action in ["list", "retrieve", "pendents"]:
             self.permission_classes = [IsAuthenticated]
         else:
-            self.permission_classes = [IsStaff]
+            self.permission_classes = [IsStaff]  # STAFF + SUPERUSER
         return super().get_permissions()
 
-    @action(detail=False, methods=["get"], url_path="pendents")
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="pendents",
+        permission_classes=[IsStudent],
+    )
     def get_pendents(self, request):
-        pendents = self.get_queryset().filter(start_date__gte=timezone.now().date()).order_by("start_date", "start_time")
+        pendents = (
+            self.get_queryset()
+            .filter(start_date__gte=timezone.now().date())
+            .order_by("start_date", "start_time")
+        )
         serializer = self.get_serializer(pendents, many=True)
         return Response(serializer.data)

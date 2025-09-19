@@ -1,6 +1,7 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
-from users.permissions import IsStaff, IsProfessor
+from rest_framework.permissions import IsAuthenticated
+from users.permissions import IsStaff, IsProfessor, IsStudent
 
 from .models import Student, Grade, Guardian, Contract, Presence
 from .serializers import (
@@ -17,7 +18,6 @@ from utils.subject_utils import get_subject_names
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all().order_by("full_name")
     serializer_class = StudentSerializer
-    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
@@ -34,7 +34,19 @@ class StudentViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
-    @action(detail=True, methods=["get"], url_path="download-grades")
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="download-grades",
+        permission_classes=[IsStudent],
+    )
     def download_grades_pdf(self, request, pk=None):
         student = self.get_object()
         subjects = get_subject_names()
@@ -46,23 +58,22 @@ class StudentViewSet(viewsets.ModelViewSet):
             )
         return pdfgen(
             "grades.html",
-            {
-                "student": student,
-                "data": data,
-            },
+            {"student": student, "data": data},
             f"Grades_{student.full_name}.pdf",
         )
 
-    @action(detail=True, methods=["get"], url_path="download-presence")
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="download-presence",
+        permission_classes=[IsStudent],
+    )
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
         presence_records = Presence.objects.filter(student=student)
         return pdfgen(
             "presence.html",
-            {
-                "student": student,
-                "data": presence_records,
-            },
+            {"student": student, "data": presence_records},
             f"Presence_{student.full_name}.pdf",
         )
 
@@ -72,7 +83,6 @@ class GradeViewSet(viewsets.ModelViewSet):
         "student__full_name", "subject__full_name", "year", "bimester"
     )
     serializer_class = GradeSerializer
-    permission_classes = [IsProfessor]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",
@@ -85,11 +95,17 @@ class GradeViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsProfessor]
+        return super().get_permissions()
+
 
 class GuardianViewSet(viewsets.ModelViewSet):
     queryset = Guardian.objects.all().order_by("full_name")
     serializer_class = GuardianSerializer
-    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "full_name",
@@ -103,11 +119,17 @@ class GuardianViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
 
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = Contract.objects.all().order_by("-created_at")
     serializer_class = ContractSerializer
-    permission_classes = [IsStaff]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "guardian__full_name",
@@ -117,14 +139,24 @@ class ContractViewSet(viewsets.ModelViewSet):
         "created_at",
     ]
 
-    @action(detail=True, methods=["get"], url_path="download-contract")
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="download-contract",
+        permission_classes=[IsStaff],
+    )
     def download_contract_pdf(self, request, pk=None):
         contract = self.get_object()
         return pdfgen(
             "contract.html",
-            {
-                "data": contract,
-            },
+            {"data": contract},
             f"Contract_{contract.id}_{contract.guardian.full_name}-{contract.student.full_name}.pdf",
         )
 
@@ -132,7 +164,6 @@ class ContractViewSet(viewsets.ModelViewSet):
 class PresenceViewSet(viewsets.ModelViewSet):
     queryset = Presence.objects.all().order_by("student__full_name", "date")
     serializer_class = PresenceSerializer
-    permission_classes = [IsProfessor]
     filter_backends = [filters.SearchFilter]
     search_fields = [
         "student__full_name",
@@ -141,3 +172,10 @@ class PresenceViewSet(viewsets.ModelViewSet):
         "presence",
         "created_at",
     ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsProfessor]
+        return super().get_permissions()

@@ -30,8 +30,11 @@ class IsStudent(BasePermission):
     def has_permission(self, request, view):
         return bool(
             request.user
-            and request.user.is_authenticated
-            and request.user.role == "STUDENT"
+            and (
+                request.user.role == "STUDENT"
+                or request.user.is_staff
+                or request.user.is_superuser
+            )
         )
 
 
