@@ -8,10 +8,8 @@ import { UserInfoCard } from "@/components/UserInfoCard";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { type DocumentRequest } from "@/types/documentRequest";
-import { useStudent } from "@/hooks/useStudent";
-
-// TODO adapt this page to handle it
-// import { useProfessor } from "@/hooks/useProfessor";
+import { useUser } from "@/hooks/useUser";
+import { UserRole } from "@/types/user";
 
 const documentRequests: DocumentRequest[] = [
 	{ title: "Boletim", type: "BULLETIN" },
@@ -21,7 +19,7 @@ const documentRequests: DocumentRequest[] = [
 ];
 
 export default function DashboardPage() {
-	const { data: userInfo, loading, error, refetch } = useStudent();
+	const { data: userInfo, loading, error, refetch } = useUser();
 
 	const handleClick = (item: DocumentRequest) => {
 		toast.success(`Foi feita a requisição de: ${item.title}`);
@@ -39,21 +37,28 @@ export default function DashboardPage() {
 		<div className="space-y-6">
 			<Header1 text="Dashboard" />
 			<Paragraph
-				text={`Bem-vindo(a), ${userInfo.full_name}`}
+				text={`Bem-vindo(a), ${
+					"profile" in userInfo && userInfo.profile
+						? userInfo.profile.full_name
+						: userInfo.name
+				}`}
 				className="text-2xl font-semibold my-5"
 			/>
 			<div className="flex flex-col gap-3">
 				<UserInfoCard data={userInfo} />
-				<div className="flex flex-row gap-3">
-					<ButtonGrid
-						header="Requisitar Documentos"
-						description="São as requisições que pode fazer à escola"
-						data={documentRequests}
-						handleClick={handleClick}
-						className="w-1/2"
-					/>
-					{/* TODO: add new cards */}
-				</div>
+				{userInfo.role === UserRole.STUDENT ||
+				userInfo.role === UserRole.GUARDIAN ? (
+					<div className="flex flex-row gap-3">
+						<ButtonGrid
+							header="Requisitar Documentos"
+							description="São as requisições que pode fazer à escola"
+							data={documentRequests}
+							handleClick={handleClick}
+							className="w-1/2"
+						/>
+						{/* Você pode adicionar mais cards específicos */}
+					</div>
+				) : null}
 			</div>
 		</div>
 	);
