@@ -4,7 +4,7 @@ from .models import Student, Grade, Guardian, Contract, Presence
 
 class StudentSerializer(serializers.ModelSerializer):
     group_details = serializers.SerializerMethodField()
-    grades = serializers.SerializerMethodField()
+    grades_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Student
@@ -17,10 +17,22 @@ class StudentSerializer(serializers.ModelSerializer):
             return GroupSerializer(obj.group, context=self.context).data
         return None
 
-    def get_grades(self, obj):
+    def get_grades_details(self, obj):
         from .serializers import GradeSerializer
 
-        return GradeSerializer(obj.grade.all(), many=True, context=self.context).data
+        grades = obj.grade.all().order_by("year", "bimester")
+        grouped = {}
+        for grade in grades:
+            year = grade.year
+            if year not in grouped:
+                grouped[year] = []
+            grouped[year].append(GradeSerializer(grade, context=self.context).data)
+
+        result = [
+            {"year": year, "grades": grades_list}
+            for year, grades_list in sorted(grouped.items())
+        ]
+        return result
 
 
 class GradeSerializer(serializers.ModelSerializer):

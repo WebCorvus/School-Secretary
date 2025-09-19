@@ -16,15 +16,7 @@ export function useUser() {
 	const [error, setError] = useState<string | null>(null);
 
 	const generateMockUser = useCallback((): UserProps => {
-		const mocks = [
-			FakeStudentUser,
-			FakeGuardianUser,
-			FakeProfessorUser,
-			FakeStaffUser,
-			FakeSuperuserUser,
-		];
-		const randomIndex = Math.floor(Math.random() * mocks.length);
-		return mocks[randomIndex];
+		return FakeStudentUser;
 	}, []);
 
 	const fetchData = useCallback(async () => {

@@ -1,4 +1,10 @@
 import { FakeGroup, GroupProps } from "./group";
+import { GradeProps } from "./grade";
+
+export interface GradesByYear {
+	year: number;
+	grades: GradeProps[];
+}
 
 export interface StudentProps {
 	id: number;
@@ -11,14 +17,14 @@ export interface StudentProps {
 	address: string;
 	group: number;
 	group_details: GroupProps | undefined;
-	// TODO add this field logic in backend
 	photoUrl?: string;
 	created_at: string;
+	grades_details: GradesByYear[];
 }
 
 export type StudentPostProps = Omit<
 	StudentProps,
-	"id" | "created_at" | "group_details"
+	"id" | "created_at" | "group_details" | "grades_details"
 >;
 
 export const FakeStudent: StudentProps = {
@@ -32,7 +38,34 @@ export const FakeStudent: StudentProps = {
 	address: "74371420",
 	group: 1,
 	group_details: FakeGroup,
-	// TODO put a real (my personal) test url
 	photoUrl: "https://picsum.photos/200/300",
 	created_at: "2000-06-04",
+	grades_details: [
+		{
+			year: 2023,
+			grades: [
+				{
+					id: 1,
+					subject: "Matemática",
+					year: 2023,
+					bimester: "1º Bimestre",
+					value: 9.5,
+					created_at: "2025-09-19T09:12:53.081919-03:00",
+				},
+			],
+		},
+		{
+			year: 2024,
+			grades: [
+				{
+					id: 2,
+					subject: "Matemática",
+					year: 2024,
+					bimester: "1º Bimestre",
+					value: 7.5,
+					created_at: "2025-09-19T09:12:53.081919-03:00",
+				},
+			],
+		},
+	],
 };

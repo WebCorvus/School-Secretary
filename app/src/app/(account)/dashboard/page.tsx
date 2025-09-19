@@ -10,6 +10,7 @@ import { FullScreenError } from "@/components/FullScreenError";
 import { type DocumentRequest } from "@/types/documentRequest";
 import { useUser } from "@/hooks/useUser";
 import { UserRole } from "@/types/user";
+import { GradesChart } from "@/components/GradesChart";
 
 const documentRequests: DocumentRequest[] = [
 	{ title: "Boletim", type: "BULLETIN" },
@@ -46,19 +47,20 @@ export default function DashboardPage() {
 			/>
 			<div className="flex flex-col gap-3">
 				<UserInfoCard data={userInfo} />
-				{userInfo.role === UserRole.STUDENT ||
-				userInfo.role === UserRole.GUARDIAN ? (
-					<div className="flex flex-row gap-3">
+				<div className="grid grid-cols-2 gap-3">
+					{userInfo.role === UserRole.STUDENT ||
+					userInfo.role === UserRole.GUARDIAN ? (
 						<ButtonGrid
 							header="Requisitar Documentos"
 							description="São as requisições que pode fazer à escola"
 							data={documentRequests}
 							handleClick={handleClick}
-							className="w-1/2"
 						/>
-						{/* Você pode adicionar mais cards específicos */}
-					</div>
-				) : null}
+					) : // Você pode adicionar mais cards específicos
+
+					null}
+					<GradesChart />
+				</div>
 			</div>
 		</div>
 	);
