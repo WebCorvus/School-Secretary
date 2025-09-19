@@ -37,6 +37,15 @@ export function UserInfoCard({
 								{profile?.full_name || data.name}
 							</li>
 
+							{profile &&
+								"student_details" in profile &&
+								profile.student_details && (
+									<li>
+										<strong>Responsável por:</strong>{" "}
+										{profile.student_details.full_name}
+									</li>
+								)}
+
 							{profile && "registration_number" in profile && (
 								<li>
 									<strong>Matrícula:</strong>{" "}
