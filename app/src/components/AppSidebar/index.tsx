@@ -80,7 +80,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 			<SidebarRail />
 			<SidebarFooter>
-				<Button onClick={() => logout()}>Logout</Button>
+				<Button variant={"outline"} onClick={() => logout()}>
+					Logout
+				</Button>
 			</SidebarFooter>
 		</Sidebar>
 	);

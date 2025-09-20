@@ -13,7 +13,6 @@ export function useAgenda() {
 			...FakeAgendaItem,
 			id: i + 1,
 			title: `Evento mock #${i + 1}`,
-			description: `Descrição do evento mock #${i + 1}`,
 		}));
 	}, []);
 

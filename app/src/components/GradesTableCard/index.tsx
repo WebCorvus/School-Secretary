@@ -39,9 +39,11 @@ export function GradesTableCard({
 						<TableRow>
 							<TableHead>Matéria</TableHead>
 							{bimesters.map((bim) => (
-								<TableHead key={bim}>{bim}</TableHead>
+								<TableHead key={bim} className="text-center">
+									{bim}
+								</TableHead>
 							))}
-							<TableHead>Média</TableHead>
+							<TableHead className="text-center">Média</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -56,13 +58,18 @@ export function GradesTableCard({
 								<TableRow key={item.subject}>
 									<TableCell>{item.subject}</TableCell>
 									{item.grades.map((note, idx) => (
-										<TableCell key={idx}>
+										<TableCell
+											key={idx}
+											className="text-center"
+										>
 											{typeof note === "number"
 												? note.toFixed(1)
 												: "-"}
 										</TableCell>
 									))}
-									<TableCell>{average.toFixed(1)}</TableCell>
+									<TableCell className="text-center">
+										{average.toFixed(1)}
+									</TableCell>
 								</TableRow>
 							);
 						})}
