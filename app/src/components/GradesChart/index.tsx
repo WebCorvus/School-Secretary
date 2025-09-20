@@ -6,7 +6,6 @@ import {
 	Card,
 	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -30,7 +29,11 @@ export function GradesChart({
 	baseColor = "59, 130, 246",
 }: GradesChartProps) {
 	const subjects = Array.from(
-		new Set(grades.flatMap((y) => y.grades.map((g) => g.subject_details.full_name)))
+		new Set(
+			grades.flatMap((y) =>
+				y.grades.map((g) => g.subject_details.full_name)
+			)
+		)
 	);
 
 	const data = subjects.map((subjectName) => {

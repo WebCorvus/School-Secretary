@@ -15,21 +15,16 @@ class GuardianCompactSerializer(serializers.ModelSerializer):
         fields = ["id", "full_name", "phone_number"]
 
 
-class GradeSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
-
+class GradeCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grade
-        fields = "__all__"
+        fields = ["id", "value", "year", "bimester"]
 
 
-class PresenceSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-
+class PresenceCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Presence
-        fields = "__all__"
+        fields = ["id", "date", "presence"]
 
 
 class GuardianSerializer(serializers.ModelSerializer):
@@ -47,6 +42,23 @@ class ContractSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contract
+        fields = "__all__"
+
+
+class GradeSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
+
+    class Meta:
+        model = Grade
+        fields = "__all__"
+
+
+class PresenceSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+
+    class Meta:
+        model = Presence
         fields = "__all__"
 
 

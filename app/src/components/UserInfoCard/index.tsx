@@ -1,15 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { UserProfileProps, UserRole } from "@/types/user";
+import { UserProps, UserRole } from "@/types/user";
+import { StudentProps } from "@/types/student";
+import { GuardianProps } from "@/types/guardian";
+import { ProfessorProps } from "@/types/professor";
+import { GroupCompactProps } from "@/types/group";
+import { SubjectCompactProps } from "@/types/subject";
 
 export function UserInfoCard({
 	data,
 	className,
 }: {
-	data: UserProfileProps;
+	data: UserProps;
 	className?: string;
 }) {
-	const profile = "profile_details" in data && data.profile_details ? data.profile_details : null;
+	const profile = data.profile_details;
 
 	return (
 		<Card className={`w-full ${className}`}>
@@ -39,24 +44,24 @@ export function UserInfoCard({
 
 							{profile &&
 								"student_details" in profile &&
-								profile.student_details && (
+								(profile as GuardianProps).student_details && (
 									<li>
 										<strong>Responsável por:</strong>{" "}
-										{profile.student_details.full_name}
+										{(profile as GuardianProps).student_details.full_name}
 									</li>
 								)}
 
 							{profile && "registration_number" in profile && (
 								<li>
 									<strong>Matrícula:</strong>{" "}
-									{profile.registration_number}
+									{(profile as StudentProps).registration_number}
 								</li>
 							)}
 
 							{profile && "phone_number" in profile && (
 								<li>
 									<strong>Telefone:</strong>{" "}
-									{profile.phone_number}
+									{(profile as StudentProps | GuardianProps | ProfessorProps).phone_number}
 								</li>
 							)}
 
@@ -66,38 +71,38 @@ export function UserInfoCard({
 
 							{profile && "cpf" in profile && (
 								<li>
-									<strong>CPF:</strong> {profile.cpf}
+									<strong>CPF:</strong> {(profile as StudentProps | GuardianProps | ProfessorProps).cpf}
 								</li>
 							)}
 
 							{profile && "birthday" in profile && (
 								<li>
 									<strong>Data de Nascimento:</strong>{" "}
-									{profile.birthday}
+									{(profile as StudentProps | GuardianProps | ProfessorProps).birthday}
 								</li>
 							)}
 
 							{profile && "address" in profile && (
 								<li>
-									<strong>Endereço:</strong> {profile.address}
+									<strong>Endereço:</strong> {(profile as StudentProps | GuardianProps | ProfessorProps).address}
 								</li>
 							)}
 
 							{profile &&
 								"group_details" in profile &&
-								profile.group_details && (
+								(profile as StudentProps).group_details && (
 									<li>
 										<strong>Turma:</strong>{" "}
-										{profile.group_details.full_name}
+										{(profile as StudentProps).group_details.full_name}
 									</li>
 								)}
 
 							{profile &&
 								"subject_details" in profile &&
-								profile.subject_details && (
+								(profile as ProfessorProps).subject_details && (
 									<li>
 										<strong>Disciplina:</strong>{" "}
-										{profile.subject_details.full_name}
+										{(profile as ProfessorProps).subject_details.full_name}
 									</li>
 								)}
 

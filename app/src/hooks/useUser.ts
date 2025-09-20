@@ -1,13 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
-import {
-	UserProps,
-	FakeStudentUser,
-	FakeGuardianUser,
-	FakeProfessorUser,
-	FakeStaffUser,
-	FakeSuperuserUser,
-} from "@/types/user";
+import { UserProps, FakeUser } from "@/types/user";
 import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
 
 export function useUser() {
@@ -16,7 +9,7 @@ export function useUser() {
 	const [error, setError] = useState<string | null>(null);
 
 	const generateMockUser = useCallback((): UserProps => {
-		return FakeStudentUser;
+		return FakeUser;
 	}, []);
 
 	const fetchData = useCallback(async () => {

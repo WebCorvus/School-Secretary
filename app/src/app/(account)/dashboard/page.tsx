@@ -9,9 +9,8 @@ import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { type DocumentRequest } from "@/types/documentRequest";
 import { useUser } from "@/hooks/useUser";
-import { UserRole } from "@/types/user";
+import { UserRole, UserProps } from "@/types/user";
 import { GradesChart } from "@/components/GradesChart";
-import { ChartConfig } from "@/components/ui/chart";
 import type { GradesByYear } from "@/types/student";
 
 const documentRequests: DocumentRequest[] = [
@@ -39,9 +38,10 @@ export default function DashboardPage() {
 	let grades: GradesByYear[] = [];
 
 	if (userInfo.role === UserRole.STUDENT) {
-		grades = userInfo.profile?.grades_details ?? [];
+		grades = userInfo.profile_details?.grades_details ?? [];
 	} else if (userInfo.role === UserRole.GUARDIAN) {
-		grades = userInfo.profile?.student_details?.grades_details ?? [];
+		grades =
+			userInfo.profile_details?.student_details?.grades_details ?? [];
 	} else {
 		grades = [];
 	}
@@ -51,9 +51,7 @@ export default function DashboardPage() {
 			<Header1 text="Dashboard" />
 			<Paragraph
 				text={`Bem-vindo(a), ${
-					"userInfo" in userInfo && userInfo.profile
-						? userInfo.profile.full_name
-						: userInfo.name
+					userInfo.profile_details?.full_name || userInfo.name
 				}`}
 				className="text-2xl font-semibold my-5"
 			/>
