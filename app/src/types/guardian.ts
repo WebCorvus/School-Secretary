@@ -1,5 +1,5 @@
 // types/guardian.ts
-import { FakeStudent, StudentProps } from "./student";
+import { createFakeStudent, StudentProps } from "./student";
 import { faker } from "@faker-js/faker";
 
 export interface GuardianProps {
@@ -21,16 +21,20 @@ export type GuardianPostProps = Omit<
 	"id" | "created_at" | "student_details"
 >;
 
-export const FakeGuardian: GuardianProps = {
-	id: faker.number.int(),
-	full_name: faker.person.fullName(),
-	student: faker.number.int(),
-	student_details: FakeStudent,
-	phone_number: faker.phone.number(),
-	email: faker.internet.email(),
-	cpf: faker.string.numeric(11),
-	birthday: faker.date.past().toISOString().split("T")[0],
-	address: faker.location.zipCode(),
-	photoUrl: faker.image.avatar(),
-	created_at: faker.date.past().toISOString().split("T")[0],
-};
+export function createFakeGuardian(): GuardianProps {
+	return {
+		id: faker.number.int(),
+		full_name: faker.person.fullName(),
+		student: faker.number.int(),
+		student_details: createFakeStudent(),
+		phone_number: faker.phone.number(),
+		email: faker.internet.email(),
+		cpf: faker.string.numeric(11),
+		birthday: faker.date.past().toISOString().split("T")[0],
+		address: faker.location.zipCode(),
+		photoUrl: faker.image.avatar(), // TODO add a real url
+		created_at: faker.date.past().toISOString().split("T")[0],
+	};
+}
+
+export const FakeGuardian = createFakeGuardian();

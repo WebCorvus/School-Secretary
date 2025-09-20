@@ -9,9 +9,13 @@ export interface ItineraryProps {
 
 export type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;
 
-export const FakeItinerary: ItineraryProps = {
-	id: faker.number.int(),
-	short_name: faker.commerce.department().substring(0, 3).toUpperCase(),
-	full_name: faker.commerce.department(),
-	created_at: faker.date.past().toISOString().split('T')[0],
-};
+export function createFakeItinerary(): ItineraryProps {
+	return {
+		id: faker.number.int(),
+		short_name: faker.commerce.department().substring(0, 3).toUpperCase(),
+		full_name: faker.commerce.department(),
+		created_at: faker.date.past().toISOString().split('T')[0],
+	};
+}
+
+export const FakeItinerary = createFakeItinerary();

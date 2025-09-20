@@ -5,7 +5,11 @@ export interface DocumentRequest {
 	type: string;
 }
 
-export const FakeDocumentRequest: DocumentRequest = {
-	title: faker.lorem.sentence(),
-	type: faker.helpers.arrayElement(['SUSPENSION', 'TRANSFER', 'ENROLLMENT']),
-};
+export function createFakeDocumentRequest(): DocumentRequest {
+	return {
+		title: faker.lorem.sentence(),
+		type: faker.helpers.arrayElement(['SUSPENSION', 'TRANSFER', 'ENROLLMENT']),
+	};
+}
+
+export const FakeDocumentRequest = createFakeDocumentRequest();

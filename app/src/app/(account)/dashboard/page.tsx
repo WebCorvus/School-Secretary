@@ -74,7 +74,7 @@ export default function DashboardPage() {
 								data={documentRequests}
 								handleClick={handleClick}
 							/>
-							<GradesChart config={chartConfig} grades={grades} />
+							<GradesChart grades={grades} />
 						</>
 					) : null}
 				</div>

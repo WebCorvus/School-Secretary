@@ -1,6 +1,6 @@
-import { FakeGroup, GroupProps } from "./group";
-import { FakeProfessor, ProfessorProps } from "./professor";
-import { FakeSubject, SubjectProps } from "./subject";
+import { createFakeGroup, GroupProps } from "./group";
+import { createFakeProfessor, ProfessorProps } from "./professor";
+import { createFakeSubject, SubjectProps } from "./subject";
 import { faker } from '@faker-js/faker';
 
 export interface LessonProps {
@@ -25,15 +25,19 @@ export type LessonPostProps = Omit<
 	| "group_details"
 >;
 
-export const FakeLesson: LessonProps = {
-	id: faker.number.int(),
-	group: faker.number.int(),
-	group_details: FakeGroup,
-	professor: faker.number.int(),
-	professor_details: FakeProfessor,
-	subject: faker.number.int(),
-	subject_details: FakeSubject,
-	time: faker.number.int({ min: 1, max: 5 }),
-	day: faker.number.int({ min: 1, max: 5 }),
-	created_at: faker.date.past().toISOString().split('T')[0],
-};
+export function createFakeLesson(): LessonProps {
+	return {
+		id: faker.number.int(),
+		group: faker.number.int(),
+		group_details: createFakeGroup(),
+		professor: faker.number.int(),
+		professor_details: createFakeProfessor(),
+		subject: faker.number.int(),
+		subject_details: createFakeSubject(),
+		time: faker.number.int({ min: 1, max: 5 }),
+		day: faker.number.int({ min: 1, max: 5 }),
+		created_at: faker.date.past().toISOString().split('T')[0],
+	};
+}
+
+export const FakeLesson = createFakeLesson();

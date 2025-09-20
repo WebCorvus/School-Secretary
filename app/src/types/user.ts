@@ -1,6 +1,6 @@
-import { StudentProps, FakeStudent } from "./student";
-import { ProfessorProps, FakeProfessor } from "./professor";
-import { GuardianProps, FakeGuardian } from "./guardian";
+import { StudentProps, createFakeStudent } from "./student";
+import { ProfessorProps, createFakeProfessor } from "./professor";
+import { GuardianProps, createFakeGuardian } from "./guardian";
 import { faker } from '@faker-js/faker';
 
 export enum UserRole {
@@ -50,40 +50,60 @@ export type UserProps =
 	| StaffUser
 	| SuperuserUser;
 
-export const FakeStudentUser: StudentUser = {
-	id: faker.number.int(),
-	email: faker.internet.email(),
-	name: faker.person.fullName(),
-	role: UserRole.STUDENT,
-	profile: FakeStudent,
-};
+export function createFakeStudentUser(): StudentUser {
+	return {
+		id: faker.number.int(),
+		email: faker.internet.email(),
+		name: faker.person.fullName(),
+		role: UserRole.STUDENT,
+		profile: createFakeStudent(),
+	};
+}
 
-export const FakeGuardianUser: GuardianUser = {
-	id: faker.number.int(),
-	email: faker.internet.email(),
-	name: faker.person.fullName(),
-	role: UserRole.GUARDIAN,
-	profile: FakeGuardian,
-};
+export const FakeStudentUser = createFakeStudentUser();
 
-export const FakeProfessorUser: ProfessorUser = {
-	id: faker.number.int(),
-	email: faker.internet.email(),
-	name: faker.person.fullName(),
-	role: UserRole.PROFESSOR,
-	profile: FakeProfessor,
-};
+export function createFakeGuardianUser(): GuardianUser {
+	return {
+		id: faker.number.int(),
+		email: faker.internet.email(),
+		name: faker.person.fullName(),
+		role: UserRole.GUARDIAN,
+		profile: createFakeGuardian(),
+	};
+}
 
-export const FakeStaffUser: StaffUser = {
-	id: faker.number.int(),
-	email: faker.internet.email(),
-	name: faker.person.fullName(),
-	role: UserRole.STAFF,
-};
+export const FakeGuardianUser = createFakeGuardianUser();
 
-export const FakeSuperuserUser: SuperuserUser = {
-	id: faker.number.int(),
-	email: faker.internet.email(),
-	name: faker.person.fullName(),
-	role: UserRole.SUPERUSER,
-};
+export function createFakeProfessorUser(): ProfessorUser {
+	return {
+		id: faker.number.int(),
+		email: faker.internet.email(),
+		name: faker.person.fullName(),
+		role: UserRole.PROFESSOR,
+		profile: createFakeProfessor(),
+	};
+}
+
+export const FakeProfessorUser = createFakeProfessorUser();
+
+export function createFakeStaffUser(): StaffUser {
+	return {
+		id: faker.number.int(),
+		email: faker.internet.email(),
+		name: faker.person.fullName(),
+		role: UserRole.STAFF,
+	};
+}
+
+export const FakeStaffUser = createFakeStaffUser();
+
+export function createFakeSuperuserUser(): SuperuserUser {
+	return {
+		id: faker.number.int(),
+		email: faker.internet.email(),
+		name: faker.person.fullName(),
+		role: UserRole.SUPERUSER,
+	};
+}
+
+export const FakeSuperuserUser = createFakeSuperuserUser();

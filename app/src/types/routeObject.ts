@@ -5,7 +5,11 @@ export interface LinkObjectProps {
 	url: string;
 }
 
-export const FakeLinkObject: LinkObjectProps = {
-	title: faker.lorem.sentence(),
-	url: faker.internet.url(),
-};
+export function createFakeLinkObject(): LinkObjectProps {
+	return {
+		title: faker.lorem.sentence(),
+		url: faker.internet.url(),
+	};
+}
+
+export const FakeLinkObject = createFakeLinkObject();

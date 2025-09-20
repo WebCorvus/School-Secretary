@@ -1,11 +1,22 @@
-import { FakeGroup, GroupProps } from "./group";
-import { GradeProps, FakeGrade } from "./grade";
+import { GradeProps, createFakeGrade } from "./grade";
 import { faker } from "@faker-js/faker";
 
 export interface GradesByYear {
 	year: number;
 	grades: GradeProps[];
 }
+
+export function createFakeGradesByYear(year: number): GradesByYear {
+	const subjectsCount = faker.number.int({ min: 3, max: 6 });
+	const grades: GradeProps[] = Array.from({ length: subjectsCount }, () =>
+		createFakeGrade(year)
+	);
+	return { year, grades };
+}
+
+export const FakeGradesByYear = createFakeGradesByYear(
+	faker.date.past({ years: 5 }).getFullYear()
+);
 
 export interface StudentProps {
 	id: number;
@@ -17,7 +28,7 @@ export interface StudentProps {
 	birthday: string;
 	address: string;
 	group: number;
-	group_details: GroupProps | undefined;
+	group_details?: any;
 	photoUrl?: string;
 	created_at: string;
 	grades_details: GradesByYear[];
@@ -28,49 +39,26 @@ export type StudentPostProps = Omit<
 	"id" | "created_at" | "group_details" | "grades_details"
 >;
 
-function generateSubjects(count: number) {
-	return Array.from({ length: count }, (_, i) => ({
-		...FakeGrade.subject,
-		id: i + 1,
-		full_name: faker.word.noun() + ` ${i + 1}`,
-		short_name: faker.word.adjective().slice(0, 2).toUpperCase(),
-	}));
+export function createFakeStudent(): StudentProps {
+	const baseYear = faker.date.past({ years: 5 }).getFullYear();
+	const yearsCount = faker.number.int({ min: 2, max: 5 });
+	const years = Array.from({ length: yearsCount }, (_, i) => baseYear + i);
+
+	return {
+		id: faker.number.int(),
+		full_name: faker.person.fullName(),
+		registration_number: faker.string.numeric(6),
+		phone_number: faker.phone.number(),
+		email: faker.internet.email(),
+		cpf: faker.string.numeric(11),
+		birthday: faker.date.past({ years: 20 }).toISOString().split("T")[0],
+		address: faker.location.zipCode(),
+		group: faker.number.int(),
+		group_details: undefined,
+		photoUrl: faker.image.avatar(),
+		created_at: faker.date.past({ years: 20 }).toISOString().split("T")[0],
+		grades_details: years.map((y) => createFakeGradesByYear(y)),
+	};
 }
 
-function generateGrades(yearsCount: number, subjectsCount = 5): GradesByYear[] {
-	const baseYear = new Date().getFullYear() - yearsCount + 1;
-	const gradesDetails: GradesByYear[] = [];
-	const subjects = generateSubjects(subjectsCount);
-
-	for (let i = 0; i < yearsCount; i++) {
-		const year = baseYear + i;
-		const grades: GradeProps[] = subjects.map((subject) => ({
-			...FakeGrade,
-			id: faker.number.int(),
-			subject,
-			year,
-			bimester: "1º Bimestre",
-			value: parseFloat((Math.random() * 6 + 4).toFixed(1)),
-			created_at: faker.date.past().toISOString(),
-		}));
-		gradesDetails.push({ year, grades });
-	}
-
-	return gradesDetails;
-}
-
-export const FakeStudent: StudentProps = {
-	id: faker.number.int(),
-	full_name: faker.person.fullName(),
-	registration_number: faker.string.numeric(6),
-	phone_number: faker.phone.number(),
-	email: faker.internet.email(),
-	cpf: faker.string.numeric(11),
-	birthday: faker.date.past({ years: 20 }).toISOString().split("T")[0],
-	address: faker.location.zipCode(),
-	group: faker.number.int(),
-	group_details: FakeGroup,
-	photoUrl: faker.image.avatar(),
-	created_at: faker.date.past({ years: 20 }).toISOString().split("T")[0],
-	grades_details: generateGrades(faker.number.int({ min: 3, max: 5 }), 4),
-};
+export const FakeStudent = createFakeStudent();

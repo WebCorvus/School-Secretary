@@ -1,4 +1,4 @@
-import { FakeSubject, SubjectProps } from "./subject";
+import { createFakeSubject, SubjectProps } from "./subject";
 import { faker } from '@faker-js/faker';
 
 export interface ProfessorProps {
@@ -21,17 +21,21 @@ export type ProfessorPostProps = Omit<
 	"id" | "subject_details" | "created_at"
 >;
 
-export const FakeProfessor: ProfessorProps = {
-	id: faker.number.int(),
-	full_name: faker.person.fullName(),
-	phone_number: faker.phone.number(),
-	email: faker.internet.email(),
-	cpf: faker.string.numeric(11),
-	birthday: faker.date.past().toISOString().split('T')[0],
-	address: faker.location.zipCode(),
-	subject: faker.number.int(),
-	subject_details: FakeSubject,
-	// TODO put a real (my personal) test url
-	photoUrl: faker.image.avatar(),
-	created_at: faker.date.past().toISOString().split('T')[0],
-};
+export function createFakeProfessor(): ProfessorProps {
+	return {
+		id: faker.number.int(),
+		full_name: faker.person.fullName(),
+		phone_number: faker.phone.number(),
+		email: faker.internet.email(),
+		cpf: faker.string.numeric(11),
+		birthday: faker.date.past().toISOString().split('T')[0],
+		address: faker.location.zipCode(),
+		subject: faker.number.int(),
+		subject_details: createFakeSubject(),
+		// TODO put a real (my personal) test url
+		photoUrl: faker.image.avatar(),
+		created_at: faker.date.past().toISOString().split('T')[0],
+	};
+}
+
+export const FakeProfessor = createFakeProfessor();

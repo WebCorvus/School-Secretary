@@ -1,6 +1,5 @@
-import type { SubjectProps } from "./subject";
 import { faker } from "@faker-js/faker";
-import { FakeSubject } from "./subject";
+import { SubjectProps, createFakeSubject } from "./subject";
 
 export interface GradeProps {
 	id: number;
@@ -11,16 +10,20 @@ export interface GradeProps {
 	created_at: string;
 }
 
-export const FakeGrade: GradeProps = {
-	id: faker.number.int(),
-	subject: FakeSubject,
-	year: faker.date.past().getFullYear(),
-	bimester: faker.helpers.arrayElement([
-		"1º Bimestre",
-		"2º Bimestre",
-		"3º Bimestre",
-		"4º Bimestre",
-	]),
-	value: faker.number.float({ min: 0, max: 10 }),
-	created_at: faker.date.past().toISOString().split("T")[0],
-};
+export function createFakeGrade(year?: number): GradeProps {
+	return {
+		id: faker.number.int(),
+		subject: createFakeSubject(),
+		year: year ?? faker.date.past({ years: 5 }).getFullYear(),
+		bimester: faker.helpers.arrayElement([
+			"1º Bimestre",
+			"2º Bimestre",
+			"3º Bimestre",
+			"4º Bimestre",
+		]),
+		value: parseFloat((Math.random() * 6 + 4).toFixed(1)),
+		created_at: faker.date.past().toISOString().split("T")[0],
+	};
+}
+
+export const FakeGrade = createFakeGrade();

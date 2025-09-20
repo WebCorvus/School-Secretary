@@ -1,4 +1,4 @@
-import { FakeSubject } from "./subject";
+import { createFakeSubject } from "./subject";
 import { SubjectProps } from "./subject";
 import { faker } from "@faker-js/faker";
 
@@ -19,19 +19,23 @@ export type AgendaItemPostProps = Omit<
 	"id" | "created_at" | "updated_at" | "subject_details"
 >;
 
-export const FakeAgendaItem: AgendaItemProps = {
-	id: faker.number.int(),
-	title: faker.lorem.sentence(),
-	subject: faker.number.int(),
-	subject_details: FakeSubject,
-	description: faker.lorem.paragraph(),
-	date: faker.date.past().toISOString().split("T")[0],
-	time: faker.helpers.arrayElement([
-		"10:00:00",
-		"11:00:00",
-		"14:00:00",
-		"15:00:00",
-	]),
-	created_at: faker.date.past().toISOString().split("T")[0],
-	updated_at: faker.date.recent().toISOString().split("T")[0],
-};
+export function createFakeAgendaItem(): AgendaItemProps {
+	return {
+		id: faker.number.int(),
+		title: faker.lorem.sentence(),
+		subject: faker.number.int(),
+		subject_details: createFakeSubject(),
+		description: faker.lorem.paragraph(),
+		date: faker.date.past().toISOString().split("T")[0],
+		time: faker.helpers.arrayElement([
+			"10:00:00",
+			"11:00:00",
+			"14:00:00",
+			"15:00:00",
+		]),
+		created_at: faker.date.past().toISOString().split("T")[0],
+		updated_at: faker.date.recent().toISOString().split("T")[0],
+	};
+}
+
+export const FakeAgendaItem = createFakeAgendaItem();
