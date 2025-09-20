@@ -1,6 +1,8 @@
+import type { SubjectProps } from "./subject";
+
 export interface GradeProps {
 	id: number;
-	subject: string;
+	subject: SubjectProps;
 	year: number;
 	bimester: string;
 	value: number;

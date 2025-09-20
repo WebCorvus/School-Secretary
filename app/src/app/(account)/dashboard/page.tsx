@@ -11,6 +11,8 @@ import { type DocumentRequest } from "@/types/documentRequest";
 import { useUser } from "@/hooks/useUser";
 import { UserRole } from "@/types/user";
 import { GradesChart } from "@/components/GradesChart";
+import { ChartConfig } from "@/components/ui/chart";
+import type { GradesByYear } from "@/types/student";
 
 const documentRequests: DocumentRequest[] = [
 	{ title: "Boletim", type: "BULLETIN" },
@@ -20,7 +22,7 @@ const documentRequests: DocumentRequest[] = [
 ];
 
 export default function DashboardPage() {
-	const { data: userInfo, loading, error, refetch } = useUser();
+	const { data: userInfo, loading, error } = useUser();
 
 	const handleClick = (item: DocumentRequest) => {
 		toast.success(`Foi feita a requisição de: ${item.title}`);
@@ -34,12 +36,27 @@ export default function DashboardPage() {
 			/>
 		);
 
+	const chartConfig: ChartConfig = {
+		desktop: { label: "Notas", color: "var(--chart-1)" },
+		mobile: { label: "Notas", color: "var(--chart-2)" },
+	};
+
+	let grades: GradesByYear[] = [];
+
+	if (userInfo.role === UserRole.STUDENT) {
+		grades = userInfo.profile?.grades_details ?? [];
+	} else if (userInfo.role === UserRole.GUARDIAN) {
+		grades = userInfo.profile?.student_details?.grades_details ?? [];
+	} else {
+		grades = [];
+	}
+
 	return (
 		<div className="space-y-6">
 			<Header1 text="Dashboard" />
 			<Paragraph
 				text={`Bem-vindo(a), ${
-					"profile" in userInfo && userInfo.profile
+					"userInfo" in userInfo && userInfo.profile
 						? userInfo.profile.full_name
 						: userInfo.name
 				}`}
@@ -50,16 +67,16 @@ export default function DashboardPage() {
 				<div className="grid grid-cols-2 gap-3">
 					{userInfo.role === UserRole.STUDENT ||
 					userInfo.role === UserRole.GUARDIAN ? (
-						<ButtonGrid
-							header="Requisitar Documentos"
-							description="São as requisições que pode fazer à escola"
-							data={documentRequests}
-							handleClick={handleClick}
-						/>
-					) : // Você pode adicionar mais cards específicos
-
-					null}
-					<GradesChart />
+						<>
+							<ButtonGrid
+								header="Requisitar Documentos"
+								description="São as requisições que pode fazer à escola"
+								data={documentRequests}
+								handleClick={handleClick}
+							/>
+							<GradesChart config={chartConfig} grades={grades} />
+						</>
+					) : null}
 				</div>
 			</div>
 		</div>
