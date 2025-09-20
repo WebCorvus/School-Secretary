@@ -12,26 +12,34 @@ from .models import (
 )
 
 
+class SubjectCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ["id", "short_name", "full_name"]
+
+
+class ItineraryCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Itinerary
+        fields = ["id", "short_name", "full_name"]
+
+
+class GroupCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ["id", "short_name", "full_name"]
+
+
+class ProfessorCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Professor
+        fields = ["id", "full_name", "email"]
+
+
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = "__all__"
-
-
-class ProfessorSerializer(serializers.ModelSerializer):
-    subject_details = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Professor
-        fields = "__all__"
-        extra_kwargs = {"user": {"read_only": True}}
-
-    def get_subject_details(self, obj):
-        from .serializers import SubjectSerializer
-
-        if obj.subject:
-            return SubjectSerializer(obj.subject, context=self.context).data
-        return None
 
 
 class ItinerarySerializer(serializers.ModelSerializer):
@@ -41,18 +49,20 @@ class ItinerarySerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    itinerary_details = serializers.SerializerMethodField()
+    itinerary_details = ItineraryCompactSerializer(source="itinerary", read_only=True)
 
     class Meta:
         model = Group
         fields = "__all__"
 
-    def get_itinerary_details(self, obj):
-        from .serializers import ItinerarySerializer
 
-        if obj.itinerary:
-            return ItinerarySerializer(obj.itinerary, context=self.context).data
-        return None
+class ProfessorSerializer(serializers.ModelSerializer):
+    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
+
+    class Meta:
+        model = Professor
+        fields = "__all__"
+        extra_kwargs = {"user": {"read_only": True}}
 
 
 class SchoolRecordSerializer(serializers.ModelSerializer):
@@ -63,11 +73,8 @@ class SchoolRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from students.serializers import StudentSerializer
-
-        if obj.student:
-            return StudentSerializer(obj.student, context=self.context).data
-        return None
+        from students.serializers import StudentCompactSerializer
+        return StudentCompactSerializer(obj.student).data
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -78,57 +85,26 @@ class BookSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_tenant_details(self, obj):
-        from students.serializers import StudentSerializer
-
-        if obj.tenant:
-            return StudentSerializer(obj.tenant, context=self.context).data
-        return None
+        from students.serializers import StudentCompactSerializer
+        return StudentCompactSerializer(obj.tenant).data
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    group_details = serializers.SerializerMethodField()
-    professor_details = serializers.SerializerMethodField()
-    subject_details = serializers.SerializerMethodField()
+    group_details = GroupCompactSerializer(source="group", read_only=True)
+    professor_details = ProfessorCompactSerializer(source="professor", read_only=True)
+    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
 
     class Meta:
         model = Lesson
         fields = "__all__"
 
-    def get_group_details(self, obj):
-        from .serializers import GroupSerializer
-
-        if obj.group:
-            return GroupSerializer(obj.group, context=self.context).data
-        return None
-
-    def get_professor_details(self, obj):
-        from .serializers import ProfessorSerializer
-
-        if obj.professor:
-            return ProfessorSerializer(obj.professor, context=self.context).data
-        return None
-
-    def get_subject_details(self, obj):
-        from .serializers import SubjectSerializer
-
-        if obj.subject:
-            return SubjectSerializer(obj.subject, context=self.context).data
-        return None
-
 
 class AgendaItemSerializer(serializers.ModelSerializer):
-    subject_details = serializers.SerializerMethodField()
+    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
 
     class Meta:
         model = AgendaItem
         fields = "__all__"
-
-    def get_subject_details(self, obj):
-        from .serializers import SubjectSerializer
-
-        if obj.subject:
-            return SubjectSerializer(obj.subject, context=self.context).data
-        return None
 
 
 class EventSerializer(serializers.ModelSerializer):
