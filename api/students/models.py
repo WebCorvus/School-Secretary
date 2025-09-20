@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 from utils.validators import phone_validator, cep_validator, cpf_validator
 
@@ -12,103 +13,89 @@ BIMESTER_CHOICES = [
 
 
 class Student(models.Model):
-    from django.conf import settings
-
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
+        verbose_name="Usuário",
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
         related_name="student_profile",
-        verbose_name="Usuário relacionado",
     )
-    full_name = models.CharField(
-        max_length=200, verbose_name="Student's full name", null=True
-    )
+    full_name = models.CharField(verbose_name="Nome completo", max_length=200)
     registration_number = models.CharField(
-        max_length=6, unique=True, verbose_name="Student's registration"
+        verbose_name="Número de matrícula", max_length=6, unique=True
     )
     phone_number = models.CharField(
-        max_length=15,
-        verbose_name="Student's phone number (XX) 9XXXX-XXXX",
-        validators=[phone_validator],
+        verbose_name="Telefone", max_length=15, validators=[phone_validator]
     )
-    email = models.EmailField(max_length=100, verbose_name="Student's email")
+    email = models.EmailField(verbose_name="Email", max_length=100)
     cpf = models.CharField(
-        max_length=11,
-        verbose_name="Student's CPF",
-        unique=True,
-        validators=[cpf_validator],
+        verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
-    birthday = models.DateField(max_length=10)
-    address = models.CharField(max_length=100, validators=[cep_validator])
+    birthday = models.DateField(verbose_name="Data de nascimento")
+    address = models.CharField(
+        verbose_name="Endereço", max_length=100, validators=[cep_validator]
+    )
     group = models.ForeignKey(
         "school.Group",
+        verbose_name="Turma",
         on_delete=models.SET_NULL,
-        verbose_name="Student's group",
-        related_name="student",
-        blank=False,
+        related_name="students",
         null=True,
     )
     created_at = models.DateTimeField(
-        default=timezone.now,
-        editable=False,
+        verbose_name="Criado em", default=timezone.now, editable=False
     )
 
     def __str__(self):
         return self.full_name
+
+    class Meta:
+        verbose_name = "Estudante"
+        verbose_name_plural = "Estudantes"
 
 
 class Guardian(models.Model):
-    from django.conf import settings
-
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
+        verbose_name="Usuário",
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
         related_name="guardian_profile",
-        verbose_name="Usuário relacionado",
     )
-    full_name = models.CharField(
-        max_length=200, verbose_name="Guardian's full name", null=True
-    )
+    full_name = models.CharField(verbose_name="Nome completo", max_length=200)
     student = models.ForeignKey(
         Student,
+        verbose_name="Estudante",
         on_delete=models.SET_NULL,
-        verbose_name="Guardian's student",
-        related_name="guardian",
-        blank=False,
+        related_name="guardians",
         null=True,
     )
     phone_number = models.CharField(
-        max_length=15,
-        verbose_name="Guardian's phone number (XX) 9XXXX-XXXX",
-        validators=[phone_validator],
+        verbose_name="Telefone", max_length=15, validators=[phone_validator]
     )
-    email = models.EmailField(max_length=100, verbose_name="Guardian's email")
+    email = models.EmailField(verbose_name="Email", max_length=100)
     cpf = models.CharField(
-        max_length=11,
-        verbose_name="Guardian's CPF",
-        unique=True,
-        validators=[cpf_validator],
+        verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
-    birthday = models.DateField(max_length=10)
-    address = models.CharField(max_length=100, validators=[cep_validator])
+    birthday = models.DateField(verbose_name="Data de nascimento")
+    address = models.CharField(
+        verbose_name="Endereço", max_length=100, validators=[cep_validator]
+    )
     created_at = models.DateTimeField(
-        default=timezone.now,
-        editable=False,
+        verbose_name="Criado em", default=timezone.now, editable=False
     )
 
     def __str__(self):
         return self.full_name
+
+    class Meta:
+        verbose_name = "Responsável"
+        verbose_name_plural = "Responsáveis"
 
 
 class Contract(models.Model):
     guardian = models.ForeignKey(
         Guardian,
         on_delete=models.SET_NULL,
-        verbose_name="Guardian's name",
+        verbose_name="Responsável",
         related_name="contract",
         blank=False,
         null=True,
@@ -117,13 +104,14 @@ class Contract(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.SET_NULL,
-        verbose_name="Student's name",
+        verbose_name="Estudante",
         related_name="contract",
         blank=False,
         null=True,
     )
 
     created_at = models.DateTimeField(
+        verbose_name="Criado em",
         default=timezone.now,
         editable=False,
     )
@@ -131,12 +119,16 @@ class Contract(models.Model):
     def __str__(self):
         return f"Contract: {self.guardian.full_name.upper()} e {self.student.full_name.upper()}"
 
+    class Meta:
+        verbose_name = "Contrato"
+        verbose_name_plural = "Contratos"
+
 
 class Grade(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.SET_NULL,
-        verbose_name="Student's name",
+        verbose_name="Estudante",
         related_name="grade",
         blank=False,
         null=True,
@@ -145,27 +137,30 @@ class Grade(models.Model):
     subject = models.ForeignKey(
         "school.Subject",
         on_delete=models.SET_NULL,
-        verbose_name="Grade's Subject",
+        verbose_name="Matéria",
         related_name="grade",
         blank=False,
         null=True,
     )
 
     year = models.IntegerField(
+        verbose_name="Ano",
         blank=False,
         null=True,
     )
 
     bimester = models.CharField(
+        verbose_name="Bimestre",
         max_length=20,
         choices=BIMESTER_CHOICES,
         blank=False,
         null=True,
     )
 
-    value = models.FloatField(blank=False, null=True)
+    value = models.FloatField(verbose_name="Valor", blank=False, null=True)
 
     created_at = models.DateTimeField(
+        verbose_name="Criado em",
         default=timezone.now,
         editable=False,
     )
@@ -176,24 +171,30 @@ class Grade(models.Model):
         return "Grade (sem estudante)"
 
     class Meta:
-        verbose_name_plural = "Grades"
+        verbose_name = "Nota"
+        verbose_name_plural = "Notas"
 
 
 class Presence(models.Model):
     student = models.ForeignKey(
         Student,
         on_delete=models.SET_NULL,
-        verbose_name="Student's name",
+        verbose_name="Estudante",
         related_name="presence",
         blank=False,
         null=True,
     )
-    date = models.DateField()
-    presence = models.BooleanField()
+    date = models.DateField(verbose_name="Data")
+    presence = models.BooleanField(verbose_name="Presença")
     created_at = models.DateTimeField(
+        verbose_name="Criado em",
         default=timezone.now,
         editable=False,
     )
 
     def __str__(self):
         return f"Presence_{self.student}"
+
+    class Meta:
+        verbose_name = "Presença"
+        verbose_name_plural = "Presenças"

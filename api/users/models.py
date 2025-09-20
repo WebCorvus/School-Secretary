@@ -12,7 +12,8 @@ class UserManager(BaseUserManager):
             raise ValueError("The Email field must be set")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)
+        if password:
+            user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -33,46 +34,50 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     class Role(models.TextChoices):
-        STUDENT = "STUDENT", "Student"
-        GUARDIAN = "GUARDIAN", "Guardian"
+        STUDENT = "STUDENT", "Estudante"
+        GUARDIAN = "GUARDIAN", "Responsável"
         PROFESSOR = "PROFESSOR", "Professor"
-        STAFF = "STAFF", "Staff"
-        SUPERUSER = "SUPERUSER", "Superuser"
+        STAFF = "STAFF", "Equipe"
+        SUPERUSER = "SUPERUSER", "Superusuário"
 
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255)
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.STUDENT)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    email = models.EmailField(verbose_name="Email", unique=True)
+    name = models.CharField(verbose_name="Nome", max_length=255)
+    role = models.CharField(
+        verbose_name="Cargo", max_length=50, choices=Role.choices, default=Role.STUDENT
+    )
+    is_staff = models.BooleanField(verbose_name="Membro da equipe", default=False)
+    is_active = models.BooleanField(verbose_name="Ativo", default=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name"]
 
+    @property
+    def profile(self):
+        if self.role == self.Role.STUDENT:
+            return getattr(self, "student_profile", None)
+        if self.role == self.Role.GUARDIAN:
+            return getattr(self, "guardian_profile", None)
+        if self.role == self.Role.PROFESSOR:
+            return getattr(self, "professor_profile", None)
+        return None
+
     def save(self, *args, **kwargs):
         if self.role == self.Role.SUPERUSER:
-            self.is_superuser = True
             self.is_staff = True
+            self.is_superuser = True
         elif self.role == self.Role.STAFF:
             self.is_staff = True
+            self.is_superuser = False
         else:
             self.is_staff = False
             self.is_superuser = False
         super().save(*args, **kwargs)
 
-    @property
-    def profile(self):
-        try:
-            if self.role == self.Role.STUDENT:
-                return self.student_profile
-            elif self.role == self.Role.GUARDIAN:
-                return self.guardian_profile
-            elif self.role == self.Role.PROFESSOR:
-                return self.professor_profile
-        except AttributeError:
-            return None
-        return None
-
     def __str__(self):
         return self.email
+
+    class Meta:
+        verbose_name = "Usuário"
+        verbose_name_plural = "Usuários"
