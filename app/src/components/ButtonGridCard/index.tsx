@@ -22,7 +22,7 @@ import {
 
 import { DocumentRequest } from "@/types/documentRequest";
 
-interface ButtonGridProps {
+interface ButtonGridCardProps {
 	header: string;
 	description?: string;
 	data: DocumentRequest[];
@@ -30,13 +30,13 @@ interface ButtonGridProps {
 	className?: string;
 }
 
-export function ButtonGrid({
+export function ButtonGridCard({
 	header,
 	description,
 	data,
 	handleClick,
 	className,
-}: ButtonGridProps) {
+}: ButtonGridCardProps) {
 	return (
 		<Card className={`w-full ${className}`}>
 			<CardHeader>

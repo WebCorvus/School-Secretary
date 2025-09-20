@@ -23,19 +23,24 @@ export interface UserProps {
 	profile_details?: StudentProps | GuardianProps | ProfessorProps;
 }
 
-export type UserPostProps = Omit<UserProps, "id" | "is_staff" | "is_active" | "profile_details"> & {
+export type UserPostProps = Omit<
+	UserProps,
+	"id" | "is_staff" | "is_active" | "profile_details"
+> & {
 	password?: string;
 	profile?: any;
 };
 
 export function createFakeUser(): UserProps {
-	const userRole = faker.helpers.arrayElement([
-		"STUDENT",
-		"GUARDIAN",
-		"PROFESSOR",
-		"STAFF",
-		"SUPERUSER",
-	]);
+	// const userRole = faker.helpers.arrayElement([
+	// 	"STUDENT",
+	// 	"GUARDIAN",
+	// 	"PROFESSOR",
+	// 	"STAFF",
+	// 	"SUPERUSER",
+	// ]);
+
+	const userRole = "STUDENT";
 
 	let profile_details:
 		| StudentProps

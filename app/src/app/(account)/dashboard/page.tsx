@@ -3,15 +3,15 @@
 import { toast } from "sonner";
 import { Header1 } from "@/components/Header1";
 import { Paragraph } from "@/components/Paragraph";
-import { ButtonGrid } from "@/components/ButtonGrid";
+import { ButtonGridCard } from "@/components/ButtonGridCard";
 import { UserInfoCard } from "@/components/UserInfoCard";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { type DocumentRequest } from "@/types/documentRequest";
 import { useUser } from "@/hooks/useUser";
 import { UserRole, UserProps } from "@/types/user";
-import { GradesChart } from "@/components/GradesChart";
-import type { GradesByYear } from "@/types/student";
+import type { GradesByYear, StudentProps } from "@/types/student";
+import { GradesTableCard } from "@/components/GradesTableCard";
 
 const documentRequests: DocumentRequest[] = [
 	{ title: "Boletim", type: "BULLETIN" },
@@ -35,16 +35,10 @@ export default function DashboardPage() {
 			/>
 		);
 
-	let grades: GradesByYear[] = [];
-
-	if (userInfo.role === UserRole.STUDENT) {
-		grades = userInfo.profile_details?.grades_details ?? [];
-	} else if (userInfo.role === UserRole.GUARDIAN) {
-		grades =
-			userInfo.profile_details?.student_details?.grades_details ?? [];
-	} else {
-		grades = [];
-	}
+	let grades: GradesByYear[] =
+		userInfo.role === UserRole.STUDENT
+			? (userInfo.profile_details as StudentProps)?.grades_details ?? []
+			: [];
 
 	return (
 		<div className="space-y-6">
@@ -55,19 +49,23 @@ export default function DashboardPage() {
 				}`}
 				className="text-2xl font-semibold my-5"
 			/>
-			<div className="flex flex-col gap-3">
+			<div className="flex flex-col gap-3 ">
 				<UserInfoCard data={userInfo} />
 				<div className="grid grid-cols-2 gap-3">
-					{userInfo.role === UserRole.STUDENT ||
-					userInfo.role === UserRole.GUARDIAN ? (
+					{userInfo.role === UserRole.STUDENT ? (
 						<>
-							<ButtonGrid
+							<ButtonGridCard
 								header="Requisitar Documentos"
 								description="São as requisições que pode fazer à escola"
 								data={documentRequests}
 								handleClick={handleClick}
 							/>
-							<GradesChart grades={grades} />
+							<GradesTableCard
+								grades={{
+									"Matéria 1": [8.5, 7.2, 9.0, 6.8],
+									"Matéria 2": [7.0, 6.5, 8.0, 7.2],
+								}}
+							/>
 						</>
 					) : null}
 				</div>

@@ -19,7 +19,7 @@ export function createFakeGradeCompact(year?: number): GradeCompactProps {
 		subject: faker.number.int(),
 		year: year ?? faker.number.int({ min: 2020, max: 2025 }),
 		bimester: faker.helpers.arrayElement(["1B", "2B", "3B", "4B"]),
-		value: faker.number.float({ min: 0, max: 10 }),
+		value: faker.number.int({ min: 0, max: 10 }),
 		created_at: faker.date.past().toISOString(),
 	};
 }
@@ -52,7 +52,7 @@ export function createFakeGrade(year?: number): GradeProps {
 		subject_details: createFakeSubjectCompact(),
 		year: year || faker.number.int({ min: 2020, max: 2025 }),
 		bimester: faker.helpers.arrayElement(["1B", "2B", "3B", "4B"]),
-		value: faker.number.float({ min: 0, max: 10 }),
+		value: faker.number.int({ min: 0, max: 10 }),
 		created_at: faker.date.past().toISOString(),
 	};
 }
