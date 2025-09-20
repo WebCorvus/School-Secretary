@@ -1,4 +1,5 @@
 import { FakeSubject, SubjectProps } from "./subject";
+import { faker } from '@faker-js/faker';
 
 export interface ProfessorProps {
 	id: number;
@@ -21,16 +22,16 @@ export type ProfessorPostProps = Omit<
 >;
 
 export const FakeProfessor: ProfessorProps = {
-	id: 1,
-	full_name: "Nome do Professor",
-	phone_number: "(62) 99972-1283",
-	email: "test@email.com",
-	cpf: "30210244089",
-	birthday: "2000-06-04",
-	address: "74371420",
-	subject: 1,
+	id: faker.number.int(),
+	full_name: faker.person.fullName(),
+	phone_number: faker.phone.number(),
+	email: faker.internet.email(),
+	cpf: faker.string.numeric(11),
+	birthday: faker.date.past().toISOString().split('T')[0],
+	address: faker.location.zipCode(),
+	subject: faker.number.int(),
 	subject_details: FakeSubject,
 	// TODO put a real (my personal) test url
-	photoUrl: "https://picsum.photos/200/300",
-	created_at: "2000-06-04",
+	photoUrl: faker.image.avatar(),
+	created_at: faker.date.past().toISOString().split('T')[0],
 };

@@ -1,5 +1,6 @@
 // types/guardian.ts
 import { FakeStudent, StudentProps } from "./student";
+import { faker } from "@faker-js/faker";
 
 export interface GuardianProps {
 	id: number;
@@ -21,15 +22,15 @@ export type GuardianPostProps = Omit<
 >;
 
 export const FakeGuardian: GuardianProps = {
-	id: 1,
-	full_name: "Nome de Teste do Responsável",
-	student: 1,
+	id: faker.number.int(),
+	full_name: faker.person.fullName(),
+	student: faker.number.int(),
 	student_details: FakeStudent,
-	phone_number: "(62) 91111-1111",
-	email: "guardian@test.com",
-	cpf: "12345678901",
-	birthday: "1980-01-01",
-	address: "74371420",
-	photoUrl: "https://picsum.photos/200/300", // TODO add a real url
-	created_at: "2025-09-19T09:12:53.081919-03:00",
+	phone_number: faker.phone.number(),
+	email: faker.internet.email(),
+	cpf: faker.string.numeric(11),
+	birthday: faker.date.past().toISOString().split("T")[0],
+	address: faker.location.zipCode(),
+	photoUrl: faker.image.avatar(),
+	created_at: faker.date.past().toISOString().split("T")[0],
 };

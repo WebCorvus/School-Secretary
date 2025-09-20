@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 export interface EventProps {
 	id: number;
 	title: string;
@@ -17,14 +19,14 @@ export type EventPostProps = Omit<
 >;
 
 export const FakeEvent: EventProps = {
-	id: 1,
-	title: "Título de teste",
-	description: "Descrição de teste",
-	start_date: "2000-01-01",
-	end_date: "2000-01-01",
-	start_time: "22:00:00",
-	end_time: "22:00:00",
-	location: "Localização de teste",
-	created_at: "2000-01-01",
-	updated_at: "2000-01-01",
+	id: faker.number.int(),
+	title: faker.lorem.sentence(),
+	description: faker.lorem.paragraph(),
+	start_date: faker.date.past().toISOString().split('T')[0],
+	end_date: faker.date.future().toISOString().split('T')[0],
+	start_time: faker.helpers.arrayElement(['10:00:00', '11:00:00', '14:00:00', '15:00:00']),
+	end_time: faker.helpers.arrayElement(['16:00:00', '17:00:00', '18:00:00', '19:00:00']),
+	location: faker.location.streetAddress(),
+	created_at: faker.date.past().toISOString().split('T')[0],
+	updated_at: faker.date.recent().toISOString().split('T')[0],
 };

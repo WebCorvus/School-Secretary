@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 export interface ItineraryProps {
 	id: number;
 	short_name: string;
@@ -8,8 +10,8 @@ export interface ItineraryProps {
 export type ItineraryPostProps = Omit<ItineraryProps, "id" | "created_at">;
 
 export const FakeItinerary: ItineraryProps = {
-	id: 1,
-	short_name: "DS",
-	full_name: "Desenvolvimento de Sistema",
-	created_at: "2000-01-01",
+	id: faker.number.int(),
+	short_name: faker.commerce.department().substring(0, 3).toUpperCase(),
+	full_name: faker.commerce.department(),
+	created_at: faker.date.past().toISOString().split('T')[0],
 };

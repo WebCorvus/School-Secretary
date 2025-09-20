@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+
 export interface SubjectProps {
 	id: number;
 	full_name: string;
@@ -8,8 +10,8 @@ export interface SubjectProps {
 export type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
 
 export const FakeSubject: SubjectProps = {
-	id: 1,
-	full_name: "Matéria de Test",
-	short_name: "MT",
-	created_at: "2000-01-01",
+	id: faker.number.int(),
+	full_name: faker.lorem.words(3),
+	short_name: faker.lorem.word(2).toUpperCase(),
+	created_at: faker.date.past().toISOString().split('T')[0],
 };

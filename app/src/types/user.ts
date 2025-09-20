@@ -1,6 +1,7 @@
 import { StudentProps, FakeStudent } from "./student";
 import { ProfessorProps, FakeProfessor } from "./professor";
 import { GuardianProps, FakeGuardian } from "./guardian";
+import { faker } from '@faker-js/faker';
 
 export enum UserRole {
 	STUDENT = "STUDENT",
@@ -50,39 +51,39 @@ export type UserProps =
 	| SuperuserUser;
 
 export const FakeStudentUser: StudentUser = {
-	id: 1,
-	email: "teste@email.com",
-	name: "João Teste",
+	id: faker.number.int(),
+	email: faker.internet.email(),
+	name: faker.person.fullName(),
 	role: UserRole.STUDENT,
 	profile: FakeStudent,
 };
 
 export const FakeGuardianUser: GuardianUser = {
-	id: 1,
-	email: "guardian@test.com",
-	name: "Responsável Teste",
+	id: faker.number.int(),
+	email: faker.internet.email(),
+	name: faker.person.fullName(),
 	role: UserRole.GUARDIAN,
 	profile: FakeGuardian,
 };
 
 export const FakeProfessorUser: ProfessorUser = {
-	id: 1,
-	email: "professor@test.com",
-	name: "Professor Teste",
+	id: faker.number.int(),
+	email: faker.internet.email(),
+	name: faker.person.fullName(),
 	role: UserRole.PROFESSOR,
 	profile: FakeProfessor,
 };
 
 export const FakeStaffUser: StaffUser = {
-	id: 1,
-	email: "staff@test.com",
-	name: "Staff Teste",
+	id: faker.number.int(),
+	email: faker.internet.email(),
+	name: faker.person.fullName(),
 	role: UserRole.STAFF,
 };
 
 export const FakeSuperuserUser: SuperuserUser = {
-	id: 1,
-	email: "admin@test.com",
-	name: "Admin Teste",
+	id: faker.number.int(),
+	email: faker.internet.email(),
+	name: faker.person.fullName(),
 	role: UserRole.SUPERUSER,
 };

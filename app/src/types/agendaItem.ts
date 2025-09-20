@@ -1,6 +1,6 @@
-import { FakeStudent } from "./student";
 import { FakeSubject } from "./subject";
 import { SubjectProps } from "./subject";
+import { faker } from "@faker-js/faker";
 
 export interface AgendaItemProps {
 	id: number;
@@ -20,13 +20,18 @@ export type AgendaItemPostProps = Omit<
 >;
 
 export const FakeAgendaItem: AgendaItemProps = {
-	id: 1,
-	title: "Atividade de teste",
-	subject: 1,
+	id: faker.number.int(),
+	title: faker.lorem.sentence(),
+	subject: faker.number.int(),
 	subject_details: FakeSubject,
-	description: "Descrição de test",
-	date: "2000-01-01",
-	time: "22:00:00",
-	created_at: "2000-01-01",
-	updated_at: "2000-01-01",
+	description: faker.lorem.paragraph(),
+	date: faker.date.past().toISOString().split("T")[0],
+	time: faker.helpers.arrayElement([
+		"10:00:00",
+		"11:00:00",
+		"14:00:00",
+		"15:00:00",
+	]),
+	created_at: faker.date.past().toISOString().split("T")[0],
+	updated_at: faker.date.recent().toISOString().split("T")[0],
 };

@@ -1,6 +1,7 @@
 import { FakeGroup, GroupProps } from "./group";
 import { FakeProfessor, ProfessorProps } from "./professor";
 import { FakeSubject, SubjectProps } from "./subject";
+import { faker } from '@faker-js/faker';
 
 export interface LessonProps {
 	id: number;
@@ -25,14 +26,14 @@ export type LessonPostProps = Omit<
 >;
 
 export const FakeLesson: LessonProps = {
-	id: 1,
-	group: 1,
+	id: faker.number.int(),
+	group: faker.number.int(),
 	group_details: FakeGroup,
-	professor: 1,
+	professor: faker.number.int(),
 	professor_details: FakeProfessor,
-	subject: 1,
+	subject: faker.number.int(),
 	subject_details: FakeSubject,
-	time: 1,
-	day: 1,
-	created_at: "2000-01-01",
+	time: faker.number.int({ min: 1, max: 5 }),
+	day: faker.number.int({ min: 1, max: 5 }),
+	created_at: faker.date.past().toISOString().split('T')[0],
 };

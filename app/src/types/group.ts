@@ -1,5 +1,6 @@
 import { FakeItinerary, ItineraryProps } from "./itinerary";
 import { LessonProps } from "./lesson";
+import { faker } from "@faker-js/faker";
 
 export interface GroupProps {
 	id: number;
@@ -21,10 +22,10 @@ export type DailyLessonsViewProps = {
 };
 
 export const FakeGroup: GroupProps = {
-	id: 1,
-	full_name: "3° Ano de Desenvolvimento de Sistemas",
-	short_name: "DS",
-	itinerary: 1,
+	id: faker.number.int(),
+	full_name: faker.commerce.department() + " " + faker.lorem.words(2),
+	short_name: faker.commerce.department().substring(0, 3).toUpperCase(),
+	itinerary: faker.number.int(),
 	itinerary_details: FakeItinerary,
-	created_at: "2000-01-01",
+	created_at: faker.date.past().toISOString().split("T")[0],
 };
