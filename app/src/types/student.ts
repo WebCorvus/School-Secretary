@@ -1,5 +1,6 @@
 import { GradeProps, createFakeGrade } from "./grade";
 import { faker } from "@faker-js/faker";
+import { GroupProps, createFakeGroup } from "./group";
 
 export interface GradesByYear {
 	year: number;
@@ -29,7 +30,7 @@ export interface StudentProps {
 	birthday: string;
 	address: string;
 	group: number;
-	group_details?: any;
+	group_details?: GroupProps;
 	photoUrl?: string;
 	created_at: string;
 	grades_details: GradesByYear[];
@@ -55,7 +56,7 @@ export function createFakeStudent(): StudentProps {
 		birthday: faker.date.past({ years: 20 }).toISOString().split("T")[0],
 		address: faker.location.zipCode(),
 		group: faker.number.int(),
-		group_details: undefined,
+		group_details: createFakeGroup(),
 		photoUrl: faker.image.avatar(),
 		created_at: faker.date.past({ years: 20 }).toISOString().split("T")[0],
 		grades_details: years.map((y) => createFakeGradesByYear(y)),

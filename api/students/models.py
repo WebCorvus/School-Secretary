@@ -40,6 +40,7 @@ class Student(models.Model):
         on_delete=models.SET_NULL,
         related_name="students",
         null=True,
+        blank=True,
     )
     created_at = models.DateTimeField(
         verbose_name="Criado em", default=timezone.now, editable=False
@@ -67,6 +68,7 @@ class Guardian(models.Model):
         on_delete=models.SET_NULL,
         related_name="guardians",
         null=True,
+        blank=True,
     )
     phone_number = models.CharField(
         verbose_name="Telefone", max_length=15, validators=[phone_validator]

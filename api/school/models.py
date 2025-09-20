@@ -143,6 +143,7 @@ class Professor(models.Model):
         on_delete=models.SET_NULL,
         related_name="professors",
         null=True,
+        blank=True,
     )
     created_at = models.DateTimeField(
         verbose_name="Criado em", default=timezone.now, editable=False

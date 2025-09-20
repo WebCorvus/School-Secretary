@@ -20,27 +20,27 @@ export interface BaseUser {
 
 export interface StudentUser extends BaseUser {
 	role: UserRole.STUDENT;
-	profile: StudentProps;
+	profile_details: StudentProps;
 }
 
 export interface GuardianUser extends BaseUser {
 	role: UserRole.GUARDIAN;
-	profile: GuardianProps;
+	profile_details: GuardianProps;
 }
 
 export interface ProfessorUser extends BaseUser {
 	role: UserRole.PROFESSOR;
-	profile: ProfessorProps;
+	profile_details: ProfessorProps;
 }
 
 export interface StaffUser extends BaseUser {
 	role: UserRole.STAFF;
-	profile?: null;
+	profile_details?: null;
 }
 
 export interface SuperuserUser extends BaseUser {
 	role: UserRole.SUPERUSER;
-	profile?: null;
+	profile_details?: null;
 }
 
 export type UserProps =
@@ -56,7 +56,7 @@ export function createFakeStudentUser(): StudentUser {
 		email: faker.internet.email(),
 		name: faker.person.fullName(),
 		role: UserRole.STUDENT,
-		profile: createFakeStudent(),
+		profile_details: createFakeStudent(),
 	};
 }
 
@@ -68,7 +68,7 @@ export function createFakeGuardianUser(): GuardianUser {
 		email: faker.internet.email(),
 		name: faker.person.fullName(),
 		role: UserRole.GUARDIAN,
-		profile: createFakeGuardian(),
+		profile_details: createFakeGuardian(),
 	};
 }
 
@@ -80,7 +80,7 @@ export function createFakeProfessorUser(): ProfessorUser {
 		email: faker.internet.email(),
 		name: faker.person.fullName(),
 		role: UserRole.PROFESSOR,
-		profile: createFakeProfessor(),
+		profile_details: createFakeProfessor(),
 	};
 }
 

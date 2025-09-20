@@ -24,6 +24,7 @@ class ProfessorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
         fields = "__all__"
+        extra_kwargs = {"user": {"read_only": True}}
 
     def get_subject_details(self, obj):
         from .serializers import SubjectSerializer

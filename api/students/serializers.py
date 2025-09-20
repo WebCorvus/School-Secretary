@@ -9,6 +9,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = "__all__"
+        extra_kwargs = {"user": {"read_only": True}}
 
     def get_group_details(self, obj):
         from school.serializers import GroupSerializer
@@ -64,6 +65,7 @@ class GuardianSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guardian
         fields = "__all__"
+        extra_kwargs = {"user": {"read_only": True}}
 
     def get_student_details(self, obj):
         from .serializers import StudentSerializer
