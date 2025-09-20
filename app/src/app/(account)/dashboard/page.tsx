@@ -36,11 +36,6 @@ export default function DashboardPage() {
 			/>
 		);
 
-	const chartConfig: ChartConfig = {
-		desktop: { label: "Notas", color: "var(--chart-1)" },
-		mobile: { label: "Notas", color: "var(--chart-2)" },
-	};
-
 	let grades: GradesByYear[] = [];
 
 	if (userInfo.role === UserRole.STUDENT) {

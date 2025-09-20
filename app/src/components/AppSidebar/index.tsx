@@ -6,6 +6,7 @@ import { SearchForm } from "@/components/SearchForm";
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
@@ -15,6 +16,8 @@ import { NavSecondary } from "@/components/NavSecondary";
 import { Home, Inbox } from "lucide-react";
 
 import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
+import { Button } from "../ui/button";
+import { logout } from "@/services/auth";
 
 const data = {
 	navMain: [
@@ -76,6 +79,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<NavSecondary items={data.navSecondary} />
 			</SidebarContent>
 			<SidebarRail />
+			<SidebarFooter>
+				<Button onClick={() => logout()}>Logout</Button>
+			</SidebarFooter>
 		</Sidebar>
 	);
 }
