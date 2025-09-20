@@ -40,27 +40,34 @@ export function createFakeUser(): UserProps {
 	// 	"SUPERUSER",
 	// ]);
 
-	const userRole = "STUDENT";
+	// let profile_details:
+	// 	| StudentProps
+	// 	| GuardianProps
+	// 	| ProfessorProps
+	// 	| undefined;
 
-	let profile_details:
-		| StudentProps
-		| GuardianProps
-		| ProfessorProps
-		| undefined;
+	// switch (userRole) {
+	// 	case "STUDENT":
+	// 		profile_details = createFakeStudent();
+	// 		break;
+	// 	case "GUARDIAN":
+	// 		profile_details = createFakeGuardian();
+	// 		break;
+	// 	case "PROFESSOR":
+	// 		profile_details = createFakeProfessor();
+	// 		break;
+	// 	default:
+	// 		profile_details = undefined;
+	// }
 
-	switch (userRole) {
-		case "STUDENT":
-			profile_details = createFakeStudent();
-			break;
-		case "GUARDIAN":
-			profile_details = createFakeGuardian();
-			break;
-		case "PROFESSOR":
-			profile_details = createFakeProfessor();
-			break;
-		default:
-			profile_details = undefined;
-	}
+	const profile_details = createFakeProfessor();
+	const userRole = faker.helpers.arrayElement([
+		"STUDENT",
+		"GUARDIAN",
+		"PROFESSOR",
+		"STAFF",
+		"SUPERUSER",
+	]);
 
 	return {
 		id: faker.number.int(),

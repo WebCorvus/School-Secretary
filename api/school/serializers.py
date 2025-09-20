@@ -10,7 +10,6 @@ from .models import (
     AgendaItem,
     Event,
 )
-from students.serializers import StudentCompactSerializer
 
 
 class SubjectCompactSerializer(serializers.ModelSerializer):
@@ -62,24 +61,34 @@ class ProfessorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Professor
-        fields = "__all__"
+        exclude = ["user"]
         extra_kwargs = {"user": {"read_only": True}}
 
 
 class SchoolRecordSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
+    student_details = serializers.SerializerMethodField()
 
     class Meta:
         model = SchoolRecord
         fields = "__all__"
 
+    def get_student_details(self, obj):
+        from students.serializers import StudentCompactSerializer
+
+        return StudentCompactSerializer(obj.student).data
+
 
 class BookSerializer(serializers.ModelSerializer):
-    tenant_details = StudentCompactSerializer(source="tenant", read_only=True)
+    tenant_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Book
         fields = "__all__"
+
+    def get_tenant_details(self, obj):
+        from students.serializers import StudentCompactSerializer
+
+        return StudentCompactSerializer(obj.tenant).data
 
 
 class LessonSerializer(serializers.ModelSerializer):

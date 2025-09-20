@@ -12,7 +12,7 @@ export type SubjectPostProps = Omit<SubjectProps, "id" | "created_at">;
 export function createFakeSubject(): SubjectProps {
 	return {
 		id: faker.number.int(),
-		short_name: faker.lorem.slug(2),
+		short_name: faker.string.alpha(2),
 		full_name: faker.lorem.word(),
 		created_at: faker.date.past().toISOString(),
 	};
@@ -29,7 +29,7 @@ export interface SubjectCompactProps {
 export function createFakeSubjectCompact(): SubjectCompactProps {
 	return {
 		id: faker.number.int(),
-		short_name: faker.lorem.slug(2),
+		short_name: faker.string.alpha(2),
 		full_name: faker.lorem.word(),
 	};
 }

@@ -1,43 +1,21 @@
 import { faker } from "@faker-js/faker";
 import { GroupCompactProps, createFakeGroupCompact } from "./group";
-import { createFakeGrade, type GradeProps } from "./grade";
 import { PresenceCompactProps, createFakePresenceCompact } from "./presence";
 import { GuardianCompactProps, createFakeGuardianCompact } from "./guardian";
-import { createFakeSubject, type SubjectProps } from "./subject";
 
-export interface GradeBySubject {
-	subject: SubjectProps;
-	grades: GradeProps[];
+export interface StudentSubjectGradesProps {
+	subject: string;
+	grades: number[];
 }
 
-export type GradesByYear = Record<number, GradeBySubject[]>;
-
-export function createFakeGradesByYear(year: number): GradesByYear {
-	const subjectsCount = faker.number.int({ min: 3, max: 4 });
-
-	const subjects: GradeBySubject[] = Array.from(
-		{ length: subjectsCount },
-		() => {
-			const subject: SubjectProps = createFakeSubject();
-
-			const grades: GradeProps[] = Array.from({ length: 4 }, () =>
-				createFakeGrade(year)
-			).map((g) => ({
-				...g,
-				subject: subject.id,
-				subject_details: subject,
-			}));
-
-			return { subject, grades };
-		}
-	);
-
-	return { [year]: subjects };
+export function createFakeStudentSubjectGrades(): StudentSubjectGradesProps {
+	return {
+		subject: faker.lorem.word(),
+		grades: Array.from({ length: 4 }, () =>
+			faker.number.int({ min: 0, max: 10 })
+		),
+	};
 }
-
-export const FakeGradesByYear = createFakeGradesByYear(
-	faker.date.past({ years: 5 }).getFullYear()
-);
 
 export interface StudentCompactProps {
 	id: number;
@@ -68,9 +46,10 @@ export interface StudentProps {
 	address: string;
 	group: number;
 	group_details?: GroupCompactProps;
-	grades_details?: GradesByYear[];
+	grades_details?: StudentSubjectGradesProps[];
 	presence_details?: PresenceCompactProps[];
 	guardians_details?: GuardianCompactProps[];
+	photoUrl?: string;
 	created_at: string;
 }
 
@@ -102,7 +81,10 @@ export function createFakeStudent(): StudentProps {
 		address: faker.location.zipCode(),
 		group: faker.number.int(),
 		group_details: createFakeGroupCompact(),
-		grades_details: years.map((y) => createFakeGradesByYear(y)),
+		grades_details: Array.from(
+			{ length: 5 },
+			createFakeStudentSubjectGrades
+		),
 		presence_details: Array.from(
 			{ length: faker.number.int({ min: 1, max: 5 }) },
 			() => createFakePresenceCompact()
@@ -111,6 +93,7 @@ export function createFakeStudent(): StudentProps {
 			{ length: faker.number.int({ min: 1, max: 2 }) },
 			() => createFakeGuardianCompact()
 		),
+		photoUrl: faker.image.avatar(),
 		created_at: faker.date.past().toISOString(),
 	};
 }

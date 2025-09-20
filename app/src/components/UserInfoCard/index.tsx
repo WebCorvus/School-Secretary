@@ -47,21 +47,34 @@ export function UserInfoCard({
 								(profile as GuardianProps).student_details && (
 									<li>
 										<strong>Responsável por:</strong>{" "}
-										{(profile as GuardianProps).student_details.full_name}
+										{
+											(profile as GuardianProps)
+												.student_details?.full_name
+										}
 									</li>
 								)}
 
 							{profile && "registration_number" in profile && (
 								<li>
 									<strong>Matrícula:</strong>{" "}
-									{(profile as StudentProps).registration_number}
+									{
+										(profile as StudentProps)
+											.registration_number
+									}
 								</li>
 							)}
 
 							{profile && "phone_number" in profile && (
 								<li>
 									<strong>Telefone:</strong>{" "}
-									{(profile as StudentProps | GuardianProps | ProfessorProps).phone_number}
+									{
+										(
+											profile as
+												| StudentProps
+												| GuardianProps
+												| ProfessorProps
+										).phone_number
+									}
 								</li>
 							)}
 
@@ -71,20 +84,43 @@ export function UserInfoCard({
 
 							{profile && "cpf" in profile && (
 								<li>
-									<strong>CPF:</strong> {(profile as StudentProps | GuardianProps | ProfessorProps).cpf}
+									<strong>CPF:</strong>{" "}
+									{
+										(
+											profile as
+												| StudentProps
+												| GuardianProps
+												| ProfessorProps
+										).cpf
+									}
 								</li>
 							)}
 
 							{profile && "birthday" in profile && (
 								<li>
 									<strong>Data de Nascimento:</strong>{" "}
-									{(profile as StudentProps | GuardianProps | ProfessorProps).birthday}
+									{
+										(
+											profile as
+												| StudentProps
+												| GuardianProps
+												| ProfessorProps
+										).birthday
+									}
 								</li>
 							)}
 
 							{profile && "address" in profile && (
 								<li>
-									<strong>Endereço:</strong> {(profile as StudentProps | GuardianProps | ProfessorProps).address}
+									<strong>Endereço:</strong>{" "}
+									{
+										(
+											profile as
+												| StudentProps
+												| GuardianProps
+												| ProfessorProps
+										).address
+									}
 								</li>
 							)}
 
@@ -93,7 +129,10 @@ export function UserInfoCard({
 								(profile as StudentProps).group_details && (
 									<li>
 										<strong>Turma:</strong>{" "}
-										{(profile as StudentProps).group_details.full_name}
+										{
+											(profile as StudentProps)
+												.group_details?.full_name
+										}
 									</li>
 								)}
 
@@ -102,7 +141,10 @@ export function UserInfoCard({
 								(profile as ProfessorProps).subject_details && (
 									<li>
 										<strong>Disciplina:</strong>{" "}
-										{(profile as ProfessorProps).subject_details.full_name}
+										{
+											(profile as ProfessorProps)
+												.subject_details?.full_name
+										}
 									</li>
 								)}
 

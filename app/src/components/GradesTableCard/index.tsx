@@ -16,12 +16,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import type { StudentSubjectGradesProps } from "@/types/student";
 
-interface GradesTableCardProps {
-	grades: Record<string, number[]>;
-}
-
-export function GradesTableCard({ grades }: GradesTableCardProps) {
+export function GradesTableCard({
+	data,
+}: {
+	data: StudentSubjectGradesProps[];
+}) {
 	const bimesters = ["1º Bim", "2º Bim", "3º Bim", "4º Bim"];
 
 	return (
@@ -44,16 +45,21 @@ export function GradesTableCard({ grades }: GradesTableCardProps) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{Object.entries(grades).map(([subject, notes]) => {
+						{data.map((item) => {
+							const validGrades = item.grades.filter(
+								(note) => typeof note === "number"
+							);
 							const average =
-								notes.reduce((acc, n) => acc + n, 0) /
-								(notes.length || 1);
+								validGrades.reduce((acc, n) => acc + n, 0) /
+								(validGrades.length || 1);
 							return (
-								<TableRow key={subject}>
-									<TableCell>{subject}</TableCell>
-									{notes.map((note, idx) => (
+								<TableRow key={item.subject}>
+									<TableCell>{item.subject}</TableCell>
+									{item.grades.map((note, idx) => (
 										<TableCell key={idx}>
-											{note.toFixed(1)}
+											{typeof note === "number"
+												? note.toFixed(1)
+												: "-"}
 										</TableCell>
 									))}
 									<TableCell>{average.toFixed(1)}</TableCell>
