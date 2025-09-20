@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, Legend } from "recharts";
 
 import {
@@ -54,6 +53,7 @@ export function GradesChart({
 		};
 	});
 
+	// TODO handle bimesters
 	return (
 		<Card>
 			<CardHeader className="items-center pb-4">
