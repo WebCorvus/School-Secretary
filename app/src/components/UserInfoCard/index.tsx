@@ -1,12 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User } from "lucide-react";
-import { UserProps, UserRole } from "@/types/user";
+import { UserProfileProps, UserRole } from "@/types/user";
 
 export function UserInfoCard({
 	data,
 	className,
 }: {
-	data: UserProps;
+	data: UserProfileProps;
 	className?: string;
 }) {
 	const profile = "profile_details" in data && data.profile_details ? data.profile_details : null;

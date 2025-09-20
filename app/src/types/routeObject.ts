@@ -13,3 +13,9 @@ export function createFakeLinkObject(): LinkObjectProps {
 }
 
 export const FakeLinkObject = createFakeLinkObject();
+
+export interface SelectOptionProps {
+  id: number;
+  short_name?: string;
+  full_name?: string;
+}

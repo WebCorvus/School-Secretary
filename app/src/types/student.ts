@@ -1,66 +1,63 @@
-import { GradeProps, createFakeGrade } from "./grade";
 import { faker } from "@faker-js/faker";
-import { GroupProps, createFakeGroup } from "./group";
+import { GroupCompactProps, createFakeGroupCompact } from "./group";
+import { GradeProps, createFakeGrade } from "./grade"; // Assuming grade.ts will be created next
+import { PresenceProps, createFakePresence } from "./presence"; // Assuming presence.ts will be created next
+import { GuardianProps, createFakeGuardian } from "./guardian"; // Assuming guardian.ts will be created next
 
-export interface GradesByYear {
-	year: number;
-	grades: GradeProps[];
+export interface StudentCompactProps {
+  id: number;
+  full_name: string;
+  registration_number: string;
 }
 
-// TODO handle bimesters
-export function createFakeGradesByYear(year: number): GradesByYear {
-	const subjectsCount = faker.number.int({ min: 3, max: 6 });
-	const grades: GradeProps[] = Array.from({ length: subjectsCount }, () =>
-		createFakeGrade(year)
-	);
-	return { year, grades };
+export function createFakeStudentCompact(): StudentCompactProps {
+  return {
+    id: faker.number.int(),
+    full_name: faker.person.fullName(),
+    registration_number: faker.string.numeric(6),
+  };
 }
 
-export const FakeGradesByYear = createFakeGradesByYear(
-	faker.date.past({ years: 5 }).getFullYear()
-);
+export const FakeStudentCompact: StudentCompactProps = createFakeStudentCompact();
 
 export interface StudentProps {
-	id: number;
-	full_name: string;
-	registration_number: string;
-	phone_number: string;
-	email: string;
-	cpf: string;
-	birthday: string;
-	address: string;
-	group: number;
-	group_details?: GroupProps;
-	photoUrl?: string;
-	created_at: string;
-	grades_details: GradesByYear[];
+  id: number;
+  user: number;
+  full_name: string;
+  registration_number: string;
+  phone_number: string;
+  email: string;
+  cpf: string;
+  birthday: string;
+  address: string;
+  group: number;
+  group_details?: GroupCompactProps;
+  grades_details?: GradeProps[];
+  presence_details?: PresenceProps[];
+  guardians_details?: GuardianProps[];
+  created_at: string;
 }
 
-export type StudentPostProps = Omit<
-	StudentProps,
-	"id" | "created_at" | "group_details" | "grades_details"
->;
+export type StudentPostProps = Omit<StudentProps, "id" | "created_at" | "user" | "group_details" | "grades_details" | "presence_details" | "guardians_details">;
 
 export function createFakeStudent(): StudentProps {
-	const baseYear = faker.date.past({ years: 5 }).getFullYear();
-	const yearsCount = faker.number.int({ min: 2, max: 5 });
-	const years = Array.from({ length: yearsCount }, (_, i) => baseYear + i);
-
-	return {
-		id: faker.number.int(),
-		full_name: faker.person.fullName(),
-		registration_number: faker.string.numeric(6),
-		phone_number: faker.phone.number(),
-		email: faker.internet.email(),
-		cpf: faker.string.numeric(11),
-		birthday: faker.date.past({ years: 20 }).toISOString().split("T")[0],
-		address: faker.location.zipCode(),
-		group: faker.number.int(),
-		group_details: createFakeGroup(),
-		photoUrl: faker.image.avatar(),
-		created_at: faker.date.past({ years: 20 }).toISOString().split("T")[0],
-		grades_details: years.map((y) => createFakeGradesByYear(y)),
-	};
+  return {
+    id: faker.number.int(),
+    user: faker.number.int(),
+    full_name: faker.person.fullName(),
+    registration_number: faker.string.numeric(6),
+    phone_number: faker.phone.number(),
+    email: faker.internet.email(),
+    cpf: faker.string.numeric(11),
+    birthday: faker.date.past({ years: 15 }).toISOString().split("T")[0],
+    address: faker.location.zipCode(),
+    group: faker.number.int(),
+    group_details: createFakeGroupCompact(),
+    grades_details: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => createFakeGrade()),
+    presence_details: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => createFakePresence()),
+    guardians_details: Array.from({ length: faker.number.int({ min: 1, max: 2 }) }, () => createFakeGuardian()),
+    created_at: faker.date.past().toISOString(),
+  };
 }
 
-export const FakeStudent = createFakeStudent();
+export const FakeStudent: StudentProps = createFakeStudent();

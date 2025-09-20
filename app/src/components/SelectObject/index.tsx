@@ -1,13 +1,12 @@
 import React from "react";
 import { useState } from "react";
+import { SelectOptionProps } from "@/types/routeObject";
 
 export default function SelectObject({
 	options,
 	onSelect,
 }: {
-	options:
-		| { id: number; short_name?: string; full_name?: string }[]
-		| undefined;
+	options: SelectOptionProps[] | undefined;
 	onSelect: (value: number | undefined) => void;
 }) {
 	const [selected, setSelected] = useState<string>("");

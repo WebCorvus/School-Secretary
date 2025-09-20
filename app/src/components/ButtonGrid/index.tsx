@@ -20,11 +20,13 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { DocumentRequest } from "@/types/documentRequest";
+
 interface ButtonGridProps {
 	header: string;
 	description?: string;
-	data: any[];
-	handleClick: (item: any) => void;
+	data: DocumentRequest[];
+	handleClick: (item: DocumentRequest) => void;
 	className?: string;
 }
 

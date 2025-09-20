@@ -1,35 +1,49 @@
-import { createFakeItinerary, ItineraryProps } from "./itinerary";
-import { LessonProps } from "./lesson";
 import { faker } from "@faker-js/faker";
+import { ItineraryCompactProps, createFakeItineraryCompact } from "./itinerary";
 
 export interface GroupProps {
-	id: number;
-	full_name: string;
-	short_name: string;
-	itinerary: number;
-	itinerary_details: ItineraryProps | undefined;
-	created_at: string;
+  id: number;
+  full_name: string;
+  short_name: string;
+  itinerary: number;
+  itinerary_details?: ItineraryCompactProps;
+  created_at: string;
 }
 
-export type GroupPostProps = Omit<
-	GroupProps,
-	"id" | "itinerary_details" | "created_at"
->;
-
-export type DailyLessonsViewProps = {
-	day: number;
-	lessons: LessonProps[];
-};
+export type GroupPostProps = Omit<GroupProps, "id" | "created_at" | "itinerary_details">;
 
 export function createFakeGroup(): GroupProps {
-	return {
-		id: faker.number.int(),
-		full_name: faker.commerce.department() + " " + faker.lorem.words(2),
-		short_name: faker.commerce.department().substring(0, 3).toUpperCase(),
-		itinerary: faker.number.int(),
-		itinerary_details: createFakeItinerary(),
-		created_at: faker.date.past().toISOString().split("T")[0],
-	};
+  return {
+    id: faker.number.int(),
+    full_name: faker.lorem.words(3),
+    short_name: faker.lorem.words(2),
+    itinerary: faker.number.int(),
+    itinerary_details: createFakeItineraryCompact(),
+    created_at: faker.date.past().toISOString(),
+  };
 }
 
-export const FakeGroup = createFakeGroup();
+export const FakeGroup: GroupProps = createFakeGroup();
+
+export interface GroupCompactProps {
+  id: number;
+  short_name: string;
+  full_name: string;
+}
+
+export function createFakeGroupCompact(): GroupCompactProps {
+  return {
+    id: faker.number.int(),
+    short_name: faker.lorem.words(2),
+    full_name: faker.lorem.words(3),
+  };
+}
+
+export const FakeGroupCompact: GroupCompactProps = createFakeGroupCompact();
+
+import { LessonProps } from "./lesson";
+
+export interface DailyLessonsViewProps {
+  day: number;
+  lessons: (LessonProps | null)[];
+}
