@@ -30,14 +30,14 @@ export function GradesChart({
 	baseColor = "59, 130, 246",
 }: GradesChartProps) {
 	const subjects = Array.from(
-		new Set(grades.flatMap((y) => y.grades.map((g) => g.subject.full_name)))
+		new Set(grades.flatMap((y) => y.grades.map((g) => g.subject_details.full_name)))
 	);
 
 	const data = subjects.map((subjectName) => {
 		const item: Record<string, string | number> = { subject: subjectName };
 		grades.forEach((yearGroup) => {
 			const grade = yearGroup.grades.find(
-				(g: GradeProps) => g.subject.full_name === subjectName
+				(g: GradeProps) => g.subject_details.full_name === subjectName
 			);
 			item[yearGroup.year] = grade ? grade.value : 0;
 		});

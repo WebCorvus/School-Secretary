@@ -9,7 +9,7 @@ export function UserInfoCard({
 	data: UserProps;
 	className?: string;
 }) {
-	const profile = "profile" in data && data.profile ? data.profile : null;
+	const profile = "profile_details" in data && data.profile_details ? data.profile_details : null;
 
 	return (
 		<Card className={`w-full ${className}`}>
