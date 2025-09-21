@@ -35,16 +35,6 @@ export async function POST(req: NextRequest) {
 		setCookie("access", access, {
 			req,
 			res,
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			path: "/",
-			sameSite: "lax",
-			maxAge: 60 * 60,
-		});
-
-		setCookie("access", access, {
-			req,
-			res,
 			path: "/",
 			sameSite: "lax",
 			maxAge: 60 * 60,
