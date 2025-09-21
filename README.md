@@ -15,6 +15,8 @@ secretaria-escolar/
 ├── api/            # Django API
 ├── app/            # Next.js Interface
 ├── docs/           # Project documents
+├── proxy/          # Nginx proxy
+├── test/           # Cypress tests
 ├── compose.yaml    # Docker Compose config
 ├── INSTALLATION.md
 └── README.md
@@ -46,58 +48,61 @@ O Nginx atua como o ponto de entrada para todas as requisições, direcionando-a
 
 A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
 
-Sendo assim, o trecho do Frontend a seguir, executado logo após a renderização da página de matérias
+Sendo assim, o trecho do Frontend a seguir, na página de eventos
 
 ```ts
-// app/src/app/(public)/subjects/page.tsx
-useEffect(() => {
-	axios
-		.get<SubjectProps[]>(`${SUBJECT_BASE_URL}?search=${search}`)
-		.then((response) => setData(response.data))
-		.catch((error) => {
-			alert(`Erro ao carregar matérias: ${error}`);
-		});
+// app/src/app/(annoucements)/events/page.tsx
+export default function EventsPage() {
+	const { data, loading, error, refetch } = useEvent();
 
-	setUpdate(false);
-}, [update]);
+	if (loading) return <FullScreenLoading />;
+	if (error) return <FullScreenError error={error} />;
+	if (!data || data.length === 0)
+		return <FullScreenError error="Nenhum evento encontrado." />;
+
+	return (
+		<div className="space-y-6">
+			{/* ... */}
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{data.map((event) => (
+					<Card key={event.id}>
+						<CardHeader>
+							<CardTitle className="text-xl">
+								{event.title}
+							</CardTitle>
+							<CardDescription>
+								De {event.start_date} até {event.end_date}
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-2">
+							<p className="font-medium text-sm">
+								<span className="text-muted-foreground">
+									Local:
+								</span>{" "}
+								{event.location}
+							</p>
+							<p className="text-sm">{event.description}</p>
+						</CardContent>
+					</Card>
+				))}
+			</div>
+		</div>
+	);
+}
 ```
 
-se comunica, na URL `SUBJECT_BASE_URL`, ou http://{BASE_URL}/school/subject/, com o trecho do Backend
+O hook `useEvent` se comunica, na URL `http://{BASE_URL}/api/school/events/`, com o trecho do Backend
 
 ```py
 # api/school/views.py
-class SubjectViewSet(viewsets.ModelViewSet):
-    queryset = Subject.objects.all().order_by("full_name")
-    serializer_class = SubjectSerializer
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all().order_by("-start_date", "-start_time")
+    serializer_class = EventSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "full_name",
-        "short_name",
-        "created_at",
-    ]
+    search_fields = ["title", "description", "location", "start_date"]
 ```
 
-e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em
-
-```ts
-// app/src/app/(public)/page.tsx
-<tbody>
-	{data.map((subject) => (
-		<tr key={subject.id}>
-			<td>{subject.short_name}</td>
-			<td>{subject.full_name}</td>
-			<td>
-				<button
-					className="link-blue"
-					onClick={() => handleDelete(subject.id)}
-				>
-					Remover
-				</button>
-			</td>
-		</tr>
-	))}
-</tbody>
-```
+e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em `EventsPage`.
 
 ## Arquitetura do APP
 
@@ -123,13 +128,15 @@ export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
 . . .
 ```
 
-E como são utilizadas em um componente do frontend (ex: `app/src/app/(public)/subjects/page.tsx`):
+E como são utilizadas em um componente do frontend (ex: `app/src/hooks/useEvent.ts`):
 
 ```ts
-// app/src/app/(public)/subjects/page.tsx
-import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config";
+// app/src/hooks/useEvent.ts
+import { EXTERNAL_API_HOST, EVENTS_ROUTE } from "@/config";
 // ...
-axios.get(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
+const response = await api.get<EventProps[]>(
+	`${EXTERNAL_API_HOST}${EVENTS_ROUTE}`
+);
 // ...
 ```
 
@@ -149,16 +156,22 @@ No caso do NextJS elas são exibidas como children, com base no layout
 // app/src/app/layout.tsx
 export default function RootLayout({
 	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body className={inter.className}>
-				<Header />
-				<HorizontalLine />
-				<div>{children}</div>
-				<Footer />
+		<html lang="pt-br" suppressHydrationWarning>
+			<body className={`${inter.className} `}>
+				<ThemeProvider>
+					<SidebarProvider>
+						<AppSidebar />
+						<SidebarInset>
+							<SiteHeader />
+							<main className="flex flex-1 flex-col gap-4 p-4">
+								{children}
+							</main>
+							<Toaster />
+						</SidebarInset>
+					</SidebarProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
@@ -175,62 +188,38 @@ app/src/app
 │   globals.css
 │   layout.tsx
 │
-├───(private)
-│   ├───professors
+├───(account)
+│   ├───dashboard
 │   │   │   page.tsx
-│   │   │
 │   │   └───add
 │   │           page.tsx
-│   │
-│   └───students
-│       │   page.tsx
-│       │
-│       └───add
-│               page.tsx
+│   └───auth
+│       ├───login
+│       │   route.ts
+│       └───logout
+│           route.ts
 │
-└───(public)
-    │   page.tsx
-    │
-    ├───groups
-    │   │   page.tsx
-    │   │
-    │   └───add
-    │           page.tsx
-    │
-    ├───itineraries
-    │   │   page.tsx
-    │   │
-    │   └───add
-    │           page.tsx
-    │
-    ├───lessons
-    │   │   page.tsx
-    │   │
-    │   └───add
-    │           page.tsx
-    │
-    ├───login
-    │       page.tsx
-    │
-    └───subjects
-        │   page.tsx
-        │
-        └───add
-                page.tsx
+├───(annoucements)
+│   ├───events
+│   │   page.tsx
+│   └───lessons
+│       page.tsx
+│
+└───(marketing)
+    └───about
+        page.tsx
 ```
 
-Considerando que as pastas cujo nome possui os parênteses são ignoradas e somente os `page.tsx` marcam uma rota válida, as rotas são:
+Considerando que as pastas cujo nome possui os parênteses são ignoradas e somente os `page.tsx` e `route.ts` marcam uma rota válida, as rotas são:
 
 ```
-{BASE_URL}/
-{BASE_URL}/professors/
-{BASE_URL}/professors/add/
-{BASE_URL}/students/
-{BASE_URL}/students/add/
-{BASE_URL}/groups/
-{BASE_URL}/groups/add/
-{BASE_URL}/itineraries/
-{BASE_URL}/itineraries/add/
+{BASE_URL}/dashboard/
+{BASE_URL}/dashboard/add/
+{BASE_URL}/auth/login/
+{BASE_URL}/auth/logout/
+{BASE_URL}/events/
+{BASE_URL}/lessons/
+{BASE_URL}/about/
 . . .
 ```
 
@@ -247,13 +236,15 @@ As URLs de acesso de dados estão nos arquivos `api/{app}/urls.py`.
 ```py
 # api/school/urls.py
 router = DefaultRouter()
-router.register(r"professor", ProfessorViewSet, basename="professor") # http://{BASE_URL}/school/professor/
-router.register(r"subject", SubjectViewSet, basename="subject") # http://{BASE_URL}/school/subject/
-router.register(r"itinerary", ItineraryViewSet, basename="itinerary") # http://{BASE_URL}/school/itinerary/
-router.register(r"group", GroupViewSet, basename="group") # http://{BASE_URL}/school/group/
-router.register(r"schoolrecord", SchoolRecordViewSet, basename="schoolrecord") # http://{BASE_URL}/school/schoolrecord/
-router.register(r"book", BookViewSet, basename="book") # http://{BASE_URL}/school/book/
-router.register(r"lesson", LessonViewSet, basename="lesson") # http://{BASE_URL}/school/lesson/
+router.register(r"professors", ProfessorViewSet, basename="professor")
+router.register(r"subjects", SubjectViewSet, basename="subject")
+router.register(r"itineraries", ItineraryViewSet, basename="itinerary")
+router.register(r"groups", GroupViewSet, basename="group")
+router.register(r"schoolrecords", SchoolRecordViewSet, basename="schoolrecord")
+router.register(r"books", BookViewSet, basename="book")
+router.register(r"lessons", LessonViewSet, basename="lesson")
+router.register(r"agenda", AgendaItemViewSet, basename="agendaitem")
+router.register(r"events", EventViewSet, basename="event")
 ```
 
 ### ViewSet
@@ -266,15 +257,11 @@ Tais configurações estão em `api/{app}/views.py`.
 
 ```py
 # api/school/views.py
-class SubjectViewSet(viewsets.ModelViewSet):
-    queryset = Subject.objects.all().order_by("full_name")
-    serializer_class = SubjectSerializer
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all().order_by("-start_date", "-start_time")
+    serializer_class = EventSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "full_name",
-        "short_name",
-        "created_at",
-    ]
+    search_fields = ["title", "description", "location", "start_date"]
 ```
 
 ### Serializers
@@ -283,30 +270,32 @@ Os serializers são uma espécie de ponte entre entre dados externos da API (JSO
 
 Nesse caso, serve para transformar, ou validar, dados de objetos de classes definidas em `api/{app}/models.py`.
 
-A seguir, serve para converter dados de objetos da classe Subject (Matéria), incluindo todos os campos do objeto.
+A seguir, serve para converter dados de objetos da classe Event (Evento), incluindo todos os campos do objeto.
 
 ```py
 # api/school/serializers.py
-class SubjectSerializer(serializers.ModelSerializer):
+class EventSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Subject
+        model = Event
         fields = "__all__"
 ```
 
 Depois disso, o serializer pode ser usado nas `ViewSet` (como visto anteriormente) ou da seguinte forma:
 
 ```py
-subject = Subject.objects.create(full_name="Mathematics")
-serializer = SubjectSerializer(subject)
-print(serializer.data)
-# Output: {'id': 1, 'name': 'Mathematics'}
+from school.models import Event
 
-data = {'full_name': 'Physics'}
-serializer = SubjectSerializer(data=data)
+event = Event.objects.create(title="Reunião de Pais")
+serializer = EventSerializer(event)
+print(serializer.data)
+# Output: {'id': 1, 'title': 'Reunião de Pais', ...}
+
+data = {'title': 'Festa Junina'}
+serializer = EventSerializer(data=data)
 
 if serializer.is_valid():
-    subject = serializer.save()
-    print(subject)  # <Subject: Physics>
+    event = serializer.save()
+    print(event)  # <Event: Festa Junina>
 else:
     print(serializer.errors)
 ```
@@ -315,7 +304,7 @@ else:
 
 Há funções em alguns serializers, que servem para propósitos específicos.
 
-No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http://{BASE_URL}/school/lesson/{OBJECT_PK}/get-lessons`.
+No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http://{BASE_URL}/school/groups/{OBJECT_PK}/get-lessons`.
 
 ```py
 # api/school/views.py
@@ -324,20 +313,14 @@ No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http:/
         group = self.get_object()
         group_lessons = Lesson.objects.filter(group=group)
         week_lessons = []
+
         for day in range(7):
             day_lessons = []
             for time in range(LESSONS_PER_DAY):
-                lesson = group_lessons.filter(day=day, time=time).first()
-                if lesson:
-                    day_lessons.append(LessonSerializer(lesson).data)
-                else:
-                    day_lessons.append(None)
-            week_lessons.append(
-                {
-                    "day": get_day_name(day),
-                    "lessons": day_lessons,
-                }
-            )
+                lesson = group_lessons.filter(day=day, time=time + 1).first()
+                day_lessons.append(LessonSerializer(lesson).data if lesson else None)
+            week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
+
         return Response(week_lessons)
 ```
 
@@ -369,31 +352,20 @@ Os modelos são definidos nos arquivos `api/{app}/models.py`
 
 ```py
 # api/school/models.py
-class Subject(models.Model):
-    short_name = models.CharField(
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
-
-    full_name = models.CharField(
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
-
-    created_at = models.DateTimeField(
-        default=datetime.now(),
-        editable=False,
-    )
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    location = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     def __str__(self):
-        return self.full_name
+        return self.title
 ```
 
-Cada campo é criado a partir de um objeto, como `CharField` e `DateTimeField`, classes que recebem dados e os constroem.
+Cada campo é criado a partir de um objeto, como `CharField` e `DateField`, classes que recebem dados e os constroem.
 
 Quando o usuário utiliza o comando
 
@@ -418,13 +390,13 @@ Em diversos pontos do Frontend, um usuário autenticado, consegue fazer registro
 Entretanto, para colocar dados no BD utilizando o próprio `python` é necessário utilizar os modelos informados (após o migrate), criar os objetos com os dados e os salvar (necessário somente se não usar `create`).
 
 ```py
-from school.models import Subject
+from school.models import Event
 
-subject = Subject.objects.create(
-    name="Physics"
+event = Event.objects.create(
+    title="Festa Junina"
 )
 
-print(subject.id)
+print(event.id)
 ```
 
 Os dados são salvos de forma persistente dentro do sistema do Docker, ou seja, mesmo excluindo os conteineres eles serão mantidos.
@@ -533,7 +505,7 @@ services:
 
 O comando `gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000` instrui o Gunicorn a:
 
--   Utilizar o arquivo de configuração WSGI da aplicação, localizado em `School-Secretary/wsgi.py`.
+-   Utilizar o arquivo de configuração WSGI da aplicação, localizado em `api/School-Secretary/wsgi.py`.
 -   Disponibilizar a aplicação em todas as interfaces de rede (`0.0.0.0`) na porta `8000`.
 
 Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do contêiner da `api`, onde o Gunicorn está escutando e gerenciando a aplicação Django.
@@ -542,47 +514,78 @@ Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do con
 
 ### Backend
 
--   A API fornece tokens JWT usando uma view customizada com `@api_view(['POST'])`.
+-   A API fornece tokens JWT para autenticação.
 -   Após o login, o Backend retorna os tokens `access` e `refresh`.
 
-Exemplo de endpoint:
+Exemplo de endpoint de login:
 
 ```http
-POST /api/token/
+POST /api/users/token/
 ```
 
 ### Frontend
 
--   O login é feito com `axios.post`, e os tokens são armazenados em cookies:
+-   O login é feito através da rota `/auth/login`, que envia as credenciais para o backend e armazena os tokens em cookies:
 
 ```ts
-// app/src/services/auth.ts
-document.cookie = `access=${access}; path=/;`;
-document.cookie = `refresh=${refresh}; path=/;`;
+// app/src/app/(account)/auth/login/route.ts
+// ...
+const { access, refresh } = response.data;
+
+setCookie("access", access, {
+	req,
+	res,
+	path: "/",
+	sameSite: "lax",
+	maxAge: 60 * 60,
+});
+
+setCookie("refresh", refresh, {
+	req,
+	res,
+	httpOnly: true,
+	secure: process.env.NODE_ENV === "production",
+	path: "/",
+	sameSite: "lax",
+	maxAge: 60 * 60 * 24 * 30,
+});
+// ...
 ```
 
 -   O middleware (`middleware.ts`) protege as rotas sensíveis:
 
 ```ts
 // app/src/middleware.ts
+import { NextResponse, NextRequest } from "next/server";
+
+const protectedRoutes = [
+	"/agenda",
+	"/dashboard",
+	"/events",
+	"/groups",
+	"/itineraries",
+	"/lessons",
+	"/subject",
+	"/professors",
+	"/students",
+];
+const loginRoute = "/";
+
 export function middleware(request: NextRequest) {
-	const accessToken = request.cookies.get("access")?.value;
-	const pathname = request.nextUrl.pathname;
+	// ...
+	const isProtectedRoute = protectedRoutes.some((route) =>
+		pathname.startsWith(route)
+	);
 
-	const protectedRoutes =
-		pathname.startsWith("/student") ||
-		pathname.startsWith("/professor") ||
-		pathname.split("/").includes("add");
-
-	if (protectedRoutes && !accessToken) {
-		return NextResponse.redirect(new URL("/login", request.url));
+	if (isProtectedRoute && !accessToken) {
+		const loginUrl = new URL(loginRoute, request.url);
+		loginUrl.searchParams.set("from", pathname);
+		return NextResponse.redirect(loginUrl);
 	}
 
 	return NextResponse.next();
 }
 ```
-
--   A interface da página de login reutiliza o tema e classes definidas em `globals.css`, usando Tailwind.
 
 -   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
 
@@ -590,14 +593,11 @@ export function middleware(request: NextRequest) {
 
 Para garantir que todas as requisições à API Django sejam devidamente autenticadas e que o processo de renovação de tokens seja transparente para o desenvolvedor, foi implementada uma instância centralizada do `axios` com interceptadores.
 
-**O Problema Original:**
-Inicialmente, as chamadas à API eram feitas diretamente usando `axios.get` ou `axios.post` nos componentes do frontend. Embora funcional para requisições não autenticadas, essa abordagem não garantia que o token JWT fosse automaticamente incluído no cabeçalho `Authorization` ou que a renovação do token (em caso de expiração) fosse tratada de forma centralizada. Isso poderia levar a código repetitivo e a falhas de autenticação.
-
 **A Solução: Instância `api` Centralizada (`app/src/services/api.ts`)**
 Para resolver isso, foi criada uma instância customizada do `axios` em `app/src/services/api.ts`. Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação:
 
 1.  **Interceptador de Requisição:** Antes de cada requisição ser enviada, ele verifica a presença de um token de acesso (JWT) nos cookies. Se encontrado, o token é anexado ao cabeçalho `Authorization` no formato `Bearer <token>`.
-2.  **Interceptador de Resposta:** Monitora as respostas da API. Se uma resposta `401 Unauthorized` for recebida (indicando que o token de acesso pode ter expirado), ele tenta usar o token de `refresh` (também armazenado em cookies) para obter um novo token de acesso do backend. Se a renovação for bem-sucedida, a requisição original é repetida com o novo token. Caso contrário, o usuário é redirecionado para a página de login.
+2.  **Interceptador de Resposta:** Monitora as respostas da API. Se uma resposta `401 Unauthorized` for recebida (indicando que o token de acesso pode ter expirado), ele tenta obter um novo token de acesso através da rota de proxy `/auth/refresh`. Se a renovação for bem-sucedida, a requisição original é repetida com o novo token. Caso contrário, o erro é registrado no console.
 
 **Código da Instância `api`:**
 
@@ -605,61 +605,50 @@ Para resolver isso, foi criada uma instância customizada do `axios` em `app/src
 // app/src/services/api.ts
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
-import { REFRESH_ROUTE } from "@/config"; // Importa a rota de refresh
 
-const DJANGO_REFRESH_URL = process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
-
-const api = axios.create(); // Cria a instância customizada do axios
+const api = axios.create();
 
 api.interceptors.request.use(
-	(config) => {
-		const token = getCookie("access"); // Obtém o token de acesso dos cookies
+	(config: any) => {
+		const token = getCookie("access");
 		if (token) {
-			config.headers["Authorization"] = `Bearer ${token}`; // Adiciona o token ao cabeçalho
+			if (!config.headers) config.headers = {};
+			config.headers.Authorization = `Bearer ${token}`;
 		}
 		return config;
 	},
-	(error) => {
-		return Promise.reject(error);
-	}
+	(error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
 	(response) => response,
-	async (error) => {
+	async (error: any) => {
 		const originalRequest = error.config;
-		// Se for um erro 401 e a requisição ainda não foi retentada
-		if (error.response.status === 401 && !originalRequest._retry) {
-			originalRequest._retry = true; // Marca a requisição como retentada
-			const refreshToken = getCookie("refresh"); // Obtém o token de refresh
 
-			if (refreshToken) {
-				try {
-					// Tenta renovar o token de acesso
-					const response = await axios.post(DJANGO_REFRESH_URL, {
-						refresh: refreshToken,
-					});
+		if (error.response?.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true;
+			try {
+				const response = await axios.post("/auth/refresh");
+				const { access } = response.data;
 
-					const { access } = response.data;
-					setCookie("access", access, { // Armazena o novo token de acesso
-						path: "/",
-						sameSite: "lax",
-					});
+				setCookie("access", access, { path: "/", sameSite: "lax" });
 
-					originalRequest.headers["Authorization"] = `Bearer ${access}`; // Atualiza o cabeçalho da requisição original
-					return api(originalRequest); // Repete a requisição original com o novo token
-				} catch (refreshError) {
-					console.error("Refresh token failed", refreshError);
-					window.location.href = "/login"; // Redireciona para o login em caso de falha na renovação
-					return Promise.reject(refreshError);
-				}
+				if (!originalRequest.headers) originalRequest.headers = {};
+				originalRequest.headers.Authorization = `Bearer ${access}`;
+
+				console.log("Token refreshed!");
+				return api(originalRequest);
+			} catch (refreshError) {
+				console.error("Refresh token failed", refreshError);
+				return Promise.reject(refreshError);
 			}
 		}
+
 		return Promise.reject(error);
 	}
 );
 
-export default api; // Exporta a instância customizada
+export default api;
 ```
 
 **Processo de Uso:**
@@ -670,49 +659,46 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
 
 **Exemplos de Uso:**
 
-*   **Em um Componente de Página (ex: `app/src/app/(public)/subjects/page.tsx`)**:
+-   **Em um Hook (ex: `app/src/hooks/useEvent.ts`)**:
 
     ```ts
-    // app/src/app/(public)/subjects/page.tsx
-    import api from "@/services/api"; // Importa a instância customizada
-    import { SUBJECT_ROUTE, EXTERNAL_API_HOST } from "@/config"; // Importa a rota e o host externo
+    // app/src/hooks/useEvent.ts
+    import api from "@/services/api";
+    import { EXTERNAL_API_HOST, EVENTS_ROUTE } from "@/config";
 
-    // ... dentro de um useEffect ou função assíncrona
-    api.get(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}?search=${search}`)
-        .then((response) => setData(response.data))
-        .catch((error) => {
-            alert(`Erro ao carregar matérias: ${error}`);
-        });
-
-    // ... para uma requisição DELETE
-    api.delete(`${EXTERNAL_API_HOST}${SUBJECT_ROUTE}${value}/`);
+    // ...
+    const response = await api.get<EventProps[]>(
+    	`${EXTERNAL_API_HOST}${EVENTS_ROUTE}`
+    );
+    // ...
     ```
 
-*   **Em uma Rota de API do Next.js (ex: `app/src/app/auth/login/route.ts`)**:
+-   **Em uma Rota de API do Next.js (ex: `app/src/app/(account)/auth/login/route.ts`)**:
 
     ```ts
-    // app/src/app/auth/login/route.ts
-    import api from "@/services/api"; // Importa a instância customizada
-    import { LOGIN_ROUTE } from "@/config"; // Importa a rota de login
+    // app/src/app/(account)/auth/login/route.ts
+    import api from "@/services/api";
+    import { LOGIN_ROUTE } from "@/config";
 
     const DJANGO_LOGIN_URL = process.env.INTERNAL_DJANGO_API_URL + LOGIN_ROUTE;
 
     export async function POST(req: NextRequest) {
-        // ...
-        const response = await api.post(
-            DJANGO_LOGIN_URL, // Utiliza a URL completa para a API Django
-            { email, password },
-            { headers: { "Content-Type": "application/json" } }
-        );
-        // ...
+    	// ...
+    	const response = await api.post(
+    		DJANGO_LOGIN_URL,
+    		{ email, password },
+    		{ headers: { "Content-Type": "application/json" } }
+    	);
+    	// ...
     }
     ```
 
 **Benefícios desta Abordagem:**
-*   **Autenticação Centralizada:** Garante que todos os tokens de acesso sejam incluídos automaticamente e que a lógica de renovação de tokens seja aplicada de forma consistente em toda a aplicação.
-*   **Redução de Código Repetitivo:** Evita a necessidade de escrever manualmente a lógica de autenticação em cada chamada de API.
-*   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em `app/src/services/api.ts`, impactando toda a aplicação de forma transparente.
-*   **Clareza e Padronização:** Promove um padrão claro para todas as interações com a API autenticada.
+
+-   **Autenticação Centralizada:** Garante que todos os tokens de acesso sejam incluídos automaticamente e que a lógica de renovação de tokens seja aplicada de forma consistente em toda a aplicação.
+-   **Redução de Código Repetitivo:** Evita a necessidade de escrever manually a lógica de autenticação em cada chamada de API.
+-   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em `app/src/services/api.ts`, impactando toda a aplicação de forma transparente.
+-   **Clareza e Padronização:** Promove um padrão claro para todas as interações com a API autenticada.
 
 ### Níveis de Acesso e Permissões
 
@@ -811,6 +797,6 @@ class UserManager(BaseUserManager):
 
 ## Autoria
 
-Frontend - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
+Frontend e Sistema de Autentificação de Usuários - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
 
-Backend - João Miguel Freire de Oliveira Mendes - Desenvolvedor Fullstack em formação.
+Backend e Sistema de logs - João Miguel Freire de Oliveira Mendes - Desenvolvedor Fullstack em formação.
