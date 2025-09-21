@@ -41,20 +41,15 @@ api.interceptors.response.use(
 					originalRequest.headers.Authorization = `Bearer ${access}`;
 
 					console.log("Token refreshed!");
-					toast.success("Token atualizado com sucesso!");
 					return api(originalRequest);
 				} catch (refreshError) {
 					console.error("Refresh token failed", refreshError);
-					toast.error("Sessão expirada, faça login novamente.");
-					window.location.href = "/";
 					return Promise.reject(refreshError);
 				}
 			}
 		}
 
 		if (error.response?.status === 403) {
-			window.location.href = "/";
-			toast.error("Acesso negado.");
 			console.error("Access error", error);
 		}
 
