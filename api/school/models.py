@@ -129,7 +129,6 @@ class Professor(models.Model):
     phone_number = models.CharField(
         verbose_name="Telefone", max_length=15, validators=[phone_validator]
     )
-    email = models.EmailField(verbose_name="Email", max_length=100)
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
@@ -302,7 +301,9 @@ class AgendaItem(models.Model):
 class Event(models.Model):
     title = models.CharField(verbose_name="Título", max_length=200)
     description = models.TextField(verbose_name="Descrição", blank=True, null=True)
-    location = models.CharField(verbose_name="Local", max_length=200, blank=True, null=True)
+    location = models.CharField(
+        verbose_name="Local", max_length=200, blank=True, null=True
+    )
     start_date = models.DateField(verbose_name="Data de início")
     end_date = models.DateField(verbose_name="Data de término", blank=True, null=True)
     start_time = models.TimeField(verbose_name="Hora de início", blank=True, null=True)

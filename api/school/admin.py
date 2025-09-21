@@ -79,7 +79,6 @@ class ProfessorsAdmin(admin.ModelAdmin):
         "user",
         "full_name",
         "phone_number",
-        "email",
         "cpf",
         "birthday",
         "address",
@@ -87,10 +86,14 @@ class ProfessorsAdmin(admin.ModelAdmin):
     )
     list_display_links = (
         "full_name",
-        "email",
-        "address",
+        "cpf",
     )
-    search_fields = ("full_name",)
+    search_fields = (
+        "full_name",
+        "user__email",
+        "user__name",
+        "cpf",
+    )
     list_filter = ("full_name",)
 
 

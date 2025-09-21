@@ -21,19 +21,18 @@ class StudentAdmin(admin.ModelAdmin):
     autocomplete_fields = ("user",)
     list_display = (
         "full_name",
+        "cpf",
         "registration_number",
         "user",
         "phone_number",
-        "email",
         "group",
     )
-    list_display_links = ("full_name", "registration_number")
+    list_display_links = ("full_name", "registration_number", "cpf")
     search_fields = (
         "full_name",
         "registration_number",
         "user__email",
         "user__name",
-        "email",
         "cpf",
     )
     list_filter = ("group",)
@@ -48,15 +47,13 @@ class GuardianAdmin(admin.ModelAdmin):
         "full_name",
         "student",
         "phone_number",
-        "email",
         "cpf",
         "birthday",
         "address",
     )
-    list_display_links = ("full_name", "email")
+    list_display_links = ("full_name", "cpf")
     search_fields = (
         "full_name",
-        "email",
         "cpf",
         "student__full_name",
         "user__email",

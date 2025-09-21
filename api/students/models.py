@@ -26,7 +26,6 @@ class Student(models.Model):
     phone_number = models.CharField(
         verbose_name="Telefone", max_length=15, validators=[phone_validator]
     )
-    email = models.EmailField(verbose_name="Email", max_length=100)
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
@@ -73,7 +72,6 @@ class Guardian(models.Model):
     phone_number = models.CharField(
         verbose_name="Telefone", max_length=15, validators=[phone_validator]
     )
-    email = models.EmailField(verbose_name="Email", max_length=100)
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
