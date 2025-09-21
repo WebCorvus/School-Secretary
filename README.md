@@ -11,15 +11,19 @@ Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no F
 ## Estrutura
 
 ```
-secretaria-escolar/
-├── api/            # Django API
-├── app/            # Next.js Interface
-├── docs/           # Project documents
-├── proxy/          # Nginx proxy
-├── test/           # Cypress tests
-├── compose.yaml    # Docker Compose config
-├── INSTALLATION.md
-└── README.md
+School-Secretary/
+├── api/            # API com Django
+├── app/            # Interface com Next.js
+├── docs/           # Documentos do projeto
+├── proxy/          # Proxy com Nginx
+├── test/           # Testes com Cypress
+├── .dockerignore   # Arquivos ignorados pelo Docker
+├── .env.base       # Variáveis de ambiente para configurar o projeto
+├── .gitignore      # Arquivos ignorados pelo Git, às vezes por segurança
+├── compose.yaml    # Configuração Docker Compose
+├── INSTALLATION.md # Informações de instalação
+├── README.md       # Informações gerais do projeto
+└── TODO.md         # Tarefas a serem feitas no futuro
 ```
 
 ## Configurações
@@ -115,7 +119,7 @@ As configurações dos endpoints da API são definidas em `app/src/config.ts`. A
 A concatenação com o host base da API (`EXTERNAL_API_HOST` ou `INTERNAL_API_HOST`) é realizada no ponto de uso, geralmente nas chamadas `axios` dentro dos componentes ou serviços do frontend.
 
 -   `EXTERNAL_API_HOST`: Define o prefixo para chamadas de API que são roteadas externamente, geralmente via Nginx (`/api/`).
--   `INTERNAL_API_HOST`: Define o endereço interno direto para o serviço da API (e.g., `http://api:8080/`), usado em contextos específicos onde a comunicação direta é necessária (como em rotas de API do Next.js que atuam como proxy).
+-   `INTERNAL_API_HOST`: Define o endereço interno direto para o serviço da API (e.g., `http://api:8000/`), usado em contextos específicos onde a comunicação direta é necessária (como em rotas de API do Next.js que atuam como proxy).
 
 Exemplo de como as rotas são definidas em `app/src/config.ts`:
 
@@ -195,19 +199,19 @@ app/src/app
 │   │           page.tsx
 │   └───auth
 │       ├───login
-│       │   route.ts
+│       │       route.ts
 │       └───logout
-│           route.ts
+│               route.ts
 │
 ├───(annoucements)
 │   ├───events
-│   │   page.tsx
+│   │       page.tsx
 │   └───lessons
-│       page.tsx
+│           page.tsx
 │
 └───(marketing)
     └───about
-        page.tsx
+            page.tsx
 ```
 
 Considerando que as pastas cujo nome possui os parênteses são ignoradas e somente os `page.tsx` e `route.ts` marcam uma rota válida, as rotas são:
@@ -797,6 +801,8 @@ class UserManager(BaseUserManager):
 
 ## Autoria
 
-Frontend e Sistema de Autentificação de Usuários - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
+Frontend e Sistema de Autenticação de Usuários - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
 
 Backend e Sistema de logs - João Miguel Freire de Oliveira Mendes - Desenvolvedor Fullstack em formação.
+
+ão.
