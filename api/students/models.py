@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from utils.validators import phone_validator, cep_validator, cpf_validator
+from utils.date import get_current_year, get_today
 
 BIMESTER_CHOICES = [
     ("1B", "1º Bimestre"),
@@ -144,9 +145,7 @@ class Grade(models.Model):
     )
 
     year = models.IntegerField(
-        verbose_name="Ano",
-        blank=False,
-        null=True,
+        verbose_name="Ano", blank=False, null=True, default=get_current_year
     )
 
     bimester = models.CharField(
@@ -184,7 +183,7 @@ class Presence(models.Model):
         blank=False,
         null=True,
     )
-    date = models.DateField(verbose_name="Data")
+    date = models.DateField(verbose_name="Data", default=get_today)
     presence = models.BooleanField(verbose_name="Presença")
     created_at = models.DateTimeField(
         verbose_name="Criado em",

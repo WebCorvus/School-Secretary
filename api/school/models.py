@@ -1,7 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from utils.validators import cep_validator, cpf_validator, phone_validator
-from utils.day_util import get_day_name
+
+from utils.date import get_today
 
 DAY_CHOICES = [
     (0, "Domingo"),
@@ -304,8 +305,13 @@ class Event(models.Model):
     location = models.CharField(
         verbose_name="Local", max_length=200, blank=True, null=True
     )
-    start_date = models.DateField(verbose_name="Data de início")
-    end_date = models.DateField(verbose_name="Data de término", blank=True, null=True)
+    start_date = models.DateField(verbose_name="Data de início", default=get_today)
+    end_date = models.DateField(
+        verbose_name="Data de término",
+        default=get_today,
+        blank=True,
+        null=True,
+    )
     start_time = models.TimeField(verbose_name="Hora de início", blank=True, null=True)
     end_time = models.TimeField(verbose_name="Hora de término", blank=True, null=True)
     created_at = models.DateTimeField(verbose_name="Criado em", auto_now_add=True)
