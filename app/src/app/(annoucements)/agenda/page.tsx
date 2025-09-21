@@ -47,18 +47,18 @@ export default function AgendaPage() {
 								<TableRow>
 									<TableHead>Título</TableHead>
 									<TableHead>Descrição</TableHead>
-									<TableHead>Data de Término</TableHead>
-									<TableHead>Horário de Término</TableHead>
+									<TableHead>Data</TableHead>
+									<TableHead>Hora</TableHead>
 									<TableHead>Matéria</TableHead>
 								</TableRow>
 							</TableHeader>
 							<TableBody>
 								{data.map((item) => (
 									<TableRow key={item.id}>
-										<TableCell className="font-medium">
+										<TableCell className="font-medium whitespace-normal max-w-20">
 											{item.title}
 										</TableCell>
-										<TableCell>
+										<TableCell className="whitespace-normal max-w-36">
 											{item.description}
 										</TableCell>
 										<TableCell>{item.date}</TableCell>
