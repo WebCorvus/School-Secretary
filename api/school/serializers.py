@@ -33,7 +33,7 @@ class GroupCompactSerializer(serializers.ModelSerializer):
 class ProfessorCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professor
-        fields = ["id", "full_name", "email"]
+        fields = ["id", "full_name", "cpf", "phone_number"]
 
 
 class SubjectSerializer(serializers.ModelSerializer):

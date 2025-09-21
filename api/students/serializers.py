@@ -9,13 +9,13 @@ from school.models import (
 class StudentCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ["id", "full_name", "registration_number"]
+        fields = ["id", "full_name", "cpf", "phone_number"]
 
 
 class GuardianCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guardian
-        fields = ["id", "full_name", "phone_number"]
+        fields = ["id", "full_name", "cpf", "phone_number"]
 
 
 class GradeCompactSerializer(serializers.ModelSerializer):
