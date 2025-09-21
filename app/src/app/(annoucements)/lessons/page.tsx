@@ -8,6 +8,22 @@ import SelectObject from "@/components/SelectObject";
 import { useGroupLessons } from "@/hooks/useGroupLesson";
 import { useGroups } from "@/hooks/useGroup";
 
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+
 export default function LessonsPage() {
 	const [selectedGroup, setSelectedGroup] = useState<number>();
 	const { groups, loading: loadingGroups, error: errorGroups } = useGroups();
@@ -33,47 +49,70 @@ export default function LessonsPage() {
 		return <FullScreenError error="Nenhuma aula encontrada." />;
 
 	return (
-		<div>
-			<div className="flex justify-center">
-				<div className="title-container">
-					<h1 className="title">Horários da Turma</h1>
-				</div>
-			</div>
+		<div className="space-y-6">
+			<Card>
+				<CardHeader className="flex flex-row items-center justify-between space-y-0 p-6">
+					<div>
+						<CardTitle>Horários da Turma</CardTitle>
+						<CardDescription className="pt-1">
+							Selecione uma turma para visualizar a grade de
+							horários.
+						</CardDescription>
+					</div>
+					<SelectObject
+						options={groups}
+						onSelect={handleSelectedGroup}
+					/>
+				</CardHeader>
 
-			<div className="w-full flex justify-center items-center">
-				<SelectObject options={groups} onSelect={handleSelectedGroup} />
-			</div>
-
-			<div className="flex justify-center items-center">
-				<div className="table-container">
-					<table className="m-3 table table-border">
-						<thead>
-							<tr>
-								<th>Dia</th>
-								<th>1° Horário</th>
-								<th>2° Horário</th>
-								<th>3° Horário</th>
-								<th>4° Horário</th>
-								<th>5° Horário</th>
-								<th>6° Horário</th>
-							</tr>
-						</thead>
-						<tbody>
-							{lessons.map(({ day, lessons }) => (
-								<tr key={day}>
-									<td>{day}</td>
-									{lessons.map((lesson, idx) => (
-										<td key={idx}>
-											{lesson?.subject_details
-												?.short_name || "-"}
-										</td>
-									))}
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div>
+				{selectedGroup && lessons && lessons.length > 0 && (
+					<CardContent className="overflow-x-auto">
+						<Table className="w-full">
+							<TableHeader>
+								<TableRow>
+									<TableHead>Dia</TableHead>
+									<TableHead className="text-center">
+										1° Horário
+									</TableHead>
+									<TableHead className="text-center">
+										2° Horário
+									</TableHead>
+									<TableHead className="text-center">
+										3° Horário
+									</TableHead>
+									<TableHead className="text-center">
+										4° Horário
+									</TableHead>
+									<TableHead className="text-center">
+										5° Horário
+									</TableHead>
+									<TableHead className="text-center">
+										6° Horário
+									</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{lessons.map(({ day, lessons }) => (
+									<TableRow key={day}>
+										<TableCell className="font-medium">
+											{day}
+										</TableCell>
+										{lessons.map((lesson, idx) => (
+											<TableCell
+												key={idx}
+												className="text-center"
+											>
+												{lesson?.subject_details
+													?.short_name || "-"}
+											</TableCell>
+										))}
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</CardContent>
+				)}
+			</Card>
 		</div>
 	);
 }
