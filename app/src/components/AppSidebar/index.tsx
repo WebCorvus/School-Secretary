@@ -18,7 +18,7 @@ import { Home, Inbox } from "lucide-react";
 import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
 import { Button } from "../ui/button";
 import { logout } from "@/services/auth";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const data = {
 	navMain: [
@@ -71,9 +71,10 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const router = useRouter();
+
 	function handleClick() {
 		logout();
-		const router = useRouter();
 		router.push("/");
 	}
 

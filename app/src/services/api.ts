@@ -26,26 +26,20 @@ api.interceptors.response.use(
 
 		if (error.response?.status === 401 && !originalRequest._retry) {
 			originalRequest._retry = true;
-			const refreshToken = getCookie("refresh");
+			try {
+				const response = await axios.post("/auth/refresh");
+				const { access } = response.data;
 
-			if (refreshToken) {
-				try {
-					const response = await axios.post(DJANGO_REFRESH_URL, {
-						refresh: refreshToken,
-					});
-					const { access } = response.data;
+				setCookie("access", access, { path: "/", sameSite: "lax" });
 
-					setCookie("access", access, { path: "/", sameSite: "lax" });
+				if (!originalRequest.headers) originalRequest.headers = {};
+				originalRequest.headers.Authorization = `Bearer ${access}`;
 
-					if (!originalRequest.headers) originalRequest.headers = {};
-					originalRequest.headers.Authorization = `Bearer ${access}`;
-
-					console.log("Token refreshed!");
-					return api(originalRequest);
-				} catch (refreshError) {
-					console.error("Refresh token failed", refreshError);
-					return Promise.reject(refreshError);
-				}
+				console.log("Token refreshed!");
+				return api(originalRequest);
+			} catch (refreshError) {
+				console.error("Refresh token failed", refreshError);
+				return Promise.reject(refreshError);
 			}
 		}
 
