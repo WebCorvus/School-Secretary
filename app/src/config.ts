@@ -1,5 +1,5 @@
 export const EXTERNAL_API_HOST = "/api/";
-export const INTERNAL_API_HOST = "http://api:8080/";
+export const INTERNAL_API_HOST = "http://api:8000/";
 
 export const ADMIN_ROUTE = "admin/";
 

@@ -8,21 +8,21 @@ from school.models import Professor
 class StudentInline(admin.StackedInline):
     model = Student
     can_delete = False
-    verbose_name_plural = "Student Profile"
+    verbose_name_plural = "Perfil de Aluno"
     fk_name = "user"
 
 
 class GuardianInline(admin.StackedInline):
     model = Guardian
     can_delete = False
-    verbose_name_plural = "Guardian Profile"
+    verbose_name_plural = "Perfil de Responsável"
     fk_name = "user"
 
 
 class ProfessorInline(admin.StackedInline):
     model = Professor
     can_delete = False
-    verbose_name_plural = "Professor Profile"
+    verbose_name_plural = "Perfil de Professor"
     fk_name = "user"
 
 
@@ -39,9 +39,9 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ("email", "name")
     ordering = ("email",)
     fieldsets = (
-        ("Credentials", {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("name", "role")}),
-        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser")}),
+        ("Credenciais", {"fields": ("email", "password")}),
+        ("Informações Pessoais", {"fields": ("name", "role")}),
+        ("Permissões", {"fields": ("is_active", "is_staff", "is_superuser")}),
     )
     add_fieldsets = (
         (
@@ -72,7 +72,7 @@ class UserAdmin(BaseUserAdmin):
             return getattr(obj, "professor_profile", None)
         return None
 
-    get_profile.short_description = "Profile"
+    get_profile.short_description = "Perfil"
 
 
 admin.site.register(User, UserAdmin)
