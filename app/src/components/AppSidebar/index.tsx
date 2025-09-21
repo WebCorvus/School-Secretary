@@ -18,6 +18,7 @@ import { Home, Inbox } from "lucide-react";
 import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
 import { Button } from "../ui/button";
 import { logout } from "@/services/auth";
+import { useRouter } from "next/router";
 
 const data = {
 	navMain: [
@@ -70,6 +71,12 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	function handleClick() {
+		logout();
+		const router = useRouter();
+		router.push("/");
+	}
+
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader>
@@ -80,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 			<SidebarRail />
 			<SidebarFooter>
-				<Button variant={"outline"} onClick={() => logout()}>
+				<Button variant={"outline"} onClick={() => handleClick()}>
 					Logout
 				</Button>
 			</SidebarFooter>
