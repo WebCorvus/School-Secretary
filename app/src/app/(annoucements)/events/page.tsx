@@ -1,10 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { FullScreenLoading } from "@/components/FullScreenLoading";
 import { FullScreenError } from "@/components/FullScreenError";
 import { useEvent } from "@/hooks/useEvent";
-// import SearchField from "@/components/SearchField"; // TODO implement search field
+
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 
 export default function EventsPage() {
 	const { data, loading, error, refetch } = useEvent();
@@ -15,38 +21,39 @@ export default function EventsPage() {
 		return <FullScreenError error="Nenhum evento encontrado." />;
 
 	return (
-		<div>
-			<div className="flex justify-center">
+		<div className="space-y-6">
+			<div className="flex flex-col md:flex-row justify-between items-center mb-6">
 				<div className="title-container">
 					<h1 className="title">Eventos</h1>
+					<p className="text-muted-foreground">
+						Confira os eventos e atividades futuras.
+					</p>
 				</div>
+				{/* TODO implement search field */}
 			</div>
 
-			<div className="flex justify-center items-center">
-				<div className="table-container">
-					<table className="m-3 table table-border">
-						<thead>
-							<tr>
-								<th>Título</th>
-								<th>Descrição</th>
-								<th>Data de Início</th>
-								<th>Data de Fim</th>
-								<th>Local</th>
-							</tr>
-						</thead>
-						<tbody>
-							{data.map((event) => (
-								<tr key={event.id}>
-									<td>{event.title}</td>
-									<td>{event.description}</td>
-									<td>{event.start_date}</td>
-									<td>{event.end_date}</td>
-									<td>{event.location}</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{data.map((event) => (
+					<Card key={event.id}>
+						<CardHeader>
+							<CardTitle className="text-xl">
+								{event.title}
+							</CardTitle>
+							<CardDescription>
+								De {event.start_date} até {event.end_date}
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-2">
+							<p className="font-medium text-sm">
+								<span className="text-muted-foreground">
+									Local:
+								</span>{" "}
+								{event.location}
+							</p>
+							<p className="text-sm">{event.description}</p>
+						</CardContent>
+					</Card>
+				))}
 			</div>
 		</div>
 	);
