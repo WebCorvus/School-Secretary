@@ -4,8 +4,6 @@ services:
     image: webcorvus/school-secretary-test:latest
     container_name: school-secretary-test
     command: sh -c "npm run test"
-    environment:
-      - NODE_ENV=production
     env_file:
       - .env.base
       - .env.prod
@@ -42,6 +40,8 @@ services:
     image: webcorvus/school-secretary-app:latest
     container_name: school-secretary-app
     command: sh -c "node server.js"
+    environment:
+      - NODE_ENV=production
     env_file:
       - .env.base
       - .env.prod

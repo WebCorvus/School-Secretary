@@ -1,17 +1,26 @@
 #!/bin/sh
 
-echo "---Building---"
-docker compose -f compose.test.yaml build
-echo "---Running---"
-docker compose -f compose.test.yaml up -d
+set -e
 
-echo "---Waiting---"
-sleep 10
+# cleanup() {
+#     echo "---Stopping and Removing Containers---"
+#     docker compose -f compose.test.yaml down -v
+# }
+
+# trap cleanup EXIT
+
+echo "---Building Containers---"
+docker compose -f compose.test.yaml build
+
+echo "---Running and Waiting for Services to be Healthy---"
+docker compose -f compose.test.yaml up -d --wait
+
+echo "---All Services are Healthy. Running Tests---"
 
 echo "---Testing API---"
 docker compose -f compose.test.yaml exec -T api python manage.py test
+
 echo "---Testing APP---"
 docker compose -f compose.test.yaml exec -T app npm run test
 
-echo "---Stopping and Removing---"
-docker compose -f compose.test.yaml down -v
+echo "---All tests finished successfully!---"
