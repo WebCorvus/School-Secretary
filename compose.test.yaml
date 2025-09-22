@@ -1,7 +1,7 @@
 services:
   test:
-    image: webcorvus/school-secretary-test:latest
-    container_name: school-secretary-test
+    image: webcorvus/test-school-secretary-test:latest
+    container_name: test-school-secretary-test
     command: sh -c "npm run test"
     env_file:
       - .env.base
@@ -21,8 +21,8 @@ services:
 
   proxy:
     build: ./proxy
-    image: webcorvus/school-secretary-proxy:latest
-    container_name: school-secretary-proxy
+    image: webcorvus/test-school-secretary-proxy:latest
+    container_name: test-school-secretary-proxy
     ports:
       - "8080:80"
     volumes:
@@ -35,8 +35,8 @@ services:
       - public
 
   app:
-    image: webcorvus/school-secretary-app:latest
-    container_name: school-secretary-app
+    image: webcorvus/test-school-secretary-app:latest
+    container_name: test-school-secretary-app
     command: sh -c "npm install &&\
       npm run dev"
     volumes:
@@ -58,8 +58,8 @@ services:
 
   api:
     build: ./api
-    image: webcorvus/school-secretary-api:latest
-    container_name: school-secretary-api
+    image: webcorvus/test-school-secretary-api:latest
+    container_name: test-school-secretary-api
     command: sh -c "python manage.py collectstatic --noinput &&\
       python manage.py makemigrations &&\
       python manage.py migrate &&\
@@ -85,9 +85,9 @@ services:
 
   db:
     image: postgres:16-alpine
-    container_name: school-secretary-db
+    container_name: test-school-secretary-db
     volumes:
-      - testdb_data:/var/lib/postgresql/data/
+      - test_db_data:/var/lib/postgresql/data/
     env_file:
       - .env.base
       - .env.prod
@@ -103,6 +103,6 @@ networks:
     driver: bridge
 
 volumes:
-  testdb_data:
+  test_db_data:
   api_static:
   api_media:
