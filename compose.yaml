@@ -4,6 +4,8 @@ services:
     image: webcorvus/school-secretary-test:latest
     container_name: school-secretary-test
     command: sh -c "npm run test"
+    environment:
+      - NODE_ENV=production
     env_file:
       - .env.base
       - .env.prod

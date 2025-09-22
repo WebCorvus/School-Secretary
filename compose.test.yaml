@@ -40,6 +40,8 @@ services:
       npm run dev"
     volumes:
       - ./app:/app
+    environment:
+      - NODE_ENV=test
     env_file:
       - .env.base
       - .env.prod
