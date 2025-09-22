@@ -25,14 +25,16 @@ class Student(models.Model):
         verbose_name="Número de matrícula", max_length=6, unique=True
     )
     phone_number = models.CharField(
-        verbose_name="Telefone", max_length=15, validators=[phone_validator]
+        verbose_name="Telefone (XX) XXXXX-XXXX",
+        max_length=15,
+        validators=[phone_validator],
     )
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
     birthday = models.DateField(verbose_name="Data de nascimento")
     address = models.CharField(
-        verbose_name="Endereço", max_length=100, validators=[cep_validator]
+        verbose_name="CEP", max_length=100, validators=[cep_validator]
     )
     group = models.ForeignKey(
         "school.Group",
@@ -71,14 +73,16 @@ class Guardian(models.Model):
         blank=True,
     )
     phone_number = models.CharField(
-        verbose_name="Telefone", max_length=15, validators=[phone_validator]
+        verbose_name="Telefone (XX) XXXXX-XXXX",
+        max_length=15,
+        validators=[phone_validator],
     )
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
     birthday = models.DateField(verbose_name="Data de nascimento")
     address = models.CharField(
-        verbose_name="Endereço", max_length=100, validators=[cep_validator]
+        verbose_name="CEP", max_length=100, validators=[cep_validator]
     )
     created_at = models.DateTimeField(
         verbose_name="Criado em", default=timezone.now, editable=False

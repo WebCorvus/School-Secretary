@@ -128,14 +128,16 @@ class Professor(models.Model):
     )
     full_name = models.CharField(verbose_name="Nome completo", max_length=200)
     phone_number = models.CharField(
-        verbose_name="Telefone", max_length=15, validators=[phone_validator]
+        verbose_name="Telefone (XX) XXXXX-XXXX",
+        max_length=15,
+        validators=[phone_validator],
     )
     cpf = models.CharField(
         verbose_name="CPF", max_length=11, unique=True, validators=[cpf_validator]
     )
     birthday = models.DateField(verbose_name="Data de nascimento")
     address = models.CharField(
-        verbose_name="Endereço", max_length=100, validators=[cep_validator]
+        verbose_name="CEP", max_length=100, validators=[cep_validator]
     )
     subject = models.ForeignKey(
         "Subject",
