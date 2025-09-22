@@ -1,6 +1,5 @@
 services:
   test:
-    build: ./test
     image: webcorvus/school-secretary-test:latest
     container_name: school-secretary-test
     command: sh -c "npm run test"
@@ -26,20 +25,22 @@ services:
     container_name: school-secretary-proxy
     ports:
       - "8080:80"
+    volumes:
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
     depends_on:
       - api
       - app
     networks:
       - public
-    volumes:
-      - api_static:/vol/web/static/
-      - api_media:/vol/web/media/
 
   app:
-    build: ./app
     image: webcorvus/school-secretary-app:latest
     container_name: school-secretary-app
-    command: sh -c "node server.js"
+    command: sh -c "npm install &&\
+      npm run dev"
+    volumes:
+      - ./app:/app
     env_file:
       - .env.base
       - .env.prod
@@ -86,7 +87,7 @@ services:
     image: postgres:16-alpine
     container_name: school-secretary-db
     volumes:
-      - db_data:/var/lib/postgresql/data/
+      - testdb_data:/var/lib/postgresql/data/
     env_file:
       - .env.base
       - .env.prod
@@ -102,6 +103,6 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
+  testdb_data:
   api_static:
   api_media:
