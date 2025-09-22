@@ -1,0 +1,36 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker Images
+        run: docker compose build
+
+      - name: Start Services
+        run: docker compose up -d
+
+      - name: Wait for Services to be Ready
+        run: sleep 10
+
+      - name: Run Django Tests
+        run: docker exec -it school-secretary-api python manage.py test
+
+      - name: Run Next.js Tests
+        run: docker exec -it school-secretary-api npm run test
+
+      - name: Cleanup Containers
+        if: always()
+        run: docker compose down

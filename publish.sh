@@ -10,19 +10,19 @@ IMAGES=(
 )
 
 echo "Subindo containers com Docker Compose..."
-sudo docker compose up --build -d
+docker compose up --build -d
 
 sleep 5
 
 echo "Fazendo login no Docker Hub..."
-sudo docker login
+docker login
 
 for IMAGE in "${IMAGES[@]}"; do
   echo "Publicando $IMAGE no Docker Hub..."
-  sudo docker push "$IMAGE"
+  docker push "$IMAGE"
 done
 
 echo "Parando containers..."
-sudo docker compose down
+docker compose down
 
 echo "Processo concluído com sucesso!"

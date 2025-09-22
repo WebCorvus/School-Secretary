@@ -1,0 +1,107 @@
+services:
+  test:
+    build: ./test
+    image: webcorvus/school-secretary-test:latest
+    container_name: school-secretary-test
+    command: sh -c "npm run test"
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      proxy:
+        condition: service_started
+      app:
+        condition: service_started
+      api:
+        condition: service_started
+      db:
+        condition: service_started
+    networks:
+      - public
+
+  proxy:
+    build: ./proxy
+    image: webcorvus/school-secretary-proxy:latest
+    container_name: school-secretary-proxy
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+      - app
+    networks:
+      - public
+    volumes:
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
+
+  app:
+    build: ./app
+    image: webcorvus/school-secretary-app:latest
+    container_name: school-secretary-app
+    command: sh -c "node server.js"
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - api
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+    networks:
+      - public
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    image: webcorvus/school-secretary-api:latest
+    container_name: school-secretary-api
+    command: sh -c "python manage.py collectstatic --noinput &&\
+      python manage.py makemigrations &&\
+      python manage.py migrate &&\
+      gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - api_static:/vol/web/static/
+      - api_media:/vol/web/media/
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    depends_on:
+      - db
+    networks:
+      - public
+      - private
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: school-secretary-db
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.base
+      - .env.prod
+      - .env.local
+    networks:
+      - private
+    restart: unless-stopped
+
+networks:
+  public:
+    driver: bridge
+  private:
+    driver: bridge
+
+volumes:
+  db_data:
+  api_static:
+  api_media:

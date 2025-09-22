@@ -35,7 +35,13 @@ Para acessar certas funcionalidades do sistema, é necessário ter um usuário c
 Utilize o comando a seguir para inicializar o projeto e, tomando o container de teste como referencia, realizar uma testagem e depois abortar tudo.
 
 ```bash
-docker compose up test --build --abort-on-container-exit
+docker compose up test --build --abort-on-container-exit # Test E2E
+```
+
+```bash
+docker compose up --build -d                                        # Test E2E
+docker compose exec -it school-secretary-api python manage.py test  # Test Backend
+docker compose exec -it school-secretary-app npm run test           # Test Frontend
 ```
 
 ### Gerar Usuários de Teste (seed_users)
