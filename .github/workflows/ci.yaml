@@ -20,10 +20,7 @@ jobs:
         run: docker compose -f compose.test.yaml build
 
       - name: Start Services
-        run: docker compose -f compose.test.yaml up -d
-
-      - name: Wait for Services to be Ready
-        run: sleep 10
+        run: docker compose -f compose.test.yaml up -d --wait
 
       - name: Run Django Tests
         run: docker compose -f compose.test.yaml exec -T api python manage.py test
