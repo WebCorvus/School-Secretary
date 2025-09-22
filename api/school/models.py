@@ -254,7 +254,7 @@ class Lesson(models.Model):
         blank=False,
     )
     time = models.IntegerField(
-        verbose_name="Horário",
+        verbose_name="Horário (1 a 6)",
         null=True,
     )
     day = models.IntegerField(
