@@ -3,9 +3,10 @@ FROM node:22.18.0-alpine AS base
 FROM base AS deps
 
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache curl
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 

@@ -2,12 +2,12 @@
 
 set -e
 
-# cleanup() {
-#     echo "---Stopping and Removing Containers---"
-#     docker compose -f compose.test.yaml down -v
-# }
+cleanup() {
+    echo "---Stopping and Removing Containers---"
+    docker compose -f compose.test.yaml down -v
+}
 
-# trap cleanup EXIT
+trap cleanup EXIT
 
 echo "---Building Containers---"
 docker compose -f compose.test.yaml build

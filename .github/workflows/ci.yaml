@@ -19,8 +19,12 @@ jobs:
       - name: Build Docker Images
         run: docker compose -f compose.test.yaml build
 
-      - name: Start Services
+      - name: Start Services and Wait for Health
         run: docker compose -f compose.test.yaml up -d --wait
+
+      - name: Show Logs (optional for debugging)
+        if: always()
+        run: docker compose -f compose.test.yaml logs
 
       - name: Run Django Tests
         run: docker compose -f compose.test.yaml exec -T api python manage.py test

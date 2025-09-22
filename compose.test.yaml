@@ -33,36 +33,38 @@ services:
     networks:
       - public
     healthcheck:
-      test: [CMD-SHELL, "wget -q --spider http://127.0.0.1 || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:80/healthcheck || exit 1"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
 
   app:
-    image: node:22.18.0-alpine
+    build:
+      context: ./app
+      dockerfile: Dockerfile.test
     container_name: test-school-secretary-app
     working_dir: /app
-    command: sh -c "npm ci && npm run build && npm run dev"
+    command: node .next/standalone/server.js
     volumes:
       - ./app:/app
       - test_app_node_modules:/app/node_modules
+      - test_app_next:/app/.next
     environment:
       - NODE_ENV=test
     env_file:
       - .env.base
       - .env.prod
       - .env.local
-    depends_on:
-      - api
     networks:
       - public
     restart: unless-stopped
     healthcheck:
-      test: [CMD-SHELL, "wget -q --spider http://localhost:3000 || exit 1"]
+      test:
+        ["CMD-SHELL", "curl -sf http://localhost:3000/healthcheck || exit 1"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 20
       start_period: 30s
 
   api:
@@ -75,11 +77,6 @@ services:
     volumes:
       - test_api_static:/vol/web/static/
       - test_api_media:/vol/web/media/
-    develop:
-      watch:
-        - action: sync
-          path: ./app
-          target: /app
     env_file:
       - .env.base
       - .env.prod
@@ -93,7 +90,7 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "python /api/healthcheck.py"]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
       start_period: 60s
 
@@ -110,9 +107,9 @@ services:
       - private
     restart: unless-stopped
     healthcheck:
-      test: [CMD-SHELL, "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
-      timeout: 5s
+      timeout: 10s
       retries: 5
       start_period: 20s
 
@@ -127,3 +124,4 @@ volumes:
   test_api_static:
   test_api_media:
   test_app_node_modules:
+  test_app_next:
