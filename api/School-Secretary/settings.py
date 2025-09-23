@@ -156,8 +156,8 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
 ).split(",")
 
 STATIC_URL = "static/"
-
 STATIC_ROOT = "/vol/web/static/"
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "/vol/web/media/"
 
