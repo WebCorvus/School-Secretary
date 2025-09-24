@@ -55,3 +55,16 @@ docker exec -it school-secretary-api python manage.py seed_users --total 5
 Você pode ajustar o número de usuários com o parâmetro `--total` e definir o papel com `--role` (opcional).
 
 BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
+
+## Logging de Exceções com Usuário
+
+O backend Django possui um middleware que registra exceções junto ao usuário autenticado.
+
+- O middleware está em: `api/school/middleware.py`.
+- Logs de erro podem ser visualizados com:
+
+    ```bash
+    docker compose logs -f school-secretary-api
+    ```
+- Para testar, provoque uma exceção em uma view autenticada e verifique o log.
+- O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.
