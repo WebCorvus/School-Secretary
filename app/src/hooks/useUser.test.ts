@@ -1,0 +1,100 @@
+import { renderHook, waitFor } from "@testing-library/react";
+import { useUser } from "./useUser";
+import api from "@/services/api";
+import { FakeUser, createFakeUser } from "@/types/user";
+import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config"; // Import directly
+
+// Mock the API service
+vi.mock("@/services/api");
+
+describe("useUser", () => {
+	const originalNodeEnv = process.env.NODE_ENV;
+
+	beforeEach(() => {
+		// Reset mocks before each test
+		vi.clearAllMocks();
+		process.env.NODE_ENV = originalNodeEnv; // Reset NODE_ENV
+	});
+
+	afterAll(() => {
+		process.env.NODE_ENV = originalNodeEnv;
+	});
+
+	it("should return initial loading state", () => {
+		const { result } = renderHook(() => useUser());
+
+		expect(result.current.loading).toBe(true);
+		expect(result.current.data).toBeNull();
+		expect(result.current.error).toBeNull();
+	});
+
+	it("should fetch user data successfully", async () => {
+		const mockUser = createFakeUser();
+		(api.get as vi.Mock).mockResolvedValueOnce({ data: mockUser });
+
+		const { result } = renderHook(() => useUser());
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+
+		expect(result.current.data).toEqual(mockUser);
+		expect(result.current.error).toBeNull();
+		expect(api.get).toHaveBeenCalledWith("/api/users/me/");
+	});
+
+	it("should handle API error in development by returning FakeUser", async () => {
+		process.env.NODE_ENV = "development";
+		(api.get as vi.Mock).mockRejectedValueOnce(new Error("API Error"));
+
+		const { result } = renderHook(() => useUser());
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+
+		expect(result.current.data).toEqual(FakeUser);
+		expect(result.current.error).toBeNull();
+	});
+
+	it("should handle API error in production by returning error message", async () => {
+		process.env.NODE_ENV = "production";
+		(api.get as vi.Mock).mockRejectedValueOnce(new Error("API Error"));
+
+		const { result } = renderHook(() => useUser());
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+
+		expect(result.current.data).toBeNull();
+		expect(result.current.error).toBe(
+			"Não foi possível carregar as informações do usuário."
+		);
+	});
+
+	it("should handle empty data in development by returning FakeUser", async () => {
+		process.env.NODE_ENV = "development";
+		(api.get as vi.Mock).mockResolvedValueOnce({ data: null });
+
+		const { result } = renderHook(() => useUser());
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+
+		expect(result.current.data).toEqual(FakeUser);
+		expect(result.current.error).toBeNull();
+	});
+
+	it("should refetch user data when refetch is called", async () => {
+		const mockUser1 = createFakeUser();
+		const mockUser2 = createFakeUser();
+
+		(api.get as vi.Mock)
+			.mockResolvedValueOnce({ data: mockUser1 })
+			.mockResolvedValueOnce({ data: mockUser2 });
+
+		const { result } = renderHook(() => useUser());
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+		expect(result.current.data).toEqual(mockUser1);
+
+		result.current.refetch();
+
+		await waitFor(() => expect(result.current.loading).toBe(false));
+		expect(result.current.data).toEqual(mockUser2);
+	});
+});

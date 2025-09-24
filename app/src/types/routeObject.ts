@@ -19,3 +19,11 @@ export interface SelectOptionProps {
   short_name?: string;
   full_name?: string;
 }
+
+export function createFakeSelectOption(): SelectOptionProps {
+  return {
+    id: faker.number.int(),
+    short_name: faker.lorem.words(2),
+    full_name: faker.lorem.words(4),
+  };
+}
