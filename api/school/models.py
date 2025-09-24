@@ -1,3 +1,35 @@
+from django.db.models.signals import post_save, post_delete
+from django.contrib.auth import get_user_model
+from django.dispatch import receiver
+
+# Logging for admin actions
+import logging
+from datetime import datetime
+
+def get_admin_username(instance):
+    # Try to get user from instance._state, fallback to None
+    user = getattr(instance._state, 'user', None)
+    return getattr(user, 'username', None) if user and hasattr(user, 'username') else None
+
+@receiver(post_save)
+def log_admin_create_update(sender, instance, created, **kwargs):
+    # Only log for models in this app
+    if sender.__module__.startswith('school.models'):
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        username = get_admin_username(instance)
+        if username:
+            if created:
+                logging.info(f"[{timestamp}] [ADMIN] CRIAÇÃO detectada por '{username}' no model '{sender.__name__}' (id={instance.pk})")
+            else:
+                logging.info(f"[{timestamp}] [ADMIN] EDIÇÃO detectada por '{username}' no model '{sender.__name__}' (id={instance.pk})")
+
+@receiver(post_delete)
+def log_admin_delete(sender, instance, **kwargs):
+    if sender.__module__.startswith('school.models'):
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        username = get_admin_username(instance)
+        if username:
+            logging.info(f"[{timestamp}] [ADMIN] DELETE detectado por '{username}' no model '{sender.__name__}' (id={instance.pk})")
 from django.db import models
 from django.utils import timezone
 from utils.validators import cep_validator, cpf_validator, phone_validator
