@@ -1,24 +1,4 @@
 services:
-  test:
-    build: ./test
-    container_name: test-school-secretary-test
-    command: sh -c "npm run test"
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    depends_on:
-      proxy:
-        condition: service_healthy
-      app:
-        condition: service_healthy
-      api:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-    networks:
-      - public
-
   proxy:
     build: ./proxy
     container_name: test-school-secretary-proxy
@@ -28,8 +8,10 @@ services:
       - test_api_static:/vol/web/static/
       - test_api_media:/vol/web/media/
     depends_on:
-      - api
-      - app
+      api:
+        condition: service_healthy
+      app:
+        condition: service_healthy
     networks:
       - public
     healthcheck:
@@ -56,6 +38,9 @@ services:
       - .env.base
       - .env.prod
       - .env.local
+    depends_on:
+      api:
+        condition: service_healthy
     networks:
       - public
     restart: unless-stopped
@@ -82,7 +67,8 @@ services:
       - .env.prod
       - .env.local
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - public
       - private

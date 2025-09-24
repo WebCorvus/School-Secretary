@@ -1,25 +1,4 @@
 services:
-  test:
-    build: ./test
-    image: webcorvus/school-secretary-test:latest
-    container_name: school-secretary-test
-    command: sh -c "npm run test"
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    depends_on:
-      proxy:
-        condition: service_started
-      app:
-        condition: service_started
-      api:
-        condition: service_started
-      db:
-        condition: service_started
-    networks:
-      - public
-
   proxy:
     build: ./proxy
     image: webcorvus/school-secretary-proxy:latest

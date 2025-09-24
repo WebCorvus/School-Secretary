@@ -804,5 +804,3 @@ class UserManager(BaseUserManager):
 Frontend e Sistema de Autenticação de Usuários - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
 
 Backend e Sistema de logs - João Miguel Freire de Oliveira Mendes - Desenvolvedor Fullstack em formação.
-
-ão.
