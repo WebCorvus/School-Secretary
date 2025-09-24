@@ -21,6 +21,20 @@ vi.mock("axios", () => ({
 	},
 }));
 
+vi.mock("@/components/ui/dropdown-menu", () => {
+	const React = require("react");
+	return {
+		DropdownMenu: ({ children }: { children: any }) =>
+			React.createElement("div", null, children),
+		DropdownMenuTrigger: ({ children }: { children: any }) =>
+			React.createElement("div", null, children),
+		DropdownMenuContent: ({ children }: { children: any }) =>
+			React.createElement("div", null, children),
+		DropdownMenuItem: ({ children, onClick }: { children: any; onClick: any }) =>
+			React.createElement("div", { onClick }, children),
+	};
+});
+
 window.alert = vi.fn();
 
 Object.defineProperty(window, "matchMedia", {
