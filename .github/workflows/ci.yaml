@@ -16,6 +16,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Generate .env files
+        run: |
+          cat ./api/.env.example > ./api/.env &&\
+          cat ./app/.env.example > ./app/.env &&\
+          cat ./db/.env.example > ./db/.env &&\
+          cat ./proxy/.env.example > ./proxy/.env
+
       - name: Build Docker Images
         run: docker compose -f compose.test.yaml build
 
