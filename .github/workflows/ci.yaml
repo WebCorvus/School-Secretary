@@ -18,9 +18,9 @@ jobs:
 
       - name: Generate .env files
         run: |
-          cat ./api/.env.example > ./api/.env &&\
-          cat ./app/.env.example > ./app/.env &&\
-          cat ./db/.env.example > ./db/.env &&\
+          cat ./api/.env.example > ./api/.env
+          cat ./app/.env.example > ./app/.env
+          cat ./db/.env.example > ./db/.env
           cat ./proxy/.env.example > ./proxy/.env
 
       - name: Build Docker Images
