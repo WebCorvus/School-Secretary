@@ -7,6 +7,8 @@ services:
     volumes:
       - test_api_static:/vol/web/static/
       - test_api_media:/vol/web/media/
+    env_file:
+      - ./proxy/.env
     depends_on:
       api:
         condition: service_healthy
@@ -35,9 +37,7 @@ services:
     environment:
       - NODE_ENV=test
     env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
+      - ./app/.env
     depends_on:
       api:
         condition: service_healthy
@@ -63,9 +63,7 @@ services:
       - test_api_static:/vol/web/static/
       - test_api_media:/vol/web/media/
     env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
+      - ./api/.env
     depends_on:
       db:
         condition: service_healthy
@@ -86,9 +84,7 @@ services:
     volumes:
       - test_db_data:/var/lib/postgresql/data/
     env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
+      - ./db/.env
     networks:
       - private
     restart: unless-stopped

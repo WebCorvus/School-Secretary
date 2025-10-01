@@ -5,6 +5,8 @@ services:
     container_name: school-secretary-proxy
     ports:
       - "8080:80"
+    env_file:
+      - ./proxy/.env
     volumes:
       - api_static:/vol/web/static/
       - api_media:/vol/web/media/
@@ -22,16 +24,14 @@ services:
     environment:
       - NODE_ENV=production
     env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
-    depends_on:
-      - api
+      - ./app/.env
     develop:
       watch:
         - action: sync
           path: ./app
           target: /app
+    depends_on:
+      - api
     networks:
       - public
     restart: unless-stopped
@@ -47,15 +47,13 @@ services:
     volumes:
       - api_static:/vol/web/static/
       - api_media:/vol/web/media/
+    env_file:
+      - ./api/.env
     develop:
       watch:
         - action: sync
           path: ./app
           target: /app
-    env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
     depends_on:
       - db
     networks:
@@ -69,9 +67,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
-      - .env.base
-      - .env.prod
-      - .env.local
+      - ./db/.env
     networks:
       - private
     restart: unless-stopped
