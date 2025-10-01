@@ -3,10 +3,10 @@ set -e
 
 DOCKER_USERNAME="webcorvus"
 IMAGES=(
-  "webcorvus/school-secretary-test:latest"
-  "webcorvus/school-secretary-proxy:latest"
-  "webcorvus/school-secretary-app:latest"
   "webcorvus/school-secretary-api:latest"
+  "webcorvus/school-secretary-app:latest"
+  "webcorvus/school-secretary-db:latest"
+  "webcorvus/school-secretary-proxy:latest"
 )
 
 echo "Subindo containers com Docker Compose..."

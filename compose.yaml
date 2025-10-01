@@ -62,7 +62,8 @@ services:
     restart: unless-stopped
 
   db:
-    image: postgres:16-alpine
+    build: ./db
+    image: webcorvus/school-secretary-db:latest
     container_name: school-secretary-db
     volumes:
       - db_data:/var/lib/postgresql/data/
