@@ -81,7 +81,6 @@ services:
 
   db:
     build: ./db
-    image: webcorvus/school-secretary-db:latest
     container_name: test-school-secretary-db
     volumes:
       - test_db_data:/var/lib/postgresql/data/
