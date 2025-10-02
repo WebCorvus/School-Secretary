@@ -52,7 +52,9 @@ services:
       start_period: 30s
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.test
     container_name: test-school-secretary-api
     command: sh -c "python manage.py collectstatic --noinput && \
       python manage.py makemigrations && \

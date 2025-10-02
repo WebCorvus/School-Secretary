@@ -9,20 +9,16 @@ IMAGES=(
   "webcorvus/school-secretary-proxy:latest"
 )
 
-echo "Subindo containers com Docker Compose..."
-docker compose up --build -d
+./scripts/start.sh
 
 sleep 5
 
-echo "Fazendo login no Docker Hub..."
+echo "Logging on Docker Hub..."
 docker login
 
 for IMAGE in "${IMAGES[@]}"; do
-  echo "Publicando $IMAGE no Docker Hub..."
+  echo "Publishing $IMAGE on Docker Hub..."
   docker push "$IMAGE"
 done
 
-echo "Parando containers..."
-docker compose down
-
-echo "Processo concluído com sucesso!"
+echo "Proccess Finished!"
