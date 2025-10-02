@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { UserProps, FakeUser } from "@/types/user";
-import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useUser() {
 	const [data, setData] = useState<UserProps | null>(null);
@@ -17,9 +17,7 @@ export function useUser() {
 		setError(null);
 
 		try {
-			const response = await api.get<UserProps>(
-				`${EXTERNAL_API_HOST}${USERS_INFO_ROUTE}`
-			);
+			const response = await api.get<UserProps>(`${ROUTES.USER_INFO}`);
 			const payload = response.data || null;
 
 			if (process.env.NODE_ENV === "development" && !payload) {

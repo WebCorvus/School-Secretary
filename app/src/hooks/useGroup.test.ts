@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useGroups } from "./useGroup";
 import api from "@/services/api";
 import { createFakeGroup } from "@/types/group";
-import { GROUP_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useGroups", () => {
 
 		expect(result.current.groups).toEqual(mockGroups);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/school/groups/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.GROUPS);
 	});
 
 	it("should handle API error in development by returning mock groups", async () => {

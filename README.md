@@ -136,11 +136,9 @@ E como são utilizadas em um componente do frontend (ex: `app/src/hooks/useEvent
 
 ```ts
 // app/src/hooks/useEvent.ts
-import { EXTERNAL_API_HOST, EVENTS_ROUTE } from "@/config";
+import { EVENTS_ROUTE } from "@/config";
 // ...
-const response = await api.get<EventProps[]>(
-	`${EXTERNAL_API_HOST}${EVENTS_ROUTE}`
-);
+const response = await api.get<EventProps[]>(`${EVENTS_ROUTE}`);
 // ...
 ```
 
@@ -668,12 +666,10 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
     ```ts
     // app/src/hooks/useEvent.ts
     import api from "@/services/api";
-    import { EXTERNAL_API_HOST, EVENTS_ROUTE } from "@/config";
+    import { EVENTS_ROUTE } from "@/config";
 
     // ...
-    const response = await api.get<EventProps[]>(
-    	`${EXTERNAL_API_HOST}${EVENTS_ROUTE}`
-    );
+    const response = await api.get<EventProps[]>(`${EVENTS_ROUTE}`);
     // ...
     ```
 

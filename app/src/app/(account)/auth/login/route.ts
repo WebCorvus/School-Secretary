@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import api from "@/services/api";
 import { setCookie } from "cookies-next";
-import { LOGIN_ROUTE } from "@/config";
+import { ROUTES_INTERNAL } from "@/config";
 
-const DJANGO_LOGIN_URL = process.env.INTERNAL_DJANGO_API_URL + LOGIN_ROUTE;
+const DJANGO_LOGIN_URL = ROUTES_INTERNAL.LOGIN;
 
 export async function POST(req: NextRequest) {
 	try {

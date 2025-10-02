@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { ProfessorProps, FakeProfessor } from "@/types/professor";
-import { EXTERNAL_API_HOST, PROFESSORS_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useProfessor() {
 	const [data, setData] = useState<ProfessorProps | null>(null);
@@ -18,7 +18,7 @@ export function useProfessor() {
 
 		try {
 			const response = await api.get<ProfessorProps>(
-				`${EXTERNAL_API_HOST}${PROFESSORS_ROUTE}`
+				`${ROUTES.PROFESSORS}`
 			);
 			const payload = response.data || null;
 

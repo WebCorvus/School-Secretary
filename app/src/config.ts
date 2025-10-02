@@ -1,24 +1,57 @@
-export const EXTERNAL_API_HOST = "/api/";
-export const INTERNAL_API_HOST = "http://api:8000/";
+const API_BASE = process.env.NEXT_PUBLIC_API_HOST || "/api/";
+const API_INTERNAL_BASE =
+	process.env.NEXT_PUBLIC_INTERNAL_API_HOST || "http://api:8000/api/";
 
-export const ADMIN_ROUTE = "admin/";
+const paths = {
+	ADMIN: "admin/",
+	USERS: "users/",
+	STUDENTS: "students/",
+	SCHOOL: "school/",
+};
 
-export const USERS_ROUTE = "users/";
-export const USERS_INFO_ROUTE = USERS_ROUTE + "me/";
-export const LOGIN_ROUTE = USERS_ROUTE + "token/";
-export const REFRESH_ROUTE = USERS_ROUTE + "token/refresh/";
+const subPaths = {
+	// USERS
+	USER_INFO: "me/",
+	LOGIN: "token/",
+	REFRESH: "token/refresh/",
 
-export const STUDENT_ROUTE = "students/";
+	// SCHOOL
+	GROUPS: "groups/",
+	ITINERARIES: "itineraries/",
+	LESSONS: "lessons/",
+	PROFESSORS: "professors/",
+	SUBJECTS: "subjects/",
+	AGENDA: "agenda/",
+	AGENDA_PENDENTS: "agenda/pendents/",
+	EVENTS: "events/",
+	EVENTS_PENDENTS: "events/pendents/",
+};
 
-export const SCHOOL_ROUTE = "school/";
-export const GROUP_ROUTE = SCHOOL_ROUTE + "groups/";
-export const ITINERARY_ROUTE = SCHOOL_ROUTE + "itineraries/";
-export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
-export const PROFESSORS_ROUTE = SCHOOL_ROUTE + "professors/";
-export const SUBJECT_ROUTE = SCHOOL_ROUTE + "subjects/";
+function makeRoutes(base: string) {
+	const routes: Record<string, string> = {};
 
-export const AGENDA_ROUTE = SCHOOL_ROUTE + "agenda/";
-export const AGENDA_PENDENTS_ROUTE = AGENDA_ROUTE + "pendents/";
+	(Object.keys(paths) as Array<keyof typeof paths>).forEach((key) => {
+		routes[key] = `${base}${paths[key]}`;
+	});
 
-export const EVENTS_ROUTE = SCHOOL_ROUTE + "events/";
-export const EVENTS_PENDENTS_ROUTE = EVENTS_ROUTE + "pendents/";
+	// USERS
+	routes.USER_INFO = `${routes.USERS}${subPaths.USER_INFO}`;
+	routes.LOGIN = `${routes.USERS}${subPaths.LOGIN}`;
+	routes.REFRESH = `${routes.USERS}${subPaths.REFRESH}`;
+
+	// SCHOOL
+	routes.GROUPS = `${routes.SCHOOL}${subPaths.GROUPS}`;
+	routes.ITINERARIES = `${routes.SCHOOL}${subPaths.ITINERARIES}`;
+	routes.LESSONS = `${routes.SCHOOL}${subPaths.LESSONS}`;
+	routes.PROFESSORS = `${routes.SCHOOL}${subPaths.PROFESSORS}`;
+	routes.SUBJECTS = `${routes.SCHOOL}${subPaths.SUBJECTS}`;
+	routes.AGENDA = `${routes.SCHOOL}${subPaths.AGENDA}`;
+	routes.AGENDA_PENDENTS = `${routes.SCHOOL}${subPaths.AGENDA_PENDENTS}`;
+	routes.EVENTS = `${routes.SCHOOL}${subPaths.EVENTS}`;
+	routes.EVENTS_PENDENTS = `${routes.SCHOOL}${subPaths.EVENTS_PENDENTS}`;
+
+	return routes;
+}
+
+export const ROUTES = makeRoutes(API_BASE);
+export const ROUTES_INTERNAL = makeRoutes(API_INTERNAL_BASE);

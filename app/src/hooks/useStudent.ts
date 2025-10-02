@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { StudentProps, FakeStudent } from "@/types/student";
-import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useStudent() {
 	const [data, setData] = useState<StudentProps | null>(null);
@@ -17,9 +17,7 @@ export function useStudent() {
 		setError(null);
 
 		try {
-			const response = await api.get<StudentProps>(
-				`${EXTERNAL_API_HOST}${USERS_INFO_ROUTE}`
-			);
+			const response = await api.get<StudentProps>(`${ROUTES.USER_INFO}`);
 			const payload = response.data || null;
 
 			if (process.env.NODE_ENV === "development" && !payload) {

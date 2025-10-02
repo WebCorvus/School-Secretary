@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useStudent } from "./useStudent";
 import api from "@/services/api";
 import { FakeStudent, createFakeStudent } from "@/types/student";
-import { USERS_INFO_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useStudent", () => {
 
 		expect(result.current.data).toEqual(mockStudent);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/users/me/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.USER_INFO);
 	});
 
 	it("should handle API error in development by returning FakeStudent", async () => {

@@ -15,7 +15,7 @@ import { NavSecondary } from "@/components/NavSecondary";
 
 import { Home, Inbox } from "lucide-react";
 
-import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 import { Button } from "../ui/button";
 import { logout } from "@/services/auth";
 import { useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ const data = {
 				},
 				{
 					title: "Painel administrativo",
-					url: `${EXTERNAL_API_HOST}${ADMIN_ROUTE}`,
+					url: `${ROUTES.ADMIN}`,
 				},
 			],
 		},
