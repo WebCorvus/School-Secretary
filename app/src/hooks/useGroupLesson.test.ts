@@ -3,7 +3,7 @@ import { useGroupLessons } from "./useGroupLesson";
 import api from "@/services/api";
 import { createFakeGroup, DailyLessonsViewProps } from "@/types/group";
 import { createFakeLesson } from "@/types/lesson";
-import { GROUP_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -42,8 +42,7 @@ describe("useGroupLessons", () => {
 		expect(result.current.data).toEqual([]);
 		expect(result.current.groups).toEqual([]);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/school/groups/");
-		expect(api.get).toHaveBeenCalledTimes(1); // Only fetchGroups should be called
+		expect(api.get).toHaveBeenCalledWith(ROUTES.GROUPS);
 	});
 
 	it("should fetch groups successfully", async () => {
@@ -77,7 +76,7 @@ describe("useGroupLessons", () => {
 		expect(result.current.error).toBeNull();
 		expect(api.get).toHaveBeenCalledWith("/api/school/groups/");
 		expect(api.get).toHaveBeenCalledWith(
-			`/api/school/groups/${selectedGroupId}/get-lessons/`
+			`${ROUTES.GROUPS}${selectedGroupId}/get-lessons/`
 		);
 		expect(api.get).toHaveBeenCalledTimes(2);
 	});

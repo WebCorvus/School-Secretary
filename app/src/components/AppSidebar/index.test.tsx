@@ -8,7 +8,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { logout } from "@/services/auth";
 
-import { EXTERNAL_API_HOST, ADMIN_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 const mockPush = vi.fn();
 vi.mock("next/navigation", () => ({
@@ -79,10 +79,7 @@ describe("AppSidebar", () => {
 		const adminLink = screen.getByRole("link", {
 			name: /Painel administrativo/i,
 		});
-		expect(adminLink).toHaveAttribute(
-			"href",
-			`${EXTERNAL_API_HOST}${ADMIN_ROUTE}`
-		);
+		expect(adminLink).toHaveAttribute("href", `${ROUTES.ADMIN}`);
 	});
 
 	it('deve chamar a função de logout e redirecionar para a página inicial ao clicar no botão "Logout"', async () => {

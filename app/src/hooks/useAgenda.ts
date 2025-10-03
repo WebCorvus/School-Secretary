@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { AgendaItemProps, FakeAgendaItem } from "@/types/agendaItem";
-import { EXTERNAL_API_HOST, AGENDA_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useAgenda() {
 	const [data, setData] = useState<AgendaItemProps[]>([]);
@@ -21,9 +21,7 @@ export function useAgenda() {
 		setError(null);
 
 		try {
-			const response = await api.get(
-				`${EXTERNAL_API_HOST}${AGENDA_ROUTE}`
-			);
+			const response = await api.get(`${ROUTES.AGENDA}`);
 			let payload = Array.isArray(response.data) ? response.data : [];
 
 			if (

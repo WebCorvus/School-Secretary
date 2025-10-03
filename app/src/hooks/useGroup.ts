@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { GroupProps, FakeGroup } from "@/types/group";
-import { EXTERNAL_API_HOST, GROUP_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useGroups() {
 	const [groups, setGroups] = useState<GroupProps[]>([]);
@@ -22,9 +22,7 @@ export function useGroups() {
 		setError(null);
 
 		try {
-			const response = await api.get<GroupProps[]>(
-				`${EXTERNAL_API_HOST}${GROUP_ROUTE}`
-			);
+			const response = await api.get<GroupProps[]>(`${ROUTES.GROUPS}`);
 			let payload = response.data;
 
 			if (

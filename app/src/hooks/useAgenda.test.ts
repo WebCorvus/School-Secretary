@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useAgenda } from "./useAgenda";
 import api from "@/services/api";
 import { createFakeAgendaItem } from "@/types/agendaItem";
-import { AGENDA_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useAgenda", () => {
 
 		expect(result.current.data).toEqual(mockAgenda);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/school/agenda/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.AGENDA);
 	});
 
 	it("should handle API error in development by returning mock agenda", async () => {

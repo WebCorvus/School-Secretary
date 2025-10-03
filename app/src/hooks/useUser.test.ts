@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useUser } from "./useUser";
 import api from "@/services/api";
 import { FakeUser, createFakeUser } from "@/types/user";
-import { EXTERNAL_API_HOST, USERS_INFO_ROUTE } from "@/config"; // Import directly
+import { ROUTES } from "@/config"; // Import directly
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useUser", () => {
 
 		expect(result.current.data).toEqual(mockUser);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/users/me/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.USER_INFO);
 	});
 
 	it("should handle API error in development by returning FakeUser", async () => {

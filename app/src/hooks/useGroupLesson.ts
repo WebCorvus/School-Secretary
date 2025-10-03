@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { GroupProps, DailyLessonsViewProps } from "@/types/group";
 import { FakeLesson } from "@/types/lesson";
-import { EXTERNAL_API_HOST, GROUP_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 const generateMockGroupLessons = (): DailyLessonsViewProps[] => {
 	return Array.from({ length: 5 }, (_, dayIndex) => ({
@@ -22,9 +22,7 @@ export function useGroupLessons(selectedGroup?: number) {
 
 	const fetchGroups = useCallback(async () => {
 		try {
-			const response = await api.get<GroupProps[]>(
-				`${EXTERNAL_API_HOST}${GROUP_ROUTE}`
-			);
+			const response = await api.get<GroupProps[]>(`${ROUTES.GROUPS}`);
 			setGroups(response.data);
 		} catch {
 			if (process.env.NODE_ENV === "development") {
@@ -43,7 +41,7 @@ export function useGroupLessons(selectedGroup?: number) {
 
 		try {
 			const response = await api.get<DailyLessonsViewProps[]>(
-				`${EXTERNAL_API_HOST}${GROUP_ROUTE}${selectedGroup}/get-lessons/`
+				`${ROUTES.GROUPS}${selectedGroup}/get-lessons/`
 			);
 			let payload = response.data;
 

@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useEvent } from "./useEvent";
 import api from "@/services/api";
 import { createFakeEvent } from "@/types/event";
-import { EVENTS_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useEvent", () => {
 
 		expect(result.current.data).toEqual(mockEvents);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/school/events/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.EVENTS);
 	});
 
 	it("should handle API error in development by returning mock events", async () => {

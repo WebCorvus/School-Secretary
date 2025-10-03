@@ -3,10 +3,10 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - master
+      - "**"
   pull_request:
     branches:
-      - master
+      - "**"
 
 jobs:
   build_and_test:
@@ -16,22 +16,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Build Docker Images
-        run: docker compose -f compose.test.yaml build
+      - name: Generate .env files
+        run: |
+          cat ./api/.env.example > ./api/.env
+          cat ./app/.env.example > ./app/.env
+          cat ./db/.env.example > ./db/.env
+          cat ./proxy/.env.example > ./proxy/.env
 
-      - name: Start Services and Wait for Health
-        run: docker compose -f compose.test.yaml up -d --wait
-
-      - name: Run Django Tests
-        run: docker compose -f compose.test.yaml exec -T api python manage.py test
-
-      - name: Run Next.js Tests
-        run: docker compose -f compose.test.yaml exec -T app npm run test
-
-      - name: Show Logs (optional for debugging)
-        if: always()
-        run: docker compose -f compose.test.yaml logs
-
-      - name: Cleanup Containers
-        if: always()
-        run: docker compose -f compose.test.yaml down -v
+      - name: Executing test script
+        run: bash ./scripts/test.sh

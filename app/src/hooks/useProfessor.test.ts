@@ -2,7 +2,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { useProfessor } from "./useProfessor";
 import api from "@/services/api";
 import { FakeProfessor, createFakeProfessor } from "@/types/professor";
-import { PROFESSORS_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 // Mock the API service
 vi.mock("@/services/api");
@@ -38,7 +38,7 @@ describe("useProfessor", () => {
 
 		expect(result.current.data).toEqual(mockProfessor);
 		expect(result.current.error).toBeNull();
-		expect(api.get).toHaveBeenCalledWith("/api/school/professors/");
+		expect(api.get).toHaveBeenCalledWith(ROUTES.PROFESSORS);
 	});
 
 	it("should handle API error in development by returning FakeProfessor", async () => {

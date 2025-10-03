@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/services/api";
 import { EventProps, FakeEvent } from "@/types/event";
-import { EXTERNAL_API_HOST, EVENTS_ROUTE } from "@/config";
+import { ROUTES } from "@/config";
 
 export function useEvent() {
 	const [data, setData] = useState<EventProps[]>([]);
@@ -22,9 +22,7 @@ export function useEvent() {
 		setError(null);
 
 		try {
-			const response = await api.get<EventProps[]>(
-				`${EXTERNAL_API_HOST}${EVENTS_ROUTE}`
-			);
+			const response = await api.get<EventProps[]>(`${ROUTES.EVENTS}`);
 			let payload = Array.isArray(response.data) ? response.data : [];
 
 			if (

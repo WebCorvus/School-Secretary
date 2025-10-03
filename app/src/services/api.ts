@@ -1,9 +1,5 @@
 import axios from "axios";
 import { getCookie, setCookie } from "cookies-next";
-import { REFRESH_ROUTE } from "@/config";
-import { toast } from "sonner";
-
-const DJANGO_REFRESH_URL = process.env.INTERNAL_DJANGO_API_URL + REFRESH_ROUTE;
 
 const api = axios.create();
 
