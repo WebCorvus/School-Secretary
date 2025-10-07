@@ -1,3 +1,7 @@
+# uv #
+uv.lock
+dist
+
 # Django #
 *.log
 *.pot

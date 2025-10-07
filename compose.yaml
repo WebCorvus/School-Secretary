@@ -42,19 +42,15 @@ services:
     healthcheck:
       test:
         ["CMD-SHELL", "curl -sf http://localhost:3000/healthcheck || exit 1"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 10
-      start_period: 100s
+      start_period: 30s
 
   api:
     build: ./api
     image: webcorvus/school-secretary-api:latest
     container_name: school-secretary-api
-    command: sh -c "python manage.py collectstatic --noinput && \
-      python manage.py makemigrations && \
-      python manage.py migrate && \
-      gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - api_static:/vol/web/static/
       - api_media:/vol/web/media/
@@ -72,7 +68,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 30s
 
   db:
     build: ./db
