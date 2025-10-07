@@ -48,7 +48,7 @@ services:
         ["CMD-SHELL", "curl -sf http://localhost:3000/healthcheck || exit 1"]
       interval: 10s
       timeout: 10s
-      retries: 20
+      retries: 10
       start_period: 30s
 
   api:
@@ -56,10 +56,6 @@ services:
       context: ./api
       dockerfile: Dockerfile.test
     container_name: test-school-secretary-api
-    command: sh -c "python manage.py collectstatic --noinput && \
-      python manage.py makemigrations && \
-      python manage.py migrate && \
-      gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - test_api_static:/vol/web/static/
       - test_api_media:/vol/web/media/
@@ -77,7 +73,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 30s
 
   db:
     build: ./db

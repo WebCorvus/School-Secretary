@@ -1,5 +1,8 @@
 db.sqlite3
+dist
 media/*
 migrations/*
+.python-version
+.venv
 .env
 .env.example
