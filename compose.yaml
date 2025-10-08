@@ -28,7 +28,6 @@ services:
     build: ./app
     image: webcorvus/school-secretary-app:latest
     container_name: school-secretary-app
-    command: sh -c "node server.js"
     environment:
       - NODE_ENV=production
     env_file:
