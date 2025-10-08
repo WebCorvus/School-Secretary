@@ -22,18 +22,16 @@ RUN npm run build
 
 FROM base AS runner
 
-RUN apk add --no-cache libc6-compat
-RUN apk add --no-cache curl
+RUN apk add --no-cache libc6-compat curl
 
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN mkdir -p .next && chown nextjs:nodejs .next
 
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
