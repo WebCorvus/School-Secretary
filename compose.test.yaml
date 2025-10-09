@@ -4,9 +4,6 @@ services:
     container_name: test-school-secretary-proxy
     ports:
       - 8080:80
-    volumes:
-      - test_api_static:/vol/web/static/
-      - test_api_media:/vol/web/media/
     env_file:
       - ./proxy/.env
     depends_on:
@@ -54,9 +51,6 @@ services:
       context: ./api
       dockerfile: Dockerfile.test
     container_name: test-school-secretary-api
-    volumes:
-      - test_api_static:/vol/web/static/
-      - test_api_media:/vol/web/media/
     env_file:
       - ./api/.env
     depends_on:
@@ -98,7 +92,5 @@ networks:
 
 volumes:
   test_db_data:
-  test_api_static:
-  test_api_media:
   test_app_node_modules:
   test_app_next:
