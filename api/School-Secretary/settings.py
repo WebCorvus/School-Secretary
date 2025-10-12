@@ -54,6 +54,7 @@ AUTH_USER_MODEL = "users.User"
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get("CORS_ALLOW_ALL_ORIGINS", True))
 CORS_ALLOWED_ORIGINS = os.environ.get(
     "CORS_ALLOWED_ORIGINS", "http://127.0.0.1,https://127.0.0.1"
@@ -156,11 +158,15 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
     "https://localhost:8000,https://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8000,https://potential-eureka-4xpgjr6x9vrf77q7-8080.app.github.dev",
 ).split(",")
 
-STATIC_URL = "static/"
-STATIC_ROOT = "/vol/web/static/"
+FORCE_SCRIPT_NAME = os.environ.get("SCRIPT_NAME", "/")
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = "/vol/web/media/"
+STATIC_URL = f"{FORCE_SCRIPT_NAME.rstrip('/')}/static/"
+MEDIA_URL = f"{FORCE_SCRIPT_NAME.rstrip('/')}/media/"
+
+STATIC_ROOT = BASE_DIR / "static"
+MEDIA_ROOT = BASE_DIR / "media"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
