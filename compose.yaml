@@ -5,9 +5,6 @@ services:
     container_name: school-secretary-proxy
     ports:
       - 8080:80
-    volumes:
-      - api_static:/vol/web/static/
-      - api_media:/vol/web/media/
     env_file:
       - ./proxy/.env
     depends_on:
@@ -28,7 +25,6 @@ services:
     build: ./app
     image: webcorvus/school-secretary-app:latest
     container_name: school-secretary-app
-    command: sh -c "node server.js"
     environment:
       - NODE_ENV=production
     env_file:
@@ -51,9 +47,6 @@ services:
     build: ./api
     image: webcorvus/school-secretary-api:latest
     container_name: school-secretary-api
-    volumes:
-      - api_static:/vol/web/static/
-      - api_media:/vol/web/media/
     env_file:
       - ./api/.env
     depends_on:
@@ -96,5 +89,3 @@ networks:
 
 volumes:
   db_data:
-  api_static:
-  api_media:

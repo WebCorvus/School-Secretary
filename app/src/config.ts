@@ -1,6 +1,6 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_HOST || "/api/";
+const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || "/api/";
 const API_INTERNAL_BASE =
-	process.env.NEXT_PUBLIC_INTERNAL_API_HOST || "http://api:8000/api/";
+	process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
 
 const paths = {
 	ADMIN: "admin/",

@@ -1,14 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-echo "---Building Containers---"
+echo "--- Building Containers ---"
 docker compose build
 
-echo "---Starting Containers---"
+echo "--- Starting Containers ---"
 docker compose up -d --wait
 
-echo "---Showing Logs---"
+echo "--- Showing Logs ---"
 docker compose logs
 
-echo "---All Services are up and healthy---"
+echo "--- All Services are up and healthy ---"
