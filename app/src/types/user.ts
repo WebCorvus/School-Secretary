@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { StudentProps, createFakeStudent } from "./student";
-import { GuardianProps, createFakeGuardian } from "./guardian";
-import { ProfessorProps, createFakeProfessor } from "./professor";
+import { GuardianProps } from "./guardian";
+import { ProfessorProps } from "./professor";
 
 export const UserRole = {
 	STUDENT: "STUDENT",
@@ -32,13 +32,13 @@ export type UserPostProps = Omit<
 };
 
 export function createFakeUser(): UserProps {
-	// const userRole = faker.helpers.arrayElement([
-	// 	"STUDENT",
-	// 	"GUARDIAN",
-	// 	"PROFESSOR",
-	// 	"STAFF",
-	// 	"SUPERUSER",
-	// ]);
+	const userRole = faker.helpers.arrayElement([
+		"STUDENT",
+		"GUARDIAN",
+		"PROFESSOR",
+		"STAFF",
+		"SUPERUSER",
+	]);
 
 	// let profile_details:
 	// 	| StudentProps
@@ -60,14 +60,7 @@ export function createFakeUser(): UserProps {
 	// 		profile_details = undefined;
 	// }
 
-	const profile_details = createFakeProfessor();
-	const userRole = faker.helpers.arrayElement([
-		"STUDENT",
-		"GUARDIAN",
-		"PROFESSOR",
-		"STAFF",
-		"SUPERUSER",
-	]);
+	const profile_details = createFakeStudent();
 
 	return {
 		id: faker.number.int(),
