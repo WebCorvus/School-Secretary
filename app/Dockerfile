@@ -5,9 +5,9 @@ FROM base AS deps
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci
 
 
 FROM base AS builder
