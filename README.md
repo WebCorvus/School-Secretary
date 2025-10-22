@@ -111,114 +111,26 @@ O APP utiliza NextJS, um framework web, utilizado na construção dos componente
 
 ### Configurações dos Endpoints
 
-As configurações dos endpoints da API são definidas em [`config.ts`](./app/src/config.ts). Anteriormente, as URLs completas eram construídas diretamente neste arquivo. Agora, para maior flexibilidade e clareza, as constantes exportadas representam apenas as **rotas relativas** (`_ROUTE`) para os endpoints da API.
+As configurações dos endpoints da API são definidas em [`config.ts`](./app/src/config.ts).
 
-A concatenação com o host base da API (`EXTERNAL_API_HOST` ou `INTERNAL_API_HOST`) é realizada no ponto de uso, geralmente nas chamadas `axios` dentro dos componentes ou serviços do frontend.
+Uma concatenação com o host base da API é realizada no para gerar os objectos `ROUTES` e `ROUTES_INTERNAL` que guardam as rotas.
 
--   `EXTERNAL_API_HOST`: Define o prefixo para chamadas de API que são roteadas externamente, geralmente via Nginx `/api/`.
--   `INTERNAL_API_HOST`: Define o endereço interno direto para o serviço da API (e.g., `http://api:8000/`), usado em contextos específicos onde a comunicação direta é necessária (como em rotas de API do Next.js que atuam como proxy).
-
-Exemplo de como as rotas são definidas em [`config.ts`](./app/src/config.ts):
+Para definir a rota da API é usando:
 
 ```ts
 // app/src/config.ts
-. . .
-export const ITINERARY_ROUTE = SCHOOL_ROUTE + "itineraries/";
-export const STUDENT_ROUTE = "students/";
-export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
-. . .
+const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || "/api/";
+const API_INTERNAL_BASE =
+	process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
 ```
 
-E como são utilizadas em um componente do frontend (ex: [`useEvent.ts`](./app/src/hooks/useEvent.ts)):
+Exemplo de como as rotas são acessadas de [`config.ts`](./app/src/config.ts):
 
 ```ts
 // app/src/hooks/useEvent.ts
-import { EVENTS_ROUTE } from "@/config";
-// ...
-const response = await api.get<EventProps[]>(`${EVENTS_ROUTE}`);
-// ...
-```
-
-### Componentes
-
-São blocos de código que podem ser utilizados em diversas páginas, ou seja, são focado em reutilização.
-
-Todos ficam em [`src/components/`](./app/src/components/).
-
-### Páginas
-
-As páginas são o bloco de código que sintetiza o que será exibido na tela.
-
-No caso do NextJS elas são exibidas como children, com base no layout
-
-```ts
-// app/src/app/layout.tsx
-export default function RootLayout({
-	children,
-}: Readonly<{ children: React.ReactNode }>) {
-	return (
-		<html lang="pt-br" suppressHydrationWarning>
-			<body className={`${inter.className} `}>
-				<ThemeProvider>
-					<SidebarProvider>
-						<AppSidebar />
-						<SidebarInset>
-							<SiteHeader />
-							<main className="flex flex-1 flex-col gap-4 p-4">
-								{children}
-							</main>
-							<Toaster />
-						</SidebarInset>
-					</SidebarProvider>
-				</ThemeProvider>
-			</body>
-		</html>
-	);
-}
-```
-
-onde há a presença de alguns componenentes também, os quais serão exibidos em todas as rotas (todas as páginas).
-
-As próprias páginas são criadas em [`src/app`](./app/src/app/) e a estrutura de pastas, a partir desse ponto, define automaticamente as rotas.
-
-```
-app/src/app
-│   favicon.ico
-│   globals.css
-│   layout.tsx
-│
-├───(account)
-│   ├───dashboard
-│   │   │   page.tsx
-│   │   └───add
-│   │           page.tsx
-│   └───auth
-│       ├───login
-│       │       route.ts
-│       └───logout
-│               route.ts
-│
-├───(annoucements)
-│   ├───events
-│   │       page.tsx
-│   └───lessons
-│           page.tsx
-│
-└───(marketing)
-    └───about
-            page.tsx
-```
-
-Considerando que as pastas cujo nome possui os parênteses são ignoradas e somente os `page.tsx` e `route.ts` marcam uma rota válida, as rotas são:
-
-```
-{BASE_URL}/dashboard/
-{BASE_URL}/dashboard/add/
-{BASE_URL}/auth/login/
-{BASE_URL}/auth/logout/
-{BASE_URL}/events/
-{BASE_URL}/lessons/
-{BASE_URL}/about/
+. . .
+const response = await api.get<EventProps[]>(`${ROUTES.EVENTS}`);
+let payload = Array.isArray(response.data) ? response.data : [];
 . . .
 ```
 
@@ -226,11 +138,7 @@ Considerando que as pastas cujo nome possui os parênteses são ignoradas e some
 
 ### URLs
 
-São a rota para acessar uma `ViewSet`.
-
-Devido ao uso de `ViewSet` - que cobram um sistema de roteamento mais complexo - nesse projeto usamos o `DefaultRouter`.
-
-As URLs de acesso de dados estão nos arquivos `api/{app}/urls.py`.
+São configurados usando o `DefaultRouter` do `rest_framework`
 
 ```py
 # api/school/urls.py
@@ -246,90 +154,71 @@ router.register(r"agenda", AgendaItemViewSet, basename="agendaitem")
 router.register(r"events", EventViewSet, basename="event")
 ```
 
-### ViewSet
-
-São uma pré-configuração (de um conjunto de `ViewSet`) de uma saída de dados do BD.
-
-Servem para lidar com diversos tipos de operação: `create`, `destroy`, `list`, `retrieve`, `update`, `partial_update`.
-
-Tais configurações estão em `api/{app}/views.py`.
-
-```py
-# api/school/views.py
-class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all().order_by("-start_date", "-start_time")
-    serializer_class = EventSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["title", "description", "location", "start_date"]
-```
-
 ### Serializers
 
-Os serializers são uma espécie de ponte entre entre dados externos da API (JSON) e internos do BD (objetos do BD).
+Estão nos arquivos `serializers.py` dentro de cada app.
 
-Nesse caso, serve para transformar, ou validar, dados de objetos de classes definidas em `api/{app}/models.py`.
-
-A seguir, serve para converter dados de objetos da classe Event (Evento), incluindo todos os campos do objeto.
+Há as versões padrão, como esta:
 
 ```py
-# api/school/serializers.py
-class EventSerializer(serializers.ModelSerializer):
+. . .
+class GroupSerializer(serializers.ModelSerializer):
+    itinerary_details = ItineraryCompactSerializer(source="itinerary", read_only=True)
+
     class Meta:
-        model = Event
+        model = Group
         fields = "__all__"
+. . .
 ```
 
-Depois disso, o serializer pode ser usado nas `ViewSet` (como visto anteriormente) ou da seguinte forma:
+e também suas respectivas verões compact, sem alguns atributos ou detalhes de outras classes:
 
 ```py
-from school.models import Event
-
-event = Event.objects.create(title="Reunião de Pais")
-serializer = EventSerializer(event)
-print(serializer.data)
-# Output: {'id': 1, 'title': 'Reunião de Pais', ...}
-
-data = {'title': 'Festa Junina'}
-serializer = EventSerializer(data=data)
-
-if serializer.is_valid():
-    event = serializer.save()
-    print(event)  # <Event: Festa Junina>
-else:
-    print(serializer.errors)
+. . .
+class GroupCompactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ["id", "short_name", "full_name"]
+. . .
 ```
+
+Siga esse padrão para evitar importações circulares.
 
 ### Viewset Functions
 
-Há funções em alguns serializers, que servem para propósitos específicos.
+Há funções em alguns serializers, que servem para propósitos específicos, as chamadas actions.
 
-No caso abaixo, serve para listar as aulas de uma turma, a URL usada é: `http://{BASE_URL}/school/groups/{OBJECT_PK}/get-lessons`.
+Quando dados relacionados a algum model forem extraídos, como as notas de um determinado aluno, é recomendável usar uma action:
 
 ```py
-# api/school/views.py
-    @action(detail=True, methods=["get"], url_path="get-lessons")
-    def get_lessons(self, request, pk=None):
-        group = self.get_object()
-        group_lessons = Lesson.objects.filter(group=group)
-        week_lessons = []
-
-        for day in range(7):
-            day_lessons = []
-            for time in range(LESSONS_PER_DAY):
-                lesson = group_lessons.filter(day=day, time=time + 1).first()
-                day_lessons.append(LessonSerializer(lesson).data if lesson else None)
-            week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
-
-        return Response(week_lessons)
+. . .
+class StudentViewSet(viewsets.ModelViewSet):
+    . . .
+    @action(detail=True, methods=["get"], url_path="download-grades")
+    def download_grades_pdf(self, request, pk=None):
+        student = self.get_object()
+        subjects = get_subject_names()
+        data = {}
+        for subject in subjects:
+            data[subject] = Grade.objects.filter(
+                student=student,
+                subject__full_name=subject,
+            )
+        return pdfgen(
+            "grades.html",
+            {"student": student, "data": data},
+            f"Grades_{student.full_name}.pdf",
+        )
+. . .
 ```
 
 ## Arquitetura do Banco de Dados
 
-O sistema de banco de dados utilizado é o PostgreSQL
+O sistema de banco de dados utilizado é o PostgreSQL. A estrutura e os dados do DB são controlados pelo Django.
 
 ### Configuração
 
-O PostgreSQL, é conectado ao Django por meio das configurações em `.env`, veja [`.env.example`](./db/.env.example) para ter uma ideia.
+O PostgreSQL, é conectado ao Django por meio das configurações nas `.env` de cada um, veja o [`.env.example`](./db/.env.example) do Postgres para ter uma ideia:
 
 ```
 # .env.example
@@ -341,7 +230,7 @@ POSTGRES_USER="postgres"
 SSL_CERT_DAYS="820". . .
 ```
 
-Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso no arquivo `.env`, grado pelo [`controller.sh`](./controller.sh).
+Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso no arquivo `.env`, gerado pelo [`controller.sh`](./controller.sh).
 
 ### Modelos
 
@@ -380,139 +269,39 @@ python manage.py migrate
 
 essa arquitetura é aplicada no banco de dados, criando as tabelas necessárias.
 
-### Preenchendo o BD
-
-Em diversos pontos do Frontend, um usuário autenticado, consegue fazer registros de determinados objetos.
-
-Entretanto, para colocar dados no BD utilizando o próprio `python` é necessário utilizar os modelos informados (após o migrate), criar os objetos com os dados e os salvar (necessário somente se não usar `create`).
-
-```py
-from school.models import Event
-
-event = Event.objects.create(
-    title="Festa Junina"
-)
-
-print(event.id)
-```
-
-Os dados são salvos de forma persistente dentro do sistema do Docker, ou seja, mesmo excluindo os conteineres eles serão mantidos.
-
-```yaml
-# compose.yaml
-volumes:
-    - db_data:/var/lib/postgresql/data/
-```
-
-```yaml
-# compose.yaml
-volumes:
-    db_data:
-```
-
 ## Proxy Reverso (Nginx)
 
-O Nginx atua como um proxy reverso para a aplicação, direcionando as requisições do cliente para o serviço apropriado - app (frontend) ou api (backend). Ele também é responsável por servir arquivos estáticos e gerenciar o tráfego de rede de forma eficiente.
+O Nginx atua como um proxy reverso para a aplicação, lidando com as rotas de acesso à aplicação. Sua configuração fica em [`nginx.conf`](./proxy/nginx.conf), consulte para entender as rotas.
 
-A configuração do Nginx é definida no [`compose.yaml`](./compose.yaml) e no [`nginx.conf`](./proxy/nginx.conf).
-
-### Configuração no Docker Compose
-
-No[ `compose.yaml`](./compose.yaml), o serviço [`proxy`](./proxy/) é definido para construir a imagem do Nginx e expor a porta 8080 do host para a porta 80 do contêiner:
-
-```yaml
-# compose.yaml
-services:
-    proxy:
-        build: ./proxy
-        container_name: school-secretary-proxy
-        ports:
-            - "8080:80"
-        depends_on:
-            - api
-            - app
-        networks:
-            - public
-```
-
-### Configuração do Nginx (proxy/nginx.conf)
-
-O arquivo [`nginx.conf`](./proxy/nginx.conf) define como o Nginx roteia as requisições:
-
-```nginx
-# proxy/nginx.conf
-server {
-    listen 80;
-
-    location / {
-        proxy_pass http://app:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /api/ {
-        proxy_pass http://api:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
--   Requisições para a raiz (`/`) são encaminhadas para o serviço [`app`](./app/) (Next.js) na porta 3000.
--   Requisições para `/api/` são encaminhadas para o serviço [`api`](./api/) (Django) na porta 8000.
-
-Dessa forma, o usuário precisa de apenas uma URL (e também apenas uma porta) para ter toda a aplicação rodando. Uma vez que, o Nginx permite que tudo fique na rede interna do Docker e que pela rota seja feito acesso ao APP ou API na porta correta.
+Use-o para garantir o funcionamento local, com Docker Compose, do projeto. Em produção, algo diferente será usado.
 
 ## Servidor de Aplicação (Gunicorn)
 
-O Gunicorn (Green Unicorn) é um servidor de aplicação WSGI (Web Server Gateway Interface) para Python. Ele é utilizado para servir a aplicação Django, atuando como uma interface entre o Nginx e a aplicação.
+O Gunicorn (Green Unicorn) é um servidor de aplicação WSGI (Web Server Gateway Interface) para Python. Ele é utilizado para servir a aplicação Django, atuando como uma interface de acesso.
 
-### Funcionamento
+### Uso no projeto
 
-Enquanto o servidor de desenvolvimento do Django (`manage.py runserver`) é ideal para o desenvolvimento, ele não é robusto o suficiente para um ambiente de produção. O Gunicorn, por outro lado, é projetado para produção, gerenciando múltiplos processos de trabalho para lidar com requisições concorrentes de forma eficiente.
+O servidor de desenvolvimento do Django (`manage.py runserver`) é usado para desenvolvimento, mas não é robusto o suficiente para produção. O `gunicorn`, por outro lado, é projetado para produção, gerenciando múltiplos processos de trabalho para lidar com requisições concorrentes de forma eficiente.
 
-No [`compose.yaml`](./compose.yaml), o serviço da [`api`](./api/) é configurado para usar o Gunicorn para iniciar a aplicação Django:
+No [`api/entrypoint.sh`](./api/entrypoint.sh), o `gunicorn` é usado para esse fim:
 
-```yaml
-# compose.yaml
-services:
-    api:
-        build:
-            context: ./api
-        container_name: school-secretary-api
-        command: gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
-        volumes:
-            - ./api:/usr/src/app/
-            - static_volume:/usr/src/app/static
-        expose:
-            - 8000
-        env_file:
-            - .env.base
-            - .env.prod
-            - .env.local
-        depends_on:
-            - db
-        networks:
-            - public
+```bash
+# api/entrypoint.sh
+. . .
+echo "--- Running API with gunicorn ---"
+uv run gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
+. . .
 ```
 
-O comando `gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000` instrui o Gunicorn a:
-
--   Utilizar o arquivo de configuração WSGI da aplicação, localizado em [`api/School-Secretary/wsgi.py`](./api/School-Secretary/wsgi.py).
--   Disponibilizar a aplicação em todas as interfaces de rede (`0.0.0.0`) na porta `8000`.
-
-Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do contêiner da [`api`](./api/), onde o Gunicorn está escutando e gerenciando a aplicação Django.
+O comando acima instrui o `gunicorn` a servir a API nas interfaces da rede `0.0.0.0` na porta `8000`, tornando o Django acessível por lá.
 
 ## Sistema de Autenticação
 
 ### Backend
 
 -   A API fornece tokens JWT para autenticação.
--   Após o login, o Backend retorna os tokens `access` e `refresh`.
+-   O APP fornece so tokens como Bearer no header Authorization da comunicação HTTP.
+-   Após o login, o Backend retorna os tokens `access` e `refresh`, que o APP armazena em forma de cookies no navegador.
 
 Exemplo de endpoint de login:
 
@@ -522,131 +311,17 @@ POST /api/users/token/
 
 ### Frontend
 
--   O login é feito através da rota `/auth/login`, que envia as credenciais para o backend e armazena os tokens em cookies:
-
-```ts
-// app/src/app/(account)/auth/login/route.ts
-// ...
-const { access, refresh } = response.data;
-
-setCookie("access", access, {
-	req,
-	res,
-	path: "/",
-	sameSite: "lax",
-	maxAge: 60 * 60,
-});
-
-setCookie("refresh", refresh, {
-	req,
-	res,
-	httpOnly: true,
-	secure: process.env.NODE_ENV === "production",
-	path: "/",
-	sameSite: "lax",
-	maxAge: 60 * 60 * 24 * 30,
-});
-// ...
-```
-
+-   O login é feito através da rota `/auth/login`, criado pelo arquivo [`login.ts`](<./app/src/app/(account)/auth/login/route.ts>), que envia as credenciais para o backend e armazena os tokens em cookies:
 -   O middleware ([`middleware.ts`](./app/src/middleware.ts)) protege as rotas sensíveis:
+-   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo (salvo política de expiração configurada no Backend e limpeza de cache).
 
-```ts
-// app/src/middleware.ts
-import { NextResponse, NextRequest } from "next/server";
-
-const protectedRoutes = [
-	"/agenda",
-	"/dashboard",
-	"/events",
-	"/groups",
-	"/itineraries",
-	"/lessons",
-	"/subject",
-	"/professors",
-	"/students",
-];
-const loginRoute = "/";
-
-export function middleware(request: NextRequest) {
-	// ...
-	const isProtectedRoute = protectedRoutes.some((route) =>
-		pathname.startsWith(route)
-	);
-
-	if (isProtectedRoute && !accessToken) {
-		const loginUrl = new URL(loginRoute, request.url);
-		loginUrl.searchParams.set("from", pathname);
-		return NextResponse.redirect(loginUrl);
-	}
-
-	return NextResponse.next();
-}
-```
-
--   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo após fechar e abrir o navegador (salvo política de expiração configurada no Backend).
+Outros arquivos em [`auth/`](<./app/src/app/(account)/auth>) fazem coisas como [`logout`](<./app/src/app/(account)/auth/logout/route.ts>) e [`refresh`](<./app/src/app/(account)/auth/refresh/route.ts>)
 
 #### Gerenciamento de Requisições Autenticadas no Frontend
 
-Para garantir que todas as requisições à API Django sejam devidamente autenticadas e que o processo de renovação de tokens seja transparente para o desenvolvedor, foi implementada uma instância centralizada do `axios` com interceptadores.
+Para garantir autentificação das operações, foi implementada uma instância centralizada do `axios`.
 
-**A Solução: Instância `api` Centralizada ([`api.ts`](./app/src/services/api.ts))**
-Para resolver isso, foi criada uma instância customizada do `axios` em [`api.ts`](./app/src/services/api.ts). Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação:
-
-1.  **Interceptador de Requisição:** Antes de cada requisição ser enviada, ele verifica a presença de um token de acesso (JWT) nos cookies. Se encontrado, o token é anexado ao cabeçalho `Authorization` no formato `Bearer <token>`.
-2.  **Interceptador de Resposta:** Monitora as respostas da API. Se uma resposta `401 Unauthorized` for recebida (indicando que o token de acesso pode ter expirado), ele tenta obter um novo token de acesso através da rota de proxy `/auth/refresh`. Se a renovação for bem-sucedida, a requisição original é repetida com o novo token. Caso contrário, o erro é registrado no console.
-
-**Código da Instância `api`:**
-
-```ts
-// app/src/services/api.ts
-import axios from "axios";
-import { getCookie, setCookie } from "cookies-next";
-
-const api = axios.create();
-
-api.interceptors.request.use(
-	(config: any) => {
-		const token = getCookie("access");
-		if (token) {
-			if (!config.headers) config.headers = {};
-			config.headers.Authorization = `Bearer ${token}`;
-		}
-		return config;
-	},
-	(error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-	(response) => response,
-	async (error: any) => {
-		const originalRequest = error.config;
-
-		if (error.response?.status === 401 && !originalRequest._retry) {
-			originalRequest._retry = true;
-			try {
-				const response = await axios.post("/auth/refresh");
-				const { access } = response.data;
-
-				setCookie("access", access, { path: "/", sameSite: "lax" });
-
-				if (!originalRequest.headers) originalRequest.headers = {};
-				originalRequest.headers.Authorization = `Bearer ${access}`;
-
-				console.log("Token refreshed!");
-				return api(originalRequest);
-			} catch (refreshError) {
-				console.error("Refresh token failed", refreshError);
-				return Promise.reject(refreshError);
-			}
-		}
-
-		return Promise.reject(error);
-	}
-);
-
-export default api;
-```
+Tal instância está em [`api.ts`](./app/src/services/api.ts). Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação.
 
 **Processo de Uso:**
 Para utilizar essa instância e garantir a autenticação, os componentes e rotas de API do Next.js que interagem com a API Django devem seguir o seguinte padrão:
@@ -668,32 +343,25 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
     // ...
     ```
 
--   **Em uma Rota de API do Next.js (ex: [`route.ts`](<app/src/app/(account)/auth/login/route.ts>))**:
+-   **Em uma Rota de API do Next.js (ex: [`login/route.ts`](<app/src/app/(account)/auth/login/route.ts>))**:
 
     ```ts
     // app/src/app/(account)/auth/login/route.ts
-    import api from "@/services/api";
-    import { LOGIN_ROUTE } from "@/config";
+    const { email, password } = await req.json();
 
-    const DJANGO_LOGIN_URL = process.env.INTERNAL_DJANGO_API_URL + LOGIN_ROUTE;
-
-    export async function POST(req: NextRequest) {
-    	// ...
-    	const response = await api.post(
-    		DJANGO_LOGIN_URL,
-    		{ email, password },
-    		{ headers: { "Content-Type": "application/json" } }
-    	);
-    	// ...
-    }
+    const response = await api.post(
+    	DJANGO_LOGIN_URL,
+    	{
+    		email,
+    		password,
+    	},
+    	{
+    		headers: {
+    			"Content-Type": "application/json",
+    		},
+    	}
+    );
     ```
-
-**Benefícios desta Abordagem:**
-
--   **Autenticação Centralizada:** Garante que todos os tokens de acesso sejam incluídos automaticamente e que a lógica de renovação de tokens seja aplicada de forma consistente em toda a aplicação.
--   **Redução de Código Repetitivo:** Evita a necessidade de escrever manually a lógica de autenticação em cada chamada de API.
--   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em [`api.ts`](./app/src/services/api.ts), impactando toda a aplicação de forma transparente.
--   **Clareza e Padronização:** Promove um padrão claro para todas as interações com a API autenticada.
 
 ### Níveis de Acesso e Permissões
 
@@ -703,18 +371,34 @@ O sistema utiliza um modelo de controle de acesso baseado em papéis (Role-Based
 
 Existem quatro papéis definidos no sistema:
 
--   **`STUDENT`**: O nível de acesso mais básico. Pode visualizar informações públicas e seus próprios dados, mas não pode modificar dados de outros usuários ou acessar áreas restritas.
--   **`PROFESSOR`**: Pode gerenciar informações relacionadas às suas próprias turmas e alunos, como lançar notas e registrar presença.
--   **`STAFF`**: Possui acesso administrativo para gerenciar dados essenciais da escola, como cadastrar novos alunos, turmas e professores.
--   **`SUPERUSER`**: Possui acesso irrestrito a todo o sistema, incluindo a capacidade de gerenciar todos os outros usuários e configurações do sistema.
+-   **`STUDENT`**: O nível de acesso mais básico. Pode apenas visualizar informações públicas e, em parte, manipular seus próprios dados.
+-   **`GUARDIAN`**: Pode acessar tudo que o aluno acessa, apenas.
+-   **`PROFESSOR`**: Pode gerenciar informações relacionadas às suas próprias turmas e alunos.
+-   **`STAFF`**: Possui acesso administrativo, mas não pode criar outro `STAFF`.
+-   **`SUPERUSER`**: Possui acesso irrestrito a todo o sistema.
 
 #### Proteção de Endpoints
 
-A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, as ações relacionadas ao gerenciamento de alunos (`/api/students/`) são protegidas da seguinte forma:
+A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, o modelo de estudante possui a seguinte configuração:
 
--   **Listar, Visualizar, Criar, Atualizar e Deletar Alunos**: Acesso restrito a usuários com o papel `STAFF` ou `SUPERUSER`.
+```py
+    def get_permissions(self):
+        if self.action in [
+            "list",
+            "retrieve",
+            "download_grades_pdf",
+            "download_presence_pdf",
+            "academic_report",
+            "download_academic_report",
+            "students_needing_attention",
+        ]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+```
 
-Esta abordagem garante que um usuário `STUDENT`, por exemplo, não possa adicionar ou remover outros alunos do sistema, mesmo que consiga acessar a interface. A lógica de permissão é centralizada na API para garantir a segurança e a integridade dos dados.
+Que define a a permission com base na ação que será tomada.
 
 ### Estrutura do Usuário
 
@@ -722,73 +406,11 @@ O modelo de usuário (`User`) é a base do sistema de autenticação e autoriza�
 
 #### Modelo `User`
 
-Nosso modelo `User` é construído a partir de `AbstractBaseUser` e `PermissionsMixin`.
+O modelo de user foi construído a partir de `AbstractBaseUser` e `PermissionsMixin` e possui campos usados base para todos os usuários de todos os tipos. Depois, é linkado um perfil a esse usuário, com dados específicos de seu papel no sistema, se aplicável.
 
-```python
-# api/users/models.py
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.db import models
+#### Modelo `UserManager`
 
-class User(AbstractBaseUser, PermissionsMixin):
-    class Role(models.TextChoices):
-        STUDENT = "STUDENT", "Student"
-        PROFESSOR = "PROFESSOR", "Professor"
-        STAFF = "STAFF", "Staff"
-        SUPERUSER = "SUPERUSER", "Superuser"
-
-    email = models.EmailField(unique=True)
-    name = models.CharField(max_length=255)
-    role = models.CharField(max_length=50, choices=Role.choices, default=Role.STUDENT)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-
-    # ... (rest of the model, including __str__ and save methods) ...
-```
-
--   **`AbstractBaseUser`**: Fornece a implementação central de um modelo de usuário, incluindo senhas com hash e autenticação baseada em token. Ele não inclui campos relacionados a permissões.
--   **`PermissionsMixin`**: É uma classe mixin que adiciona campos e métodos relacionados a permissões ao modelo de usuário. Ao herdar de `PermissionsMixin`, nosso modelo `User` automaticamente ganha:
-    -   `is_superuser`: Um campo booleano que indica se o usuário tem todas as permissões sem ser explicitamente atribuído.
-    -   `groups`: Um campo Many-to-Many para gerenciar grupos de usuários.
-    -   `user_permissions`: Um campo Many-to-Many para gerenciar permissões individuais do usuário.
-    -   Métodos como `has_perm`, `has_module_perms`, etc., para verificação de permissões.
-
-Além desses, nosso modelo `User` inclui campos personalizados como `email` (usado como campo de nome de usuário), `name`, e `role` (para definir o papel do usuário no sistema: `STUDENT`, `PROFESSOR`, `STAFF`, `SUPERUSER`).
-
-#### `UserManager`
-
-O `UserManager` (definido em [`users/models.py`](./api/users/models.py)) é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
-
-```python
-# api/users/models.py
-from django.contrib.auth.models import BaseUserManager
-
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', self.model.Role.SUPERUSER)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-        if extra_fields.get('role') is not self.model.Role.SUPERUSER:
-            raise ValueError('Superuser must have role of Superuser.')
-
-        return self.create_user(email, password, **extra_fields)
-```
-
--   **Criação de Usuários**: Ele fornece métodos especializados como `create_user()` e `create_superuser()`. Esses métodos são cruciais porque o modelo de usuário personalizado não usa o campo `username` padrão do Django. O `UserManager` garante que os usuários sejam criados corretamente com `email` e `password`, e que os superusuários tenham os sinalizadores `is_staff` e `is_superuser` (e o `role` apropriado) definidos.
--   **`extra_fields`**: Nos métodos `create_user()` e `create_superuser()` do `UserManager`, o parâmetro `**extra_fields` permite que campos adicionais do modelo `User` (como `name` ou `role`) sejam passados durante a criação do usuário. Isso torna os métodos de criação flexíveis, permitindo que você defina quaisquer outros campos necessários para o seu modelo de usuário.
+O `UserManager` é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
 
 ## Autoria
 
