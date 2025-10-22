@@ -47,7 +47,7 @@ env_file:
 
 O Nginx atua como o ponto de entrada para todas as requisições, direcionando-as para a interface (Frontend) ou para a API (Backend).
 
-A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo `app/src/config.ts`.
+A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo [`config.ts`](./app/src/config.ts).
 
 Sendo assim, o trecho do Frontend a seguir, na página de eventos
 
@@ -92,7 +92,7 @@ export default function EventsPage() {
 }
 ```
 
-O hook `useEvent` se comunica, na URL `http://{BASE_URL}/api/school/events/`, com o trecho do Backend
+O hook [`useEvent`](./app/src/hooks/useEvent.ts) se comunica, na URL `http://{BASE_URL}/api/school/events/`, com o trecho do Backend
 
 ```py
 # api/school/views.py
@@ -103,7 +103,7 @@ class EventViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description", "location", "start_date"]
 ```
 
-e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em `EventsPage`.
+e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em [`EventsPage`](<./app/src/app/(annoucements)/events/page.tsx>).
 
 ## Arquitetura do APP
 
@@ -111,14 +111,14 @@ O APP utiliza NextJS, um framework web, utilizado na construção dos componente
 
 ### Configurações dos Endpoints
 
-As configurações dos endpoints da API são definidas em `app/src/config.ts`. Anteriormente, as URLs completas eram construídas diretamente neste arquivo. Agora, para maior flexibilidade e clareza, as constantes exportadas representam apenas as **rotas relativas** (`_ROUTE`) para os endpoints da API.
+As configurações dos endpoints da API são definidas em [`config.ts`](./app/src/config.ts). Anteriormente, as URLs completas eram construídas diretamente neste arquivo. Agora, para maior flexibilidade e clareza, as constantes exportadas representam apenas as **rotas relativas** (`_ROUTE`) para os endpoints da API.
 
 A concatenação com o host base da API (`EXTERNAL_API_HOST` ou `INTERNAL_API_HOST`) é realizada no ponto de uso, geralmente nas chamadas `axios` dentro dos componentes ou serviços do frontend.
 
--   `EXTERNAL_API_HOST`: Define o prefixo para chamadas de API que são roteadas externamente, geralmente via Nginx (`/api/`).
+-   `EXTERNAL_API_HOST`: Define o prefixo para chamadas de API que são roteadas externamente, geralmente via Nginx `/api/`.
 -   `INTERNAL_API_HOST`: Define o endereço interno direto para o serviço da API (e.g., `http://api:8000/`), usado em contextos específicos onde a comunicação direta é necessária (como em rotas de API do Next.js que atuam como proxy).
 
-Exemplo de como as rotas são definidas em `app/src/config.ts`:
+Exemplo de como as rotas são definidas em [`config.ts`](./app/src/config.ts):
 
 ```ts
 // app/src/config.ts
@@ -129,7 +129,7 @@ export const LESSON_ROUTE = SCHOOL_ROUTE + "lessons/";
 . . .
 ```
 
-E como são utilizadas em um componente do frontend (ex: `app/src/hooks/useEvent.ts`):
+E como são utilizadas em um componente do frontend (ex: [`useEvent.ts`](./app/src/hooks/useEvent.ts)):
 
 ```ts
 // app/src/hooks/useEvent.ts
@@ -143,7 +143,7 @@ const response = await api.get<EventProps[]>(`${EVENTS_ROUTE}`);
 
 São blocos de código que podem ser utilizados em diversas páginas, ou seja, são focado em reutilização.
 
-Todos ficam em `app/src/components/`
+Todos ficam em [`src/components/`](./app/src/components/).
 
 ### Páginas
 
@@ -179,7 +179,7 @@ export default function RootLayout({
 
 onde há a presença de alguns componenentes também, os quais serão exibidos em todas as rotas (todas as páginas).
 
-As próprias páginas são criadas em `app/src/app` e a estrutura de pastas, a partir desse ponto, define automaticamente as rotas.
+As próprias páginas são criadas em [`src/app`](./app/src/app/) e a estrutura de pastas, a partir desse ponto, define automaticamente as rotas.
 
 ```
 app/src/app
@@ -329,21 +329,19 @@ O sistema de banco de dados utilizado é o PostgreSQL
 
 ### Configuração
 
-O PostgreSQL, é conectado ao Django por meio das configurações em `.env.base`.
+O PostgreSQL, é conectado ao Django por meio das configurações em `.env`, veja [`.env.example`](./db/.env.example) para ter uma ideia.
 
 ```
-# .env.base
-DATABASE_ENGINE=postgresql_psycopg2
-DATABASE_ENGINE=postgresql_psycopg2
-DATABASE_NAME=school_secretary
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=123
-DATABASE_HOST=db
-DATABASE_PORT=1000
-. . .
+# .env.example
+PGDATA="/var/lib/postgresql/data/pgdata"
+PGPORT="5432"
+POSTGRES_DB="school_secretary"
+POSTGRES_PASSWORD="L0IYKNqlwTlxhW396BMNvgPp1p19oYwWR9r8mnzIDI0="
+POSTGRES_USER="postgres"
+SSL_CERT_DAYS="820". . .
 ```
 
-Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso em `.env.prod`.
+Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso no arquivo `.env`, grado pelo [`controller.sh`](./controller.sh).
 
 ### Modelos
 
@@ -416,11 +414,11 @@ volumes:
 
 O Nginx atua como um proxy reverso para a aplicação, direcionando as requisições do cliente para o serviço apropriado - app (frontend) ou api (backend). Ele também é responsável por servir arquivos estáticos e gerenciar o tráfego de rede de forma eficiente.
 
-A configuração do Nginx é definida no `compose.yaml` e no `proxy/nginx.conf`.
+A configuração do Nginx é definida no [`compose.yaml`](./compose.yaml) e no [`nginx.conf`](./proxy/nginx.conf).
 
 ### Configuração no Docker Compose
 
-No `compose.yaml`, o serviço `proxy` é definido para construir a imagem do Nginx e expor a porta 8080 do host para a porta 80 do contêiner:
+No[ `compose.yaml`](./compose.yaml), o serviço [`proxy`](./proxy/) é definido para construir a imagem do Nginx e expor a porta 8080 do host para a porta 80 do contêiner:
 
 ```yaml
 # compose.yaml
@@ -439,7 +437,7 @@ services:
 
 ### Configuração do Nginx (proxy/nginx.conf)
 
-O arquivo `proxy/nginx.conf` define como o Nginx roteia as requisições:
+O arquivo [`nginx.conf`](./proxy/nginx.conf) define como o Nginx roteia as requisições:
 
 ```nginx
 # proxy/nginx.conf
@@ -464,8 +462,8 @@ server {
 }
 ```
 
--   Requisições para a raiz (`/`) são encaminhadas para o serviço `app` (Next.js) na porta 3000.
--   Requisições para `/api/` são encaminhadas para o serviço `api` (Django) na porta 8000.
+-   Requisições para a raiz (`/`) são encaminhadas para o serviço [`app`](./app/) (Next.js) na porta 3000.
+-   Requisições para `/api/` são encaminhadas para o serviço [`api`](./api/) (Django) na porta 8000.
 
 Dessa forma, o usuário precisa de apenas uma URL (e também apenas uma porta) para ter toda a aplicação rodando. Uma vez que, o Nginx permite que tudo fique na rede interna do Docker e que pela rota seja feito acesso ao APP ou API na porta correta.
 
@@ -477,7 +475,7 @@ O Gunicorn (Green Unicorn) é um servidor de aplicação WSGI (Web Server Gatewa
 
 Enquanto o servidor de desenvolvimento do Django (`manage.py runserver`) é ideal para o desenvolvimento, ele não é robusto o suficiente para um ambiente de produção. O Gunicorn, por outro lado, é projetado para produção, gerenciando múltiplos processos de trabalho para lidar com requisições concorrentes de forma eficiente.
 
-No `compose.yaml`, o serviço da `api` é configurado para usar o Gunicorn para iniciar a aplicação Django:
+No [`compose.yaml`](./compose.yaml), o serviço da [`api`](./api/) é configurado para usar o Gunicorn para iniciar a aplicação Django:
 
 ```yaml
 # compose.yaml
@@ -504,10 +502,10 @@ services:
 
 O comando `gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000` instrui o Gunicorn a:
 
--   Utilizar o arquivo de configuração WSGI da aplicação, localizado em `api/School-Secretary/wsgi.py`.
+-   Utilizar o arquivo de configuração WSGI da aplicação, localizado em [`api/School-Secretary/wsgi.py`](./api/School-Secretary/wsgi.py).
 -   Disponibilizar a aplicação em todas as interfaces de rede (`0.0.0.0`) na porta `8000`.
 
-Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do contêiner da `api`, onde o Gunicorn está escutando e gerenciando a aplicação Django.
+Dessa forma, o Nginx pode encaminhar as requisições para a porta `8000` do contêiner da [`api`](./api/), onde o Gunicorn está escutando e gerenciando a aplicação Django.
 
 ## Sistema de Autenticação
 
@@ -551,7 +549,7 @@ setCookie("refresh", refresh, {
 // ...
 ```
 
--   O middleware (`middleware.ts`) protege as rotas sensíveis:
+-   O middleware ([`middleware.ts`](./app/src/middleware.ts)) protege as rotas sensíveis:
 
 ```ts
 // app/src/middleware.ts
@@ -592,8 +590,8 @@ export function middleware(request: NextRequest) {
 
 Para garantir que todas as requisições à API Django sejam devidamente autenticadas e que o processo de renovação de tokens seja transparente para o desenvolvedor, foi implementada uma instância centralizada do `axios` com interceptadores.
 
-**A Solução: Instância `api` Centralizada (`app/src/services/api.ts`)**
-Para resolver isso, foi criada uma instância customizada do `axios` em `app/src/services/api.ts`. Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação:
+**A Solução: Instância `api` Centralizada ([`api.ts`](./app/src/services/api.ts))**
+Para resolver isso, foi criada uma instância customizada do `axios` em [`api.ts`](./app/src/services/api.ts). Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação:
 
 1.  **Interceptador de Requisição:** Antes de cada requisição ser enviada, ele verifica a presença de um token de acesso (JWT) nos cookies. Se encontrado, o token é anexado ao cabeçalho `Authorization` no formato `Bearer <token>`.
 2.  **Interceptador de Resposta:** Monitora as respostas da API. Se uma resposta `401 Unauthorized` for recebida (indicando que o token de acesso pode ter expirado), ele tenta obter um novo token de acesso através da rota de proxy `/auth/refresh`. Se a renovação for bem-sucedida, a requisição original é repetida com o novo token. Caso contrário, o erro é registrado no console.
@@ -658,7 +656,7 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
 
 **Exemplos de Uso:**
 
--   **Em um Hook (ex: `app/src/hooks/useEvent.ts`)**:
+-   **Em um Hook (ex: [`useEvent.ts`](./app/src/hooks/useEvent.ts))**:
 
     ```ts
     // app/src/hooks/useEvent.ts
@@ -670,7 +668,7 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
     // ...
     ```
 
--   **Em uma Rota de API do Next.js (ex: `app/src/app/(account)/auth/login/route.ts`)**:
+-   **Em uma Rota de API do Next.js (ex: [`route.ts`](<app/src/app/(account)/auth/login/route.ts>))**:
 
     ```ts
     // app/src/app/(account)/auth/login/route.ts
@@ -694,7 +692,7 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
 
 -   **Autenticação Centralizada:** Garante que todos os tokens de acesso sejam incluídos automaticamente e que a lógica de renovação de tokens seja aplicada de forma consistente em toda a aplicação.
 -   **Redução de Código Repetitivo:** Evita a necessidade de escrever manually a lógica de autenticação em cada chamada de API.
--   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em `app/src/services/api.ts`, impactando toda a aplicação de forma transparente.
+-   **Manutenção Simplificada:** Alterações no mecanismo de autenticação (por exemplo, mudança de tipo de token, nova lógica de renovação) precisam ser feitas apenas em [`api.ts`](./app/src/services/api.ts), impactando toda a aplicação de forma transparente.
 -   **Clareza e Padronização:** Promove um padrão claro para todas as interações com a API autenticada.
 
 ### Níveis de Acesso e Permissões
@@ -720,7 +718,7 @@ Esta abordagem garante que um usuário `STUDENT`, por exemplo, não possa adicio
 
 ### Estrutura do Usuário
 
-O modelo de usuário (`User`) é a base do sistema de autenticação e autorização. Ele é definido em `api/users/models.py` e estende as funcionalidades padrão do Django para se adequar às necessidades específicas da aplicação.
+O modelo de usuário (`User`) é a base do sistema de autenticação e autorização. Ele é definido em [`users/models.py`](./api/users/models.py) e estende as funcionalidades padrão do Django para se adequar às necessidades específicas da aplicação.
 
 #### Modelo `User`
 
@@ -758,7 +756,7 @@ Além desses, nosso modelo `User` inclui campos personalizados como `email` (usa
 
 #### `UserManager`
 
-O `UserManager` (definido em `api/users/models.py`) é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
+O `UserManager` (definido em [`users/models.py`](./api/users/models.py)) é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
 
 ```python
 # api/users/models.py
