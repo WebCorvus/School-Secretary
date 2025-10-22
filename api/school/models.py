@@ -348,6 +348,15 @@ class Event(models.Model):
     )
     start_time = models.TimeField(verbose_name="Hora de início", blank=True, null=True)
     end_time = models.TimeField(verbose_name="Hora de término", blank=True, null=True)
+    allow_registration = models.BooleanField(
+        verbose_name="Permitir inscrição",
+        default=False,
+    )
+    max_participants = models.IntegerField(
+        verbose_name="Máximo de participantes",
+        null=True,
+        blank=True,
+    )
     created_at = models.DateTimeField(verbose_name="Criado em", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Atualizado em", auto_now=True)
 
@@ -358,3 +367,225 @@ class Event(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class EventRegistration(models.Model):
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        verbose_name="Evento",
+        related_name="registrations",
+    )
+    student = models.ForeignKey(
+        "students.Student",
+        on_delete=models.CASCADE,
+        verbose_name="Estudante",
+        related_name="event_registrations",
+    )
+    registration_date = models.DateTimeField(
+        verbose_name="Data de inscrição",
+        auto_now_add=True,
+    )
+
+    class Meta:
+        verbose_name = "Inscrição em Evento"
+        verbose_name_plural = "Inscrições em Eventos"
+        unique_together = ["event", "student"]
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.event.title}"
+
+
+RESOURCE_TYPE_CHOICES = [
+    ("COMPUTER", "Computador"),
+    ("BOOK", "Livro"),
+    ("EQUIPMENT", "Equipamento"),
+    ("OTHER", "Outro"),
+]
+
+RESOURCE_STATUS_CHOICES = [
+    ("AVAILABLE", "Disponível"),
+    ("IN_USE", "Em uso"),
+    ("MAINTENANCE", "Manutenção"),
+    ("UNAVAILABLE", "Indisponível"),
+]
+
+
+class Resource(models.Model):
+    name = models.CharField(verbose_name="Nome", max_length=200)
+    resource_type = models.CharField(
+        verbose_name="Tipo",
+        max_length=20,
+        choices=RESOURCE_TYPE_CHOICES,
+    )
+    description = models.TextField(
+        verbose_name="Descrição",
+        blank=True,
+        null=True,
+    )
+    status = models.CharField(
+        verbose_name="Status",
+        max_length=20,
+        choices=RESOURCE_STATUS_CHOICES,
+        default="AVAILABLE",
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        verbose_name = "Recurso"
+        verbose_name_plural = "Recursos"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_resource_type_display()})"
+
+
+class ResourceLoan(models.Model):
+    resource = models.ForeignKey(
+        Resource,
+        on_delete=models.CASCADE,
+        verbose_name="Recurso",
+        related_name="loans",
+    )
+    student = models.ForeignKey(
+        "students.Student",
+        on_delete=models.CASCADE,
+        verbose_name="Estudante",
+        related_name="resource_loans",
+    )
+    loan_date = models.DateField(verbose_name="Data de empréstimo", default=get_today)
+    return_date = models.DateField(
+        verbose_name="Data de devolução prevista",
+    )
+    actual_return_date = models.DateField(
+        verbose_name="Data de devolução efetiva",
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        verbose_name = "Empréstimo de Recurso"
+        verbose_name_plural = "Empréstimos de Recursos"
+
+    def __str__(self):
+        return f"{self.resource.name} - {self.student.full_name}"
+
+
+ROOM_TYPE_CHOICES = [
+    ("CLASSROOM", "Sala de aula"),
+    ("LABORATORY", "Laboratório"),
+    ("AUDITORIUM", "Auditório"),
+    ("GYM", "Ginásio"),
+    ("OTHER", "Outro"),
+]
+
+
+class Room(models.Model):
+    name = models.CharField(verbose_name="Nome", max_length=200)
+    room_type = models.CharField(
+        verbose_name="Tipo",
+        max_length=20,
+        choices=ROOM_TYPE_CHOICES,
+    )
+    capacity = models.IntegerField(verbose_name="Capacidade")
+    description = models.TextField(
+        verbose_name="Descrição",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        verbose_name = "Sala"
+        verbose_name_plural = "Salas"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_room_type_display()})"
+
+
+class RoomReservation(models.Model):
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        verbose_name="Sala",
+        related_name="reservations",
+    )
+    reserved_by = models.ForeignKey(
+        "school.Professor",
+        on_delete=models.CASCADE,
+        verbose_name="Reservado por",
+        related_name="room_reservations",
+    )
+    purpose = models.CharField(verbose_name="Finalidade", max_length=200)
+    date = models.DateField(verbose_name="Data")
+    start_time = models.TimeField(verbose_name="Hora de início")
+    end_time = models.TimeField(verbose_name="Hora de término")
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        verbose_name = "Reserva de Sala"
+        verbose_name_plural = "Reservas de Salas"
+
+    def __str__(self):
+        return f"{self.room.name} - {self.date} - {self.reserved_by.full_name}"
+
+
+NOTIFICATION_TYPE_CHOICES = [
+    ("GRADE", "Nota"),
+    ("ABSENCE", "Falta"),
+    ("WARNING", "Advertência"),
+    ("SUSPENSION", "Suspensão"),
+    ("EVENT", "Evento"),
+    ("ASSIGNMENT", "Trabalho"),
+    ("EXAM", "Prova"),
+    ("PAYMENT", "Pagamento"),
+    ("GENERAL", "Geral"),
+]
+
+
+class Notification(models.Model):
+    from django.conf import settings
+
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Destinatário",
+        related_name="notifications",
+    )
+    notification_type = models.CharField(
+        verbose_name="Tipo",
+        max_length=20,
+        choices=NOTIFICATION_TYPE_CHOICES,
+    )
+    title = models.CharField(verbose_name="Título", max_length=200)
+    message = models.TextField(verbose_name="Mensagem")
+    read = models.BooleanField(verbose_name="Lida", default=False)
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    class Meta:
+        verbose_name = "Notificação"
+        verbose_name_plural = "Notificações"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.title} - {self.recipient}"

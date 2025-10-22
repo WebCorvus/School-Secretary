@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Student, Guardian, Contract, Grade, Presence
+from .models import (
+    Student,
+    Guardian,
+    Contract,
+    Grade,
+    Presence,
+    Warning,
+    Suspension,
+    Tuition,
+    Enrollment,
+)
 
 
 class GradeInline(admin.TabularInline):
@@ -90,8 +100,60 @@ class PresenceAdmin(admin.ModelAdmin):
     list_filter = ("presence", "date")
 
 
+class WarningAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    list_display = ("id", "student", "reason", "date", "issued_by")
+    list_display_links = ("student",)
+    search_fields = ("student__full_name", "reason")
+    list_filter = ("date",)
+
+
+class SuspensionAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    list_display = ("id", "student", "reason", "start_date", "end_date", "issued_by")
+    list_display_links = ("student",)
+    search_fields = ("student__full_name", "reason")
+    list_filter = ("start_date", "end_date")
+
+
+class TuitionAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    list_display = (
+        "id",
+        "student",
+        "amount",
+        "due_date",
+        "payment_date",
+        "status",
+        "reference_month",
+    )
+    list_display_links = ("student",)
+    search_fields = ("student__full_name",)
+    list_filter = ("status", "due_date")
+
+
+class EnrollmentAdmin(admin.ModelAdmin):
+    list_per_page = 1000
+    list_display = (
+        "id",
+        "student",
+        "group",
+        "year",
+        "status",
+        "enrollment_date",
+        "is_reenrollment",
+    )
+    list_display_links = ("student",)
+    search_fields = ("student__full_name", "group__full_name")
+    list_filter = ("status", "year", "is_reenrollment")
+
+
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Guardian, GuardianAdmin)
 admin.site.register(Contract, ContractAdmin)
 admin.site.register(Grade, GradeAdmin)
 admin.site.register(Presence, PresenceAdmin)
+admin.site.register(Warning, WarningAdmin)
+admin.site.register(Suspension, SuspensionAdmin)
+admin.site.register(Tuition, TuitionAdmin)
+admin.site.register(Enrollment, EnrollmentAdmin)

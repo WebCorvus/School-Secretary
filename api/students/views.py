@@ -1,17 +1,35 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from users.permissions import IsStaff, IsProfessor
-from .models import Student, Grade, Guardian, Contract, Presence
+from .models import (
+    Student,
+    Grade,
+    Guardian,
+    Contract,
+    Presence,
+    Warning,
+    Suspension,
+    Tuition,
+    Enrollment,
+)
 from .serializers import (
     StudentSerializer,
     GradeSerializer,
     GuardianSerializer,
     ContractSerializer,
     PresenceSerializer,
+    WarningSerializer,
+    SuspensionSerializer,
+    TuitionSerializer,
+    EnrollmentSerializer,
 )
 from utils.pdfgen import pdfgen
 from utils.subject_utils import get_subject_names
+from django.db.models import Count, Q
+from datetime import timedelta
+from django.utils import timezone
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -163,8 +181,129 @@ class PresenceViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action in ["list", "retrieve", "absence_report"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsProfessor]
+        return super().get_permissions()
+
+    @action(detail=False, methods=["get"], url_path="absence-report")
+    def absence_report(self, request):
+        """Generate absence report and identify students with >25% absences"""
+        students_with_absences = []
+
+        for student in Student.objects.all():
+            total_days = Presence.objects.filter(student=student).count()
+            if total_days == 0:
+                continue
+
+            absences = Presence.objects.filter(
+                student=student, presence=False
+            ).count()
+            absence_rate = (absences / total_days) * 100
+
+            students_with_absences.append(
+                {
+                    "student_id": student.id,
+                    "student_name": student.full_name,
+                    "total_days": total_days,
+                    "absences": absences,
+                    "absence_rate": round(absence_rate, 2),
+                    "needs_notification": absence_rate > 25,
+                }
+            )
+
+        return Response(students_with_absences)
+
+
+class WarningViewSet(viewsets.ModelViewSet):
+    queryset = Warning.objects.all().order_by("-date")
+    serializer_class = WarningSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student__full_name",
+        "student__registration_number",
+        "reason",
+        "date",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class SuspensionViewSet(viewsets.ModelViewSet):
+    queryset = Suspension.objects.all().order_by("-start_date")
+    serializer_class = SuspensionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student__full_name",
+        "student__registration_number",
+        "reason",
+        "start_date",
+        "end_date",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class TuitionViewSet(viewsets.ModelViewSet):
+    queryset = Tuition.objects.all().order_by("-due_date")
+    serializer_class = TuitionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student__full_name",
+        "student__registration_number",
+        "status",
+        "due_date",
+        "reference_month",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve", "payment_history"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+    @action(detail=False, methods=["get"], url_path="payment-history")
+    def payment_history(self, request):
+        """Get payment history for all students"""
+        student_id = request.query_params.get("student_id")
+        if student_id:
+            tuitions = Tuition.objects.filter(student_id=student_id).order_by(
+                "-reference_month"
+            )
+        else:
+            tuitions = Tuition.objects.all().order_by("-reference_month")
+
+        serializer = self.get_serializer(tuitions, many=True)
+        return Response(serializer.data)
+
+
+class EnrollmentViewSet(viewsets.ModelViewSet):
+    queryset = Enrollment.objects.all().order_by("-year", "-enrollment_date")
+    serializer_class = EnrollmentSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "student__full_name",
+        "student__registration_number",
+        "group__full_name",
+        "year",
+        "status",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
         return super().get_permissions()
