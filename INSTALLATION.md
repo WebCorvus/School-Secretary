@@ -2,63 +2,85 @@
 
 Este guia fornece instruções passo a passo para instalar e executar o sistema de Secretaria Escolar.
 
-## Pré-requisitos
+## Usando Docker (Recomendado)
 
-Antes de começar, certifique-se de ter instalado em seu computador:
+### Pré-requisitos
 
-1.  Certifique-se de ter o Docker e o Docker Compose instalados.
-2.  Para inicializar o projeto, faça:
+-   Docker
+-   Docker Compose
+
+### Instruções
+
+1.  Gere e, de preferência, edite os arquivos `.env`:
 
     ```bash
-    # Create .env files
     ./controller.sh genenvs
+    ```
 
-    # Run containers
+2.  Inicialize o projeto com usando o [`controller.sh`](./controller.sh) (usa `docker` internamente):
+
+    ```bash
     ./controller.sh start
+    ```
 
-    # Create an administrator user
+3.  Crie um usuário administrador:
+
+    ```bash
     ./controller.sh createsuperuser
     ```
 
-    Esses comandos vão construir as imagens Docker para todo os serviços(coforme necessário), iniciá-las e criar um usuário.
+Agora é possível acessar o site em: [`http://localhost:8080`](http://localhost:8080).
 
-### Localmente (Manual)
+## Localmente (Manual)
 
-1. Certifique-se de ter o [uv](https://docs.astral.sh/uv/getting-started/installation/) baixado.
-2. Execute os comandos de setup
+### Pré-requisitos
 
-    ```bash
-    uv sync # cria a .venv com as depedências
-    uv run python manage.py makemigrations  # cria as migrações
-    uv run python manage.py migrate # atualiza do db
-    ```
+-   Python
+-   Node
+-   uv
 
-3. Inicialize
+### API
 
-    ```bash
-    uv run python manage.py runserver # roda em modo dev
-    ```
-
-## Testando o sistema
-
-Utilize o comando a seguir para inicializar containers de teste, que rodarão os processos de testagem configurados e depois serão destruidos completamente.
-
-```bash
-./controller.sh test
-```
-
-## Logging de Exceções com Usuário
-
-Siga os tópicos anteriores parar inicializar o projeto
-
--   O middleware está em: `api/school/middleware.py`.
--   Logs de erro podem ser visualizados com:
+1. Instale as dependências:
 
     ```bash
-    docker compose logs -f school-secretary-api
-
-    # ou apenas observe o output se tiver feito localmente
+    uv sync
     ```
 
--   Para testar, provoque uma exceção em uma view autenticada e verifique o log.
--   O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.
+2. Crie as migrações:
+
+    ```bash
+    uv run python manage.py makemigrations
+    ```
+
+3. Atualize o banco de dados:
+
+    ```bash
+    uv run python manage.py migrate
+    ```
+
+4. Inicialize:
+
+    ```bash
+    uv run python manage.py runserver
+    ```
+
+### APP
+
+1. Vá para o [`app/`](./app/):
+
+    ```bash
+    cd app/
+    ```
+
+2. Instale as dependências:
+
+    ```bash
+    npm install
+    ```
+
+3. Rode em modo de desenvolvimento:
+
+    ```bash
+    npm run dev
+    ```
