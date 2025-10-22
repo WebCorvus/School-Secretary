@@ -1,10 +1,11 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsStaff, IsProfessor
 from django.utils import timezone
 from utils.date import get_day_name
+from utils.reports import generate_group_performance_report
 
 from .models import (
     Professor,
@@ -16,6 +17,12 @@ from .models import (
     Lesson,
     AgendaItem,
     Event,
+    EventRegistration,
+    Resource,
+    ResourceLoan,
+    Room,
+    RoomReservation,
+    Notification,
 )
 from .serializers import (
     ProfessorSerializer,
@@ -27,6 +34,12 @@ from .serializers import (
     LessonSerializer,
     AgendaItemSerializer,
     EventSerializer,
+    EventRegistrationSerializer,
+    ResourceSerializer,
+    ResourceLoanSerializer,
+    RoomSerializer,
+    RoomReservationSerializer,
+    NotificationSerializer,
 )
 from .models import LESSONS_PER_DAY
 
@@ -89,7 +102,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "get_lessons"]:
+        if self.action in ["list", "retrieve", "get_lessons", "performance_report"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -109,6 +122,13 @@ class GroupViewSet(viewsets.ModelViewSet):
             week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
 
         return Response(week_lessons)
+
+    @action(detail=True, methods=["get"], url_path="performance-report")
+    def performance_report(self, request, pk=None):
+        """Generate performance report for group"""
+        group = self.get_object()
+        report = generate_group_performance_report(group)
+        return Response(report)
 
 
 class SchoolRecordViewSet(viewsets.ModelViewSet):
@@ -200,7 +220,7 @@ class EventViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description", "location", "start_date"]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "get_pendents"]:
+        if self.action in ["list", "retrieve", "get_pendents", "register"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -215,3 +235,159 @@ class EventViewSet(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(pendents, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["post"], url_path="register")
+    def register(self, request, pk=None):
+        """Register student in event"""
+        event = self.get_object()
+        student = request.user.profile
+
+        if not student or not hasattr(student, "id"):
+            return Response(
+                {"error": "Only students can register for events"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if not event.allow_registration:
+            return Response(
+                {"error": "This event does not allow registration"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if (
+            event.max_participants
+            and event.registrations.count() >= event.max_participants
+        ):
+            return Response(
+                {"error": "Event is full"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        registration, created = EventRegistration.objects.get_or_create(
+            event=event, student=student
+        )
+
+        if created:
+            return Response(
+                {"message": "Successfully registered for event"},
+                status=status.HTTP_201_CREATED,
+            )
+        else:
+            return Response(
+                {"message": "Already registered for this event"},
+                status=status.HTTP_200_OK,
+            )
+
+
+class EventRegistrationViewSet(viewsets.ModelViewSet):
+    queryset = EventRegistration.objects.all().order_by("-registration_date")
+    serializer_class = EventRegistrationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "event__title",
+        "student__full_name",
+        "student__registration_number",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class ResourceViewSet(viewsets.ModelViewSet):
+    queryset = Resource.objects.all().order_by("name")
+    serializer_class = ResourceSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name", "resource_type", "status"]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class ResourceLoanViewSet(viewsets.ModelViewSet):
+    queryset = ResourceLoan.objects.all().order_by("-loan_date")
+    serializer_class = ResourceLoanSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "resource__name",
+        "student__full_name",
+        "student__registration_number",
+        "loan_date",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class RoomViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all().order_by("name")
+    serializer_class = RoomSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["name", "room_type", "capacity"]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsStaff]
+        return super().get_permissions()
+
+
+class RoomReservationViewSet(viewsets.ModelViewSet):
+    queryset = RoomReservation.objects.all().order_by("-date", "-start_time")
+    serializer_class = RoomReservationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "room__name",
+        "reserved_by__full_name",
+        "purpose",
+        "date",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsProfessor]
+        return super().get_permissions()
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = Notification.objects.all().order_by("-created_at")
+    serializer_class = NotificationSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["title", "message", "notification_type"]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Users can only see their own notifications"""
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return Notification.objects.all()
+        return Notification.objects.filter(recipient=self.request.user)
+
+    @action(detail=True, methods=["post"], url_path="mark-read")
+    def mark_read(self, request, pk=None):
+        """Mark notification as read"""
+        notification = self.get_object()
+        notification.read = True
+        notification.save()
+        return Response({"message": "Notification marked as read"})
+
+    @action(detail=False, methods=["post"], url_path="mark-all-read")
+    def mark_all_read(self, request):
+        """Mark all user notifications as read"""
+        Notification.objects.filter(recipient=request.user, read=False).update(
+            read=True
+        )
+        return Response({"message": "All notifications marked as read"})

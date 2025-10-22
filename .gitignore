@@ -156,3 +156,5 @@ npm-debug.log*
 
 # typescript
 *.tsbuildinfo
+#filedev
+QUICKSTART.md

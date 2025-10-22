@@ -9,6 +9,12 @@ from .models import (
     Lesson,
     AgendaItem,
     Event,
+    EventRegistration,
+    Resource,
+    ResourceLoan,
+    Room,
+    RoomReservation,
+    Notification,
 )
 
 
@@ -110,6 +116,60 @@ class AgendaItemSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.ModelSerializer):
+    registrations_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
+        fields = "__all__"
+
+    def get_registrations_count(self, obj):
+        return obj.registrations.count()
+
+
+class EventRegistrationSerializer(serializers.ModelSerializer):
+    event_details = EventSerializer(source="event", read_only=True)
+    student_name = serializers.CharField(source="student.full_name", read_only=True)
+
+    class Meta:
+        model = EventRegistration
+        fields = "__all__"
+
+
+class ResourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resource
+        fields = "__all__"
+
+
+class ResourceLoanSerializer(serializers.ModelSerializer):
+    resource_details = ResourceSerializer(source="resource", read_only=True)
+    student_name = serializers.CharField(source="student.full_name", read_only=True)
+
+    class Meta:
+        model = ResourceLoan
+        fields = "__all__"
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = "__all__"
+
+
+class RoomReservationSerializer(serializers.ModelSerializer):
+    room_details = RoomSerializer(source="room", read_only=True)
+    professor_name = serializers.CharField(
+        source="reserved_by.full_name", read_only=True
+    )
+
+    class Meta:
+        model = RoomReservation
+        fields = "__all__"
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    recipient_name = serializers.CharField(source="recipient.name", read_only=True)
+
+    class Meta:
+        model = Notification
         fields = "__all__"
