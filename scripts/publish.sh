@@ -2,6 +2,10 @@
 
 set -e
 
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
+$SCRIPT_DIR/start.sh
+
 DOCKER_USERNAME="webcorvus"
 IMAGES=(
   "webcorvus/school-secretary-api:latest"
@@ -9,8 +13,6 @@ IMAGES=(
   "webcorvus/school-secretary-db:latest"
   "webcorvus/school-secretary-proxy:latest"
 )
-
-./scripts/start.sh
 
 sleep 5
 

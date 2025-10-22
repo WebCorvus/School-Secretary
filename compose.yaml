@@ -67,8 +67,6 @@ services:
     build: ./db
     image: webcorvus/school-secretary-db:latest
     container_name: school-secretary-db
-    volumes:
-      - db_data:/var/lib/postgresql/data/
     env_file:
       - ./db/.env
     networks:
@@ -86,6 +84,3 @@ networks:
     driver: bridge
   private:
     driver: bridge
-
-volumes:
-  db_data:
