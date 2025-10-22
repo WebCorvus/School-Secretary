@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Relatório Financeiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            color: #2c3e50;
+        }
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .summary-item {
+            padding: 10px;
+            background-color: white;
+            border-left: 4px solid #3498db;
+        }
+        .summary-item.paid {
+            border-left-color: #27ae60;
+        }
+        .summary-item.pending {
+            border-left-color: #f39c12;
+        }
+        .summary-item.overdue {
+            border-left-color: #e74c3c;
+        }
+        .summary-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .summary-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .payment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .payment-table th,
+        .payment-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .payment-table th {
+            background-color: #34495e;
+            color: white;
+        }
+        .payment-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-overdue {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RELATÓRIO FINANCEIRO</h1>
+        {% if student %}
+        <p><strong>{{ student.full_name }}</strong></p>
+        <p>Matrícula: {{ student.registration_number }}</p>
+        {% else %}
+        <p><strong>Relatório Geral - Todas as Mensalidades</strong></p>
+        {% endif %}
+    </div>
+
+    <!-- Summary Section -->
+    <div class="summary-box">
+        <h2 style="margin-top: 0; color: #2c3e50;">Resumo Financeiro</h2>
+        <div class="summary-grid">
+            <div class="summary-item paid">
+                <h3>Mensalidades Pagas</h3>
+                <div class="value">{{ summary.total_paid }}</div>
+                <div>R$ {{ summary.amount_paid|floatformat:2 }}</div>
+            </div>
+            <div class="summary-item pending">
+                <h3>Mensalidades Pendentes</h3>
+                <div class="value">{{ summary.total_pending }}</div>
+                <div>R$ {{ summary.amount_pending|floatformat:2 }}</div>
+            </div>
+            <div class="summary-item overdue">
+                <h3>Mensalidades Vencidas</h3>
+                <div class="value">{{ summary.total_overdue }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History -->
+    <h2 style="color: #2c3e50;">Histórico de Pagamentos</h2>
+    <table class="payment-table">
+        <thead>
+            <tr>
+                {% if not student %}
+                <th>Aluno</th>
+                {% endif %}
+                <th>Mês de Referência</th>
+                <th>Valor</th>
+                <th>Vencimento</th>
+                <th>Data de Pagamento</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payment_history %}
+            <tr>
+                {% if not student %}
+                <td>{{ payment.student_name }}</td>
+                {% endif %}
+                <td>{{ payment.reference_month }}</td>
+                <td>R$ {{ payment.amount|floatformat:2 }}</td>
+                <td>{{ payment.due_date }}</td>
+                <td>{{ payment.payment_date|default:"-" }}</td>
+                <td>
+                    <span class="status-badge status-{{ payment.status|lower }}">
+                        {% if payment.status == "PAID" %}PAGO
+                        {% elif payment.status == "PENDING" %}PENDENTE
+                        {% elif payment.status == "OVERDUE" %}VENCIDO
+                        {% elif payment.status == "CANCELLED" %}CANCELADO
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Relatório gerado em {{ now|date:"d/m/Y H:i" }}</p>
+        <p>Sistema de Secretaria Escolar</p>
+    </div>
+</body>
+</html>

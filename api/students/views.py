@@ -63,6 +63,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             "download_grades_pdf",
             "download_presence_pdf",
             "academic_report",
+            "download_academic_report",
             "students_needing_attention",
         ]:
             self.permission_classes = [IsAuthenticated]
@@ -102,6 +103,27 @@ class StudentViewSet(viewsets.ModelViewSet):
         student = self.get_object()
         report = generate_student_academic_report(student)
         return Response(report)
+
+    @action(detail=True, methods=["get"], url_path="download-academic-report")
+    def download_academic_report(self, request, pk=None):
+        """Download comprehensive academic report PDF"""
+        from django.utils import timezone as tz
+        student = self.get_object()
+        report = generate_student_academic_report(student)
+        
+        context = {
+            'student': student,
+            'grades': report['grades'],
+            'attendance': report['attendance'],
+            'discipline': report['discipline'],
+            'now': tz.now()
+        }
+        
+        return pdfgen(
+            "academic_report.html",
+            context,
+            f"Relatorio_Academico_{student.full_name}.pdf",
+        )
 
     @action(detail=False, methods=["get"], url_path="students-needing-attention")
     def students_needing_attention(self, request):
@@ -288,7 +310,7 @@ class TuitionViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "payment_history", "financial_report"]:
+        if self.action in ["list", "retrieve", "payment_history", "financial_report", "download_financial_report"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -315,6 +337,29 @@ class TuitionViewSet(viewsets.ModelViewSet):
         student = Student.objects.get(id=student_id) if student_id else None
         report = generate_financial_report(student)
         return Response(report)
+
+    @action(detail=False, methods=["get"], url_path="download-financial-report")
+    def download_financial_report(self, request):
+        """Download financial report PDF"""
+        from django.utils import timezone as tz
+        student_id = request.query_params.get("student_id")
+        student = Student.objects.get(id=student_id) if student_id else None
+        report = generate_financial_report(student)
+        
+        context = {
+            'student': student,
+            'summary': report['summary'],
+            'payment_history': report['payment_history'],
+            'now': tz.now()
+        }
+        
+        filename = f"Relatorio_Financeiro_{student.full_name}.pdf" if student else "Relatorio_Financeiro_Geral.pdf"
+        
+        return pdfgen(
+            "financial_report.html",
+            context,
+            filename,
+        )
 
 
 class EnrollmentViewSet(viewsets.ModelViewSet):
