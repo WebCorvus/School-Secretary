@@ -1,70 +1,189 @@
-## Como rodar
+# Manual de Instalação - Secretaria Escolar
 
-O projeto utiliza Docker Compose para orquestrar os serviços de backend (Django) e frontend (Next.js).
+Este guia fornece instruções passo a passo para instalar e executar o sistema de Secretaria Escolar.
 
-### Com Docker Compose (Recomendado)
+## Pré-requisitos
 
-Para iniciar a aplicação completa (backend e frontend) em ambiente de desenvolvimento:
+Antes de começar, certifique-se de ter instalado em seu computador:
 
-1.  Certifique-se de ter o Docker e o Docker Compose instalados.
-2.  Na raiz do projeto, execute:
+- **Docker**: versão 20.10 ou superior
+- **Docker Compose**: versão 2.0 ou superior
 
-    ```bash
-    docker compose up --build (-d)
-    ```
-
-    Este comando irá construir as imagens Docker para ambos os serviços (se necessário) e iniciá-los. O serviço `school-secretary-app-1` (frontend) já está configurado para realizar o build e iniciar para ambiente de produção automaticamente.
-
-### Criar Usuário Administrador (Superuser)
-
-Para acessar certas funcionalidades do sistema, é necessário ter um usuário cadastrado. Você pode criar um superusuário no banco de dados do Django (serviço `school-secretary-api-1`):
-
-1.  Com os serviços do Docker Compose em execução, abra um novo terminal.
-2.  Execute o comando para criar um superusuário dentro do container `school-secretary-api-1`:
-
-        ```bash
-        docker exec -it school-secretary-api python manage.py createsuperuser
-        ```
-
-        Siga as instruções no terminal para definir o nome de usuário, e-mail e senha.
-
-    BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
-
-### Testando o sistema
-
-Utilize o comando a seguir para inicializar o projeto e, tomando o container de teste como referencia, realizar uma testagem e depois abortar tudo.
+Para verificar se estão instalados, execute:
 
 ```bash
-docker compose up test --build --abort-on-container-exit # Test E2E
+docker --version
+docker compose version
 ```
+
+Se você não tiver o Docker instalado, visite:
+- Windows/Mac: https://www.docker.com/products/docker-desktop
+- Linux: https://docs.docker.com/engine/install/
+
+## Passo 1: Obter o Código
+
+Clone o repositório ou extraia os arquivos do projeto:
 
 ```bash
-docker compose up --build -d                                        # Test E2E
-docker compose exec -it school-secretary-api python manage.py test  # Test Backend
-docker compose exec -it school-secretary-app npm run test           # Test Frontend
+git clone https://github.com/WebCorvus/School-Secretary.git
+cd School-Secretary
 ```
 
-### Gerar Usuários de Teste (seed_users)
+## Passo 2: Configurar Variáveis de Ambiente
 
-Para criar usuários de teste automaticamente, execute:
+O sistema requer arquivos `.env` para cada serviço. Copie os arquivos de exemplo:
 
 ```bash
-docker exec -it school-secretary-api python manage.py seed_users --total 5
+# Copiar arquivos de exemplo para os arquivos .env
+cp api/.env.example api/.env
+cp app/.env.example app/.env
+cp db/.env.example db/.env
+cp proxy/.env.example proxy/.env
 ```
 
-Você pode ajustar o número de usuários com o parâmetro `--total` e definir o papel com `--role` (opcional).
+**Nota**: Para ambiente de produção, você deve alterar as senhas e chaves secretas nos arquivos `.env` criados.
 
-BETA: docker compose exec api python manage.py seed_school --students <NÚMERO> --guardians <NÚMERO> --professors <NÚMERO>
+## Passo 3: Iniciar o Sistema
 
-## Logging de Exceções com Usuário
+Execute o seguinte comando na raiz do projeto:
 
-O backend Django possui um middleware que registra exceções junto ao usuário autenticado.
+```bash
+docker compose up -d
+```
 
-- O middleware está em: `api/school/middleware.py`.
-- Logs de erro podem ser visualizados com:
+Este comando irá:
+1. Baixar as imagens Docker necessárias
+2. Criar as redes Docker para comunicação entre serviços
+3. Iniciar todos os containers (banco de dados, backend, frontend e proxy)
 
-    ```bash
-    docker compose logs -f school-secretary-api
-    ```
-- Para testar, provoque uma exceção em uma view autenticada e verifique o log.
-- O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.
+O processo pode levar alguns minutos na primeira execução.
+
+### Verificar o Status
+
+Verifique se todos os containers estão rodando corretamente:
+
+```bash
+docker ps
+```
+
+Você deve ver 4 containers em execução:
+- `school-secretary-db` - Banco de dados PostgreSQL
+- `school-secretary-api` - Backend Django
+- `school-secretary-app` - Frontend Next.js
+- `school-secretary-proxy` - Proxy Nginx
+
+## Passo 4: Criar Usuário Administrador
+
+Para acessar o sistema, você precisa criar um usuário administrador:
+
+```bash
+docker exec -it school-secretary-api uv run python manage.py shell -c "from users.models import User; User.objects.create_superuser('admin@escola.com', 'senha123', name='Administrador') if not User.objects.filter(email='admin@escola.com').exists() else print('Usuário já existe')"
+```
+
+**Importante**: Guarde essas credenciais:
+- **Email**: admin@escola.com
+- **Senha**: senha123
+
+(Em produção, use uma senha forte e segura!)
+
+## Passo 5: Acessar o Sistema
+
+Abra seu navegador e acesse:
+
+```
+http://localhost:8080
+```
+
+Faça login com as credenciais criadas no passo anterior.
+
+## Comandos Úteis
+
+### Parar o Sistema
+
+```bash
+docker compose down
+```
+
+### Reiniciar o Sistema
+
+```bash
+docker compose restart
+```
+
+### Ver Logs
+
+Para ver os logs de todos os serviços:
+
+```bash
+docker compose logs -f
+```
+
+Para ver logs de um serviço específico:
+
+```bash
+docker compose logs -f api      # Backend
+docker compose logs -f app      # Frontend
+docker compose logs -f db       # Banco de dados
+docker compose logs -f proxy    # Proxy
+```
+
+### Criar Usuários de Teste
+
+Para popular o sistema com dados de teste:
+
+```bash
+docker exec -it school-secretary-api uv run python manage.py seed_users --total 10
+```
+
+## Solução de Problemas
+
+### O container `proxy` não inicia
+
+Se o proxy não conseguir iniciar devido a erro de DNS, reinicie-o:
+
+```bash
+docker compose restart proxy
+```
+
+### Erro "Port 8080 is already in use"
+
+Outro serviço está usando a porta 8080. Você pode:
+1. Parar o outro serviço, ou
+2. Alterar a porta no arquivo `compose.yaml` (linha com `8080:80`)
+
+### Não consigo fazer login
+
+1. Verifique se todos os containers estão rodando: `docker ps`
+2. Verifique os logs do backend: `docker compose logs api`
+3. Confirme que o usuário foi criado corretamente
+
+### Reset completo do sistema
+
+Para remover todos os dados e recomeçar:
+
+```bash
+docker compose down -v  # Remove containers e volumes
+docker compose up -d    # Inicia novamente
+# Recriar usuário administrador (Passo 4)
+```
+
+## Arquitetura do Sistema
+
+O sistema é composto por 4 serviços principais:
+
+1. **Banco de Dados (PostgreSQL)**: Armazena todos os dados
+2. **Backend (Django)**: API REST que gerencia a lógica de negócio
+3. **Frontend (Next.js)**: Interface web para usuários
+4. **Proxy (Nginx)**: Roteia requisições entre frontend e backend
+
+Toda comunicação com o sistema passa pelo proxy na porta 8080.
+
+## Desenvolvimento
+
+Para desenvolvimento, você pode executar os serviços individualmente. Consulte o `README.md` para mais detalhes sobre a arquitetura e desenvolvimento.
+
+## Suporte
+
+Para problemas ou dúvidas:
+- Abra uma issue no GitHub
+- Consulte a documentação completa no `README.md`
