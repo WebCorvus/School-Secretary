@@ -2,6 +2,10 @@
 
 set -e
 
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+
+cd $SCRIPT_DIR/..
+
 cleanup() {
     echo "--- Stopping and Removing Containers ---"
     docker compose -f compose.test.yaml down -v

@@ -2,6 +2,8 @@
 
 set -e
 
-./scripts/stop.sh
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
-./scripts/start.sh
+$SCRIPT_DIR/stop.sh
+
+$SCRIPT_DIR/start.sh
