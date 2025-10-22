@@ -39,7 +39,7 @@ No [`api/`](./api/) os testes estão em arquivos específicos para cada _app_:
 -   [`api/users/tests/test_models.py`](./api/users/tests/test_models.py)
 -   [`api/users/tests/test_serializers.py`](./api/users/tests/test_serializers.py)
 
-Para criar um novo arquivo de testes, basta colocá-lo dentro da pasta tests do _App Django_ (criado com `./manage.py startapp`). Lembre-se de seguir a convensão de nomenclatura `test_` para o arquivo.
+Para criar um novo arquivo de testes, basta colocá-lo dentro da pasta `tests/` do _App Django_ (criado com `./manage.py startapp`). Lembre-se de seguir a convensão de nomenclatura `test_*` para o arquivo.
 
 ### APP
 
