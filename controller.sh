@@ -5,20 +5,28 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-FUNCTION="$1"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")/scripts"
+SCRIPT="$1.sh"
 
-if [ ! -f "$SCRIPT_DIR/$FUNCTION.sh" ]; then
-  echo "'$FUNCTION.sh' not found in 'scripts'."
+SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT"
+
+if [ ! -f "$SCRIPT_PATH" ]; then
+  echo "'$SCRIPT' not found in 'scripts/'."
   exit 1
 fi
 
-chmod +x "$SCRIPT_DIR/$FUNCTION.sh"
-echo "Executing $FUNCTION..."
-"$SCRIPT_DIR/$FUNCTION.sh"
+CMD="$SCRIPT_PATH"
+
+OS=$(uname -s)
+if [[ "$OS" == "MINGW"* || "$OS" == "CYGWIN"* || "$OS" == "MSYS"* ]]; then
+    CMD="winpty $CMD"
+fi
+
+chmod +x "$SCRIPT_PATH"
+echo "Executing $SCRIPT..."
+"$CMD"
 
 chmod +x "$SCRIPT_DIR/on_exit.sh"
-echo "Executing on_exit..."
 "$SCRIPT_DIR/on_exit.sh"
 
 exit 0
