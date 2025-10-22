@@ -6,184 +6,59 @@ Este guia fornece instruções passo a passo para instalar e executar o sistema 
 
 Antes de começar, certifique-se de ter instalado em seu computador:
 
-- **Docker**: versão 20.10 ou superior
-- **Docker Compose**: versão 2.0 ou superior
+1.  Certifique-se de ter o Docker e o Docker Compose instalados.
+2.  Para inicializar o projeto, faça:
 
-Para verificar se estão instalados, execute:
+    ```bash
+    # Create .env files
+    ./controller.sh genenvs
 
-```bash
-docker --version
-docker compose version
-```
+    # Run containers
+    ./controller.sh start
 
-Se você não tiver o Docker instalado, visite:
-- Windows/Mac: https://www.docker.com/products/docker-desktop
-- Linux: https://docs.docker.com/engine/install/
+    # Create an administrator user
+    docker exec -it school-secretary-api uv run python manage.py createsuperuser
+    ```
 
-## Passo 1: Obter o Código
+    Esses comandos vão construir as imagens Docker para todo os serviços(coforme necessário), iniciá-las e criar um usuário.
 
-Clone o repositório ou extraia os arquivos do projeto:
+### Localmente (Manual)
 
-```bash
-git clone https://github.com/WebCorvus/School-Secretary.git
-cd School-Secretary
-```
+1. Certifique-se de ter o [uv](https://docs.astral.sh/uv/getting-started/installation/) baixado.
+2. Execute os comandos de setup
 
-## Passo 2: Configurar Variáveis de Ambiente
+    ```bash
+    uv sync # cria a .venv com as depedências
+    uv run python manage.py makemigrations  # cria as migrações
+    uv run python manage.py migrate # atualiza do db
+    ```
 
-O sistema requer arquivos `.env` para cada serviço. Copie os arquivos de exemplo:
+3. Inicialize
 
-```bash
-# Copiar arquivos de exemplo para os arquivos .env
-cp api/.env.example api/.env
-cp app/.env.example app/.env
-cp db/.env.example db/.env
-cp proxy/.env.example proxy/.env
-```
+    ```bash
+    uv run python manage.py runserver # roda em modo dev
+    ```
 
-**Nota**: Para ambiente de produção, você deve alterar as senhas e chaves secretas nos arquivos `.env` criados.
+## Testando o sistema
 
-## Passo 3: Iniciar o Sistema
-
-Execute o seguinte comando na raiz do projeto:
+Utilize o comando a seguir para inicializar containers de teste, que rodarão os processos de testagem configurados e depois serão destruidos completamente.
 
 ```bash
-docker compose up -d
+./controller.sh test
 ```
 
-Este comando irá:
-1. Baixar as imagens Docker necessárias
-2. Criar as redes Docker para comunicação entre serviços
-3. Iniciar todos os containers (banco de dados, backend, frontend e proxy)
+## Logging de Exceções com Usuário
 
-O processo pode levar alguns minutos na primeira execução.
+Siga os tópicos anteriores parar inicializar o projeto
 
-### Verificar o Status
+-   O middleware está em: `api/school/middleware.py`.
+-   Logs de erro podem ser visualizados com:
 
-Verifique se todos os containers estão rodando corretamente:
+    ```bash
+    docker compose logs -f school-secretary-api
 
-```bash
-docker ps
-```
+    # ou apenas observe o output se tiver feito localmente
+    ```
 
-Você deve ver 4 containers em execução:
-- `school-secretary-db` - Banco de dados PostgreSQL
-- `school-secretary-api` - Backend Django
-- `school-secretary-app` - Frontend Next.js
-- `school-secretary-proxy` - Proxy Nginx
-
-## Passo 4: Criar Usuário Administrador
-
-Para acessar o sistema, você precisa criar um usuário administrador:
-
-```bash
-docker exec -it school-secretary-api uv run python manage.py shell -c "from users.models import User; User.objects.create_superuser('admin@escola.com', 'senha123', name='Administrador') if not User.objects.filter(email='admin@escola.com').exists() else print('Usuário já existe')"
-```
-
-**Importante**: Guarde essas credenciais:
-- **Email**: admin@escola.com
-- **Senha**: senha123
-
-(Em produção, use uma senha forte e segura!)
-
-## Passo 5: Acessar o Sistema
-
-Abra seu navegador e acesse:
-
-```
-http://localhost:8080
-```
-
-Faça login com as credenciais criadas no passo anterior.
-
-## Comandos Úteis
-
-### Parar o Sistema
-
-```bash
-docker compose down
-```
-
-### Reiniciar o Sistema
-
-```bash
-docker compose restart
-```
-
-### Ver Logs
-
-Para ver os logs de todos os serviços:
-
-```bash
-docker compose logs -f
-```
-
-Para ver logs de um serviço específico:
-
-```bash
-docker compose logs -f api      # Backend
-docker compose logs -f app      # Frontend
-docker compose logs -f db       # Banco de dados
-docker compose logs -f proxy    # Proxy
-```
-
-### Criar Usuários de Teste
-
-Para popular o sistema com dados de teste:
-
-```bash
-docker exec -it school-secretary-api uv run python manage.py seed_users --total 10
-```
-
-## Solução de Problemas
-
-### O container `proxy` não inicia
-
-Se o proxy não conseguir iniciar devido a erro de DNS, reinicie-o:
-
-```bash
-docker compose restart proxy
-```
-
-### Erro "Port 8080 is already in use"
-
-Outro serviço está usando a porta 8080. Você pode:
-1. Parar o outro serviço, ou
-2. Alterar a porta no arquivo `compose.yaml` (linha com `8080:80`)
-
-### Não consigo fazer login
-
-1. Verifique se todos os containers estão rodando: `docker ps`
-2. Verifique os logs do backend: `docker compose logs api`
-3. Confirme que o usuário foi criado corretamente
-
-### Reset completo do sistema
-
-Para remover todos os dados e recomeçar:
-
-```bash
-docker compose down -v  # Remove containers e volumes
-docker compose up -d    # Inicia novamente
-# Recriar usuário administrador (Passo 4)
-```
-
-## Arquitetura do Sistema
-
-O sistema é composto por 4 serviços principais:
-
-1. **Banco de Dados (PostgreSQL)**: Armazena todos os dados
-2. **Backend (Django)**: API REST que gerencia a lógica de negócio
-3. **Frontend (Next.js)**: Interface web para usuários
-4. **Proxy (Nginx)**: Roteia requisições entre frontend e backend
-
-Toda comunicação com o sistema passa pelo proxy na porta 8080.
-
-## Desenvolvimento
-
-Para desenvolvimento, você pode executar os serviços individualmente. Consulte o `README.md` para mais detalhes sobre a arquitetura e desenvolvimento.
-
-## Suporte
-
-Para problemas ou dúvidas:
-- Abra uma issue no GitHub
-- Consulte a documentação completa no `README.md`
+-   Para testar, provoque uma exceção em uma view autenticada e verifique o log.
+-   O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.

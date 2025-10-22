@@ -67,8 +67,6 @@ services:
   db:
     build: ./db
     container_name: test-school-secretary-db
-    volumes:
-      - test_db_data:/var/lib/postgresql/data/
     env_file:
       - ./db/.env
     networks:
@@ -86,6 +84,3 @@ networks:
     driver: bridge
   private:
     driver: bridge
-
-volumes:
-  test_db_data:
