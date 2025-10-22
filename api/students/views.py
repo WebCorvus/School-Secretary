@@ -32,9 +32,6 @@ from utils.reports import (
     generate_financial_report,
     identify_students_needing_notification,
 )
-from django.db.models import Count, Q
-from datetime import timedelta
-from django.utils import timezone
 
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -108,17 +105,18 @@ class StudentViewSet(viewsets.ModelViewSet):
     def download_academic_report(self, request, pk=None):
         """Download comprehensive academic report PDF"""
         from django.utils import timezone as tz
+
         student = self.get_object()
         report = generate_student_academic_report(student)
-        
+
         context = {
-            'student': student,
-            'grades': report['grades'],
-            'attendance': report['attendance'],
-            'discipline': report['discipline'],
-            'now': tz.now()
+            "student": student,
+            "grades": report["grades"],
+            "attendance": report["attendance"],
+            "discipline": report["discipline"],
+            "now": tz.now(),
         }
-        
+
         return pdfgen(
             "academic_report.html",
             context,
@@ -239,9 +237,7 @@ class PresenceViewSet(viewsets.ModelViewSet):
             if total_days == 0:
                 continue
 
-            absences = Presence.objects.filter(
-                student=student, presence=False
-            ).count()
+            absences = Presence.objects.filter(student=student, presence=False).count()
             absence_rate = (absences / total_days) * 100
 
             students_with_absences.append(
@@ -310,7 +306,13 @@ class TuitionViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "payment_history", "financial_report", "download_financial_report"]:
+        if self.action in [
+            "list",
+            "retrieve",
+            "payment_history",
+            "financial_report",
+            "download_financial_report",
+        ]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -342,19 +344,24 @@ class TuitionViewSet(viewsets.ModelViewSet):
     def download_financial_report(self, request):
         """Download financial report PDF"""
         from django.utils import timezone as tz
+
         student_id = request.query_params.get("student_id")
         student = Student.objects.get(id=student_id) if student_id else None
         report = generate_financial_report(student)
-        
+
         context = {
-            'student': student,
-            'summary': report['summary'],
-            'payment_history': report['payment_history'],
-            'now': tz.now()
+            "student": student,
+            "summary": report["summary"],
+            "payment_history": report["payment_history"],
+            "now": tz.now(),
         }
-        
-        filename = f"Relatorio_Financeiro_{student.full_name}.pdf" if student else "Relatorio_Financeiro_Geral.pdf"
-        
+
+        filename = (
+            f"Relatorio_Financeiro_{student.full_name}.pdf"
+            if student
+            else "Relatorio_Financeiro_Geral.pdf"
+        )
+
         return pdfgen(
             "financial_report.html",
             context,
