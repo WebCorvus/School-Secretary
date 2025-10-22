@@ -2,7 +2,7 @@
 
 ## Executando Testes
 
-### Por Docker (Recomendado)
+### Usando Docker (Recomendado)
 
 Para rodar todos os testes de uma só fez, em _containers_ separados e temporários, execute:
 
@@ -12,9 +12,9 @@ Para rodar todos os testes de uma só fez, em _containers_ separados e temporár
 
 O qual executa [`./scripts/test.sh`](./scripts/test.sh), que cria todos os _containers_, roda, testa e apaga.
 
-### Localmente
+### Localmente (Manual)
 
-Para isso faça o setup local do site, informado em [INSTALLATION](./INSTALLATION.md), depois siga as instruções abaixo:
+Para isso faça o _setup_ local do site, informado em [INSTALLATION](./INSTALLATION.md), depois siga as instruções abaixo:
 
 #### API
 
@@ -46,3 +46,19 @@ Para criar um novo arquivo de testes, basta colocá-lo dentro da pasta tests do 
 No [`app/`](./app/) os testes estão ao lado de seu respectivo arquivo `*.tsx` e possuem, obrigatoriamente, o nome `*.test.tsx`. Por exemplo:
 
 -   [`UserInfoCard/index.tsx`](./app/src/components/UserInfoCard/index.tsx) é testado por [`UserInfoCard/index.test.tsx`](./app/src/components/UserInfoCard/index.test.tsx)
+
+## Logging de Exceções com Usuário
+
+Siga os tópicos anteriores parar inicializar o projeto
+
+-   O middleware está em: [`school/middleware.py`](./api/school/middleware.py).
+-   Logs de erro podem ser visualizados com:
+
+    ```bash
+    docker compose logs -f school-secretary-api
+
+    # ou apenas observe o output se tiver feito localmente
+    ```
+
+-   Para testar, provoque uma exceção em uma view autenticada e verifique o log.
+-   O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.
