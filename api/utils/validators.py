@@ -1,15 +1,28 @@
 import re
 from django.core.exceptions import ValidationError
-from validate_docbr import CPF
+
+try:
+    from validate_docbr import CPF
+    HAS_VALIDATE_DOCBR = True
+except ImportError:
+    HAS_VALIDATE_DOCBR = False
 
 
 def cpf_validator(value):
-    cpf = CPF()
-    if not cpf.validate(value):
-        raise ValidationError(
-            ("%(value)s is not valid"),
-            params={"value": value},
-        )
+    if HAS_VALIDATE_DOCBR:
+        cpf = CPF()
+        if not cpf.validate(value):
+            raise ValidationError(
+                ("%(value)s is not valid"),
+                params={"value": value},
+            )
+    else:
+        # Basic CPF validation without external library
+        if not value or len(value) != 11 or not value.isdigit():
+            raise ValidationError(
+                ("%(value)s is not valid"),
+                params={"value": value},
+            )
 
 
 def cep_validator(value):

@@ -9,6 +9,12 @@ from school.models import (
     Lesson,
     Event,
     AgendaItem,
+    EventRegistration,
+    Resource,
+    ResourceLoan,
+    Room,
+    RoomReservation,
+    Notification,
 )
 
 
@@ -263,3 +269,60 @@ admin.site.register(
     Event,
     EventsAdmin,
 )
+
+
+class EventRegistrationAdmin(admin.ModelAdmin):
+    list_display = ("id", "event", "student", "registration_date")
+    list_display_links = ("event", "student")
+    search_fields = ("event__title", "student__full_name")
+    list_filter = ("event", "registration_date")
+
+
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "resource_type", "status")
+    list_display_links = ("name",)
+    search_fields = ("name", "resource_type")
+    list_filter = ("resource_type", "status")
+
+
+class ResourceLoanAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "resource",
+        "student",
+        "loan_date",
+        "return_date",
+        "actual_return_date",
+    )
+    list_display_links = ("resource", "student")
+    search_fields = ("resource__name", "student__full_name")
+    list_filter = ("loan_date", "return_date")
+
+
+class RoomAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "room_type", "capacity")
+    list_display_links = ("name",)
+    search_fields = ("name", "room_type")
+    list_filter = ("room_type",)
+
+
+class RoomReservationAdmin(admin.ModelAdmin):
+    list_display = ("id", "room", "reserved_by", "purpose", "date", "start_time", "end_time")
+    list_display_links = ("room", "reserved_by")
+    search_fields = ("room__name", "reserved_by__full_name", "purpose")
+    list_filter = ("date",)
+
+
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("id", "recipient", "notification_type", "title", "read", "created_at")
+    list_display_links = ("title",)
+    search_fields = ("recipient__name", "title", "message")
+    list_filter = ("notification_type", "read", "created_at")
+
+
+admin.site.register(EventRegistration, EventRegistrationAdmin)
+admin.site.register(Resource, ResourceAdmin)
+admin.site.register(ResourceLoan, ResourceLoanAdmin)
+admin.site.register(Room, RoomAdmin)
+admin.site.register(RoomReservation, RoomReservationAdmin)
+admin.site.register(Notification, NotificationAdmin)

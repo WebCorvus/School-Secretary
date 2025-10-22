@@ -1,5 +1,15 @@
 from rest_framework import serializers
-from .models import Student, Grade, Guardian, Contract, Presence
+from .models import (
+    Student,
+    Grade,
+    Guardian,
+    Contract,
+    Presence,
+    Warning,
+    Suspension,
+    Tuition,
+    Enrollment,
+)
 from school.serializers import SubjectCompactSerializer, GroupCompactSerializer
 from school.models import (
     Subject,
@@ -65,12 +75,51 @@ class PresenceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class WarningSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+    issued_by_name = serializers.CharField(source="issued_by.name", read_only=True)
+
+    class Meta:
+        model = Warning
+        fields = "__all__"
+
+
+class SuspensionSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+    issued_by_name = serializers.CharField(source="issued_by.name", read_only=True)
+
+    class Meta:
+        model = Suspension
+        fields = "__all__"
+
+
+class TuitionSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+
+    class Meta:
+        model = Tuition
+        fields = "__all__"
+
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+    group_details = GroupCompactSerializer(source="group", read_only=True)
+
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
+
+
 class StudentSerializer(serializers.ModelSerializer):
     group_details = GroupCompactSerializer(source="group", read_only=True)
     grades_details = serializers.SerializerMethodField()
     presence_details = PresenceSerializer(source="presence", many=True, read_only=True)
     guardians_details = GuardianSerializer(
         source="guardians", many=True, read_only=True
+    )
+    warnings_details = WarningSerializer(source="warnings", many=True, read_only=True)
+    suspensions_details = SuspensionSerializer(
+        source="suspensions", many=True, read_only=True
     )
 
     class Meta:
