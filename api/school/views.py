@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsStaff, IsProfessor
 from django.utils import timezone
 from utils.date import get_day_name
+from utils.reports import generate_group_performance_report
 
 from .models import (
     Professor,
@@ -101,7 +102,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "get_lessons"]:
+        if self.action in ["list", "retrieve", "get_lessons", "performance_report"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -121,6 +122,13 @@ class GroupViewSet(viewsets.ModelViewSet):
             week_lessons.append({"day": get_day_name(day), "lessons": day_lessons})
 
         return Response(week_lessons)
+
+    @action(detail=True, methods=["get"], url_path="performance-report")
+    def performance_report(self, request, pk=None):
+        """Generate performance report for group"""
+        group = self.get_object()
+        report = generate_group_performance_report(group)
+        return Response(report)
 
 
 class SchoolRecordViewSet(viewsets.ModelViewSet):

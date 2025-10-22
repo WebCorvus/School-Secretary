@@ -27,6 +27,11 @@ from .serializers import (
 )
 from utils.pdfgen import pdfgen
 from utils.subject_utils import get_subject_names
+from utils.reports import (
+    generate_student_academic_report,
+    generate_financial_report,
+    identify_students_needing_notification,
+)
 from django.db.models import Count, Q
 from datetime import timedelta
 from django.utils import timezone
@@ -57,6 +62,8 @@ class StudentViewSet(viewsets.ModelViewSet):
             "retrieve",
             "download_grades_pdf",
             "download_presence_pdf",
+            "academic_report",
+            "students_needing_attention",
         ]:
             self.permission_classes = [IsAuthenticated]
         else:
@@ -88,6 +95,19 @@ class StudentViewSet(viewsets.ModelViewSet):
             {"student": student, "data": presence_records},
             f"Presence_{student.full_name}.pdf",
         )
+
+    @action(detail=True, methods=["get"], url_path="academic-report")
+    def academic_report(self, request, pk=None):
+        """Generate comprehensive academic report for student"""
+        student = self.get_object()
+        report = generate_student_academic_report(student)
+        return Response(report)
+
+    @action(detail=False, methods=["get"], url_path="students-needing-attention")
+    def students_needing_attention(self, request):
+        """Identify students needing notifications"""
+        notifications = identify_students_needing_notification()
+        return Response(notifications)
 
 
 class GradeViewSet(viewsets.ModelViewSet):
@@ -268,7 +288,7 @@ class TuitionViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "payment_history"]:
+        if self.action in ["list", "retrieve", "payment_history", "financial_report"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -287,6 +307,14 @@ class TuitionViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(tuitions, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], url_path="financial-report")
+    def financial_report(self, request):
+        """Generate financial report"""
+        student_id = request.query_params.get("student_id")
+        student = Student.objects.get(id=student_id) if student_id else None
+        report = generate_financial_report(student)
+        return Response(report)
 
 
 class EnrollmentViewSet(viewsets.ModelViewSet):
