@@ -4,7 +4,7 @@ Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no F
 
 ## Tecnologias
 
--   Django + Django REST Framework
+-   Django + Django REST Framework + WhiteNoise
 -   Next.js + Axios
 -   PostgreSQL
 
@@ -12,37 +12,34 @@ Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no F
 
 ```
 School-Secretary/
-├── api/            # API com Django
-├── app/            # Interface com Next.js
-├── docs/           # Documentos do projeto
-├── proxy/          # Proxy com Nginx
-├── test/           # Testes com Cypress
-├── .dockerignore   # Arquivos ignorados pelo Docker
-├── .env.base       # Variáveis de ambiente para configurar o projeto
-├── .gitignore      # Arquivos ignorados pelo Git, às vezes por segurança
-├── compose.yaml    # Configuração Docker Compose
-├── INSTALLATION.md # Informações de instalação
-├── README.md       # Informações gerais do projeto
-└── TODO.md         # Tarefas a serem feitas no futuro
+├── .github/            # Configuração para GitHub Actions
+├── api/                # API com Django
+├── app/                # Interface com Next.js
+├── db/                 # Configuração do BD local
+├── docs/               # Documentos do projeto
+├── proxy/              # Proxy com Nginx
+├── scripts/            # Scripts de propósito geral usados or controller.sh
+├── .gitattributes      # Configuração de codificação de arquivos salvos pelo git
+├── .gitignore          # Arquivos ignorados pelo Git, às vezes por segurança
+├── compose.test.yaml   # Configuração de testes do Docker Compose
+├── compose.yaml        # Configuração Docker Compose
+├── controller.sh       # Script que cuida da execução dos outros em script/
+├── INSTALLATION.md     # Informações de instalação
+├── README.md           # Informações gerais do projeto
+└── TODO.md             # Tarefas a serem feitas no futuro
 ```
 
 ## Configurações
 
 As configurações são injetadas no Backend e Frontend sem a necessidade de mudar código.
 
-Nesse sentido, basta acessar o arquivo `.env.base` para ver as configurações padrão da aplicação.
-
-Depois disso, para inserir novas configurações, basta sobrescrever as variáveis do arquivo base nos arquivos vazios `.env.local` ou `.env.prod`.
-
-Saiba que `.env.local` sobrescreve `.env.prod`, que sobrescreve `.env.base`, nessa ordem, uma vez que:
+Para inserir novas configurações, basta sobrescrever as variáveis do arquivo base `.env` , dentro da pasta de cada container. Localmente, serão incluídas assim:
 
 ```yaml
 # compose.yaml
 . . .
 env_file:
-    - .env.base
-    - .env.prod
-    - .env.local
+    - .env
 . . .
 ```
 
