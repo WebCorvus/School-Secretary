@@ -21,6 +21,13 @@ def test_model_structure():
     with open(models_file, 'r') as f:
         content = f.read()
     
+    # Check that admin logging functions are removed
+    if 'get_admin_username' in content or 'log_admin_create_update' in content:
+        print(f"  ❌ Admin logging functions should be removed")
+        return False
+    else:
+        print(f"  ✅ Admin logging functions removed - OK")
+    
     checks = [
         ('WeeklyLessonPlan class', 'class WeeklyLessonPlan'),
         ('professor ForeignKey', 'professor = models.ForeignKey'),
@@ -38,11 +45,129 @@ def test_model_structure():
             print(f"  ❌ {check_name} - MISSING")
             return False
     
+    # Check that Resource models are removed from school
+    if 'class Resource(' in content or 'class ResourceLoan(' in content:
+        print(f"  ❌ Resource models should be moved to resources app")
+        return False
+    else:
+        print(f"  ✅ Resource models removed from school - OK")
+    
+    return True
+
+def test_resources_app():
+    """Test that resources app is properly created"""
+    print("\n🔍 Testing resources app...")
+    
+    resources_dir = project_root / 'api' / 'resources'
+    if not resources_dir.exists():
+        print(f"  ❌ Resources app directory not found")
+        return False
+    
+    print(f"  ✅ Resources app directory exists - OK")
+    
+    # Check models
+    models_file = resources_dir / 'models.py'
+    if not models_file.exists():
+        print(f"  ❌ Resources models.py not found")
+        return False
+    
+    with open(models_file, 'r') as f:
+        content = f.read()
+    
+    if 'class Resource(' in content and 'class ResourceLoan(' in content:
+        print(f"  ✅ Resource models in resources app - OK")
+    else:
+        print(f"  ❌ Resource models not properly defined")
+        return False
+    
+    # Check serializers
+    serializers_file = resources_dir / 'serializers.py'
+    if serializers_file.exists():
+        print(f"  ✅ Resources serializers exist - OK")
+    else:
+        print(f"  ❌ Resources serializers missing")
+        return False
+    
+    # Check views
+    views_file = resources_dir / 'views.py'
+    if views_file.exists():
+        print(f"  ✅ Resources views exist - OK")
+    else:
+        print(f"  ❌ Resources views missing")
+        return False
+    
+    # Check urls
+    urls_file = resources_dir / 'urls.py'
+    if urls_file.exists():
+        print(f"  ✅ Resources urls exist - OK")
+    else:
+        print(f"  ❌ Resources urls missing")
+        return False
+    
+    # Check admin
+    admin_file = resources_dir / 'admin.py'
+    if admin_file.exists():
+        print(f"  ✅ Resources admin exists - OK")
+    else:
+        print(f"  ❌ Resources admin missing")
+        return False
+    
+    return True
+
+def test_settings():
+    """Test that settings.py is updated correctly"""
+    print("\n🔍 Testing settings.py...")
+    
+    settings_file = project_root / 'api' / 'School-Secretary' / 'settings.py'
+    with open(settings_file, 'r') as f:
+        content = f.read()
+    
+    # Check resources app is added
+    if '"resources.apps.ResourcesConfig"' in content:
+        print(f"  ✅ Resources app added to INSTALLED_APPS - OK")
+    else:
+        print(f"  ❌ Resources app not in INSTALLED_APPS")
+        return False
+    
+    # Check codespace link is removed
+    if 'potential-eureka' in content or 'github.dev' in content:
+        print(f"  ❌ Codespace link still present in CSRF_TRUSTED_ORIGINS")
+        return False
+    else:
+        print(f"  ✅ Codespace link removed from CSRF_TRUSTED_ORIGINS - OK")
+    
+    return True
+
+def test_urls():
+    """Test that main urls.py includes resources"""
+    print("\n🔍 Testing URL configuration...")
+    
+    urls_file = project_root / 'api' / 'School-Secretary' / 'urls.py'
+    with open(urls_file, 'r') as f:
+        content = f.read()
+    
+    if 'path("resources/"' in content and 'include("resources.urls")' in content:
+        print(f"  ✅ Resources URLs registered - OK")
+    else:
+        print(f"  ❌ Resources URLs not registered")
+        return False
+    
+    # Check school urls don't have resources
+    school_urls_file = project_root / 'api' / 'school' / 'urls.py'
+    with open(school_urls_file, 'r') as f:
+        content = f.read()
+    
+    if 'ResourceViewSet' in content or 'ResourceLoanViewSet' in content:
+        print(f"  ❌ Resource viewsets still in school urls")
+        return False
+    else:
+        print(f"  ✅ Resource viewsets removed from school urls - OK")
+    
     return True
 
 def test_serializers():
     """Test that WeeklyLessonPlan serializer is properly defined"""
-    print("\n🔍 Testing WeeklyLessonPlan serializer...")
+    print("\n🔍 Testing serializers...")
     
     serializers_file = project_root / 'api' / 'school' / 'serializers.py'
     with open(serializers_file, 'r') as f:
@@ -62,11 +187,18 @@ def test_serializers():
             print(f"  ❌ {check_name} - MISSING")
             return False
     
+    # Check Resource serializers are removed from school
+    if 'ResourceSerializer' in content or 'ResourceLoanSerializer' in content:
+        print(f"  ❌ Resource serializers still in school")
+        return False
+    else:
+        print(f"  ✅ Resource serializers removed from school - OK")
+    
     return True
 
 def test_views():
     """Test that WeeklyLessonPlanViewSet is properly defined"""
-    print("\n🔍 Testing WeeklyLessonPlanViewSet...")
+    print("\n🔍 Testing views...")
     
     views_file = project_root / 'api' / 'school' / 'views.py'
     with open(views_file, 'r') as f:
@@ -89,23 +221,59 @@ def test_views():
             print(f"  ❌ {check_name} - MISSING")
             return False
     
+    # Check Resource viewsets are removed from school
+    if 'class ResourceViewSet' in content or 'class ResourceLoanViewSet' in content:
+        print(f"  ❌ Resource viewsets still in school views")
+        return False
+    else:
+        print(f"  ✅ Resource viewsets removed from school - OK")
+    
     return True
 
-def test_urls():
-    """Test that WeeklyLessonPlan URLs are registered"""
-    print("\n🔍 Testing URL registration...")
+def test_seed_files_removed():
+    """Test that seed files are removed"""
+    print("\n🔍 Testing seed files removal...")
     
-    urls_file = project_root / 'api' / 'school' / 'urls.py'
-    with open(urls_file, 'r') as f:
+    seed_school = project_root / 'api' / 'students' / 'management' / 'commands' / 'seed_school.py'
+    seed_users = project_root / 'api' / 'users' / 'management' / 'commands' / 'seed_users.py'
+    
+    if seed_school.exists():
+        print(f"  ❌ seed_school.py still exists")
+        return False
+    else:
+        print(f"  ✅ seed_school.py removed - OK")
+    
+    if seed_users.exists():
+        print(f"  ❌ seed_users.py still exists")
+        return False
+    else:
+        print(f"  ✅ seed_users.py removed - OK")
+    
+    return True
+
+def test_api_documentation():
+    """Test that API documentation exists"""
+    print("\n🔍 Testing API documentation...")
+    
+    readme_file = project_root / 'api' / 'README.md'
+    if not readme_file.exists():
+        print(f"  ❌ API README.md not found")
+        return False
+    
+    with open(readme_file, 'r') as f:
         content = f.read()
     
     checks = [
-        ('WeeklyLessonPlanViewSet import', 'WeeklyLessonPlanViewSet'),
-        ('weekly-plans registration', r'router.register\(r"weekly-plans"'),
+        ('Resources endpoints documented', '/api/resources/'),
+        ('Resource loans documented', '/api/resources/loans/'),
+        ('Weekly lesson plans documented', '/api/school/weekly-plans/'),
+        ('Efficiency analysis documented', 'efficiency-analysis'),
+        ('Authentication section', 'Authentication'),
+        ('Example usage', 'Example Usage'),
     ]
     
     for check_name, check_pattern in checks:
-        if re.search(check_pattern, content):
+        if check_pattern in content:
             print(f"  ✅ {check_name} - OK")
         else:
             print(f"  ❌ {check_name} - MISSING")
@@ -268,9 +436,13 @@ def main():
     
     tests = [
         ("WeeklyLessonPlan Model", test_model_structure),
-        ("WeeklyLessonPlan Serializers", test_serializers),
-        ("WeeklyLessonPlan Views", test_views),
-        ("WeeklyLessonPlan URLs", test_urls),
+        ("Resources App", test_resources_app),
+        ("Settings Configuration", test_settings),
+        ("URL Configuration", test_urls),
+        ("Serializers", test_serializers),
+        ("Views", test_views),
+        ("Seed Files Removed", test_seed_files_removed),
+        ("API Documentation", test_api_documentation),
         ("Efficiency Analysis", test_efficiency_analysis),
         ("Frontend Inbox", test_frontend_inbox),
         ("Authentication Fix", test_authentication_fix),
@@ -305,3 +477,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+
