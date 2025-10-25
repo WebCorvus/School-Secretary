@@ -38,7 +38,7 @@ api.interceptors.response.use(
         console.error("Refresh token failed", refreshError);
         // Redirect to login if refresh fails
         if (typeof window !== "undefined") {
-          window.location.href = "/auth/login";
+          window.location.href = "/";
         }
         return Promise.reject(refreshError);
       }
@@ -48,7 +48,7 @@ api.interceptors.response.use(
     if (error.response?.status === 403) {
       console.error("Access forbidden - redirecting to login");
       if (typeof window !== "undefined") {
-        window.location.href = "/auth/login";
+        window.location.href = "/";
       }
     }
 
