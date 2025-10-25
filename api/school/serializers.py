@@ -8,6 +8,7 @@ from .models import (
     Book,
     Lesson,
     AgendaItem,
+    WeeklyLessonPlan,
     Event,
     EventRegistration,
     Resource,
@@ -112,6 +113,15 @@ class AgendaItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AgendaItem
+        fields = "__all__"
+
+
+class WeeklyLessonPlanSerializer(serializers.ModelSerializer):
+    professor_details = ProfessorCompactSerializer(source="professor", read_only=True)
+    lesson_details = LessonSerializer(source="lesson", read_only=True)
+
+    class Meta:
+        model = WeeklyLessonPlan
         fields = "__all__"
 
 

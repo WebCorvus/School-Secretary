@@ -333,6 +333,55 @@ class AgendaItem(models.Model):
         return self.title
 
 
+class WeeklyLessonPlan(models.Model):
+    """Weekly lesson planning for professors"""
+    professor = models.ForeignKey(
+        "school.Professor",
+        on_delete=models.CASCADE,
+        verbose_name="Professor",
+        related_name="weekly_plans",
+    )
+    lesson = models.ForeignKey(
+        "school.Lesson",
+        on_delete=models.CASCADE,
+        verbose_name="Aula",
+        related_name="weekly_plans",
+    )
+    week_start_date = models.DateField(verbose_name="Início da semana")
+    planning_content = models.TextField(
+        verbose_name="Planejamento",
+        help_text="Conteúdo programado para a semana"
+    )
+    objectives = models.TextField(
+        verbose_name="Objetivos",
+        blank=True,
+        null=True,
+        help_text="Objetivos de aprendizagem da semana"
+    )
+    resources_needed = models.TextField(
+        verbose_name="Recursos necessários",
+        blank=True,
+        null=True,
+        help_text="Materiais e recursos necessários"
+    )
+    notes = models.TextField(
+        verbose_name="Observações",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(verbose_name="Criado em", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Atualizado em", auto_now=True)
+
+    class Meta:
+        verbose_name = "Planejamento Semanal"
+        verbose_name_plural = "Planejamentos Semanais"
+        ordering = ["-week_start_date"]
+        unique_together = ["lesson", "week_start_date"]
+
+    def __str__(self):
+        return f"{self.professor.full_name} - {self.lesson} - Semana de {self.week_start_date}"
+
+
 class Event(models.Model):
     title = models.CharField(verbose_name="Título", max_length=200)
     description = models.TextField(verbose_name="Descrição", blank=True, null=True)
