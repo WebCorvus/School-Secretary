@@ -24,8 +24,6 @@ from .models import (
     WeeklyLessonPlan,
     Event,
     EventRegistration,
-    Resource,
-    ResourceLoan,
     Room,
     RoomReservation,
     Notification,
@@ -42,8 +40,6 @@ from .serializers import (
     WeeklyLessonPlanSerializer,
     EventSerializer,
     EventRegistrationSerializer,
-    ResourceSerializer,
-    ResourceLoanSerializer,
     RoomSerializer,
     RoomReservationSerializer,
     NotificationSerializer,
@@ -335,39 +331,6 @@ class EventRegistrationViewSet(viewsets.ModelViewSet):
         "event__title",
         "student__full_name",
         "student__registration_number",
-    ]
-
-    def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
-
-
-class ResourceViewSet(viewsets.ModelViewSet):
-    queryset = Resource.objects.all().order_by("name")
-    serializer_class = ResourceSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "resource_type", "status"]
-
-    def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
-
-
-class ResourceLoanViewSet(viewsets.ModelViewSet):
-    queryset = ResourceLoan.objects.all().order_by("-loan_date")
-    serializer_class = ResourceLoanSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "resource__name",
-        "student__full_name",
-        "student__registration_number",
-        "loan_date",
     ]
 
     def get_permissions(self):

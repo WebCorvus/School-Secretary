@@ -11,8 +11,6 @@ from school.models import (
     AgendaItem,
     WeeklyLessonPlan,
     EventRegistration,
-    Resource,
-    ResourceLoan,
     Room,
     RoomReservation,
     Notification,
@@ -307,27 +305,6 @@ class EventRegistrationAdmin(admin.ModelAdmin):
     list_filter = ("event", "registration_date")
 
 
-class ResourceAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "resource_type", "status")
-    list_display_links = ("name",)
-    search_fields = ("name", "resource_type")
-    list_filter = ("resource_type", "status")
-
-
-class ResourceLoanAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "resource",
-        "student",
-        "loan_date",
-        "return_date",
-        "actual_return_date",
-    )
-    list_display_links = ("resource", "student")
-    search_fields = ("resource__name", "student__full_name")
-    list_filter = ("loan_date", "return_date")
-
-
 class RoomAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "room_type", "capacity")
     list_display_links = ("name",)
@@ -350,8 +327,6 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(EventRegistration, EventRegistrationAdmin)
-admin.site.register(Resource, ResourceAdmin)
-admin.site.register(ResourceLoan, ResourceLoanAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(RoomReservation, RoomReservationAdmin)
 admin.site.register(Notification, NotificationAdmin)
