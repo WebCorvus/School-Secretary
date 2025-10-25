@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "school.apps.SchoolConfig",
     "students.apps.StudentsConfig",
     "users.apps.UsersConfig",
+    "resources.apps.ResourcesConfig",
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
@@ -155,7 +156,7 @@ USE_TZ = os.environ.get("USE_TZ", True)
 
 CSRF_TRUSTED_ORIGINS = os.environ.get(
     "CSRF_TRUSTED_ORIGINS",
-    "https://localhost:8000,https://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8000,https://potential-eureka-4xpgjr6x9vrf77q7-8080.app.github.dev",
+    "https://localhost:8000,https://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:8000",
 ).split(",")
 
 FORCE_SCRIPT_NAME = os.environ.get("SCRIPT_NAME", "/")
