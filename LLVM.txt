@@ -1,0 +1,62 @@
+# LLVM.txt — Regras e Diretrizes Gerais do Projeto
+
+## 1. Documentação
+- Ler toda a documentação nos arquivos *.md antes de implementar ou alterar algo.
+- Revisar também este arquivo (LLVM.txt) sempre que for desenvolver novas partes do projeto.
+- Manter a documentação atualizada quando novas decisões técnicas forem tomadas.
+
+## 2. Testes
+- Gerar testes para todos os componentes, funções e rotas criadas.
+- Executar os testes seguindo as instruções em TESTING.md.
+- O script controller.sh pode ser utilizado para automatizar processos de teste e execução, conforme documentado em TESTING.md e INSTALLATION.md.
+- Para o frontend (Next.js), usar Vitest.
+- Para o backend (Django), usar os testes nativos do Django.
+- Garantir que todos os testes passem antes de enviar qualquer alteração.
+
+## 3. Organização e Estrutura
+- Seguir rigorosamente a estrutura atual do projeto (pastas, padrões, convenções).
+- Não alterar a arquitetura nem a organização dos módulos sem solicitação explícita.
+- No Django, separar apps dentro de api/ quando os modelos não se misturarem (exemplo: AgendaItem e Resources devem ficar em apps distintos).
+- No frontend, manter o padrão de estrutura atual (componentes, hooks, pages, etc).
+
+## 4. Integração e Arquitetura
+- Considerar toda a arquitetura existente antes de implementar qualquer coisa:
+  - nginx
+  - docker e docker-compose
+  - postgres
+  - whitenoise
+  - serve (frontend)
+- Garantir que as mudanças não quebrem o fluxo atual de build e deploy.
+- Testar localmente dentro do ambiente Docker antes de commitar.
+
+## 5. Padrões de Código
+- Seguir as configurações do Prettier e do ESLint já definidas no projeto.
+- Não adicionar regras manuais conflitantes sem justificativa.
+- Manter o código limpo, tipado (TypeScript) e consistente com o estilo atual.
+
+## 6. Controle de Mudanças
+- Registrar todas as modificações e adições no final do arquivo NEW.md.
+- Nunca apagar o conteúdo existente de NEW.md.
+- Se adicionar novas dependências, documentar brevemente sua função e motivo.
+
+## 7. Boas Práticas Gerais
+- Comentar o código apenas quando for realmente necessário para o entendimento.
+- Priorizar legibilidade e consistência sobre micro-otimizações.
+- Validar o funcionamento tanto no backend (API) quanto no frontend (Next.js).
+- Evitar dependências desnecessárias.
+
+## 8. Revisão Final Antes de Commitar
+1. Rodar todos os testes (vitest e python manage.py test).
+2. Checar ESLint e Prettier (npm run lint && npm run format).
+3. Validar que o docker-compose up sobe sem erros.
+4. Atualizar NEW.md se houve mudanças relevantes.
+5. Confirmar que nenhuma convenção descrita aqui foi violada.
+6. Utilizar controller.sh quando apropriado, para automatizar verificações e builds.
+
+## 9. Automação e Scripts
+- O script controller.sh é parte essencial do fluxo de automação do projeto.
+- Sempre verificar a documentação de TESTING.md e INSTALLATION.md antes de executá-lo.
+- controller.sh pode executar testes, preparar builds ou reiniciar serviços Docker.
+- Não alterar controller.sh sem autorização explícita.
+- Caso o script seja atualizado, garantir que todas as referências e documentações estejam sincronizadas.
+
