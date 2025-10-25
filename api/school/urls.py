@@ -9,10 +9,9 @@ from .views import (
     BookViewSet,
     LessonViewSet,
     AgendaItemViewSet,
+    WeeklyLessonPlanViewSet,
     EventViewSet,
     EventRegistrationViewSet,
-    ResourceViewSet,
-    ResourceLoanViewSet,
     RoomViewSet,
     RoomReservationViewSet,
     NotificationViewSet,
@@ -27,10 +26,9 @@ router.register(r"schoolrecords", SchoolRecordViewSet, basename="schoolrecord")
 router.register(r"books", BookViewSet, basename="book")
 router.register(r"lessons", LessonViewSet, basename="lesson")
 router.register(r"agenda", AgendaItemViewSet, basename="agendaitem")
+router.register(r"weekly-plans", WeeklyLessonPlanViewSet, basename="weeklylessonplan")
 router.register(r"events", EventViewSet, basename="event")
 router.register(r"event-registrations", EventRegistrationViewSet, basename="event-registration")
-router.register(r"resources", ResourceViewSet, basename="resource")
-router.register(r"resource-loans", ResourceLoanViewSet, basename="resource-loan")
 router.register(r"rooms", RoomViewSet, basename="room")
 router.register(r"room-reservations", RoomReservationViewSet, basename="room-reservation")
 router.register(r"notifications", NotificationViewSet, basename="notification")

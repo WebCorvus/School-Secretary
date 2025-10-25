@@ -8,10 +8,9 @@ from .models import (
     Book,
     Lesson,
     AgendaItem,
+    WeeklyLessonPlan,
     Event,
     EventRegistration,
-    Resource,
-    ResourceLoan,
     Room,
     RoomReservation,
     Notification,
@@ -115,6 +114,15 @@ class AgendaItemSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class WeeklyLessonPlanSerializer(serializers.ModelSerializer):
+    professor_details = ProfessorCompactSerializer(source="professor", read_only=True)
+    lesson_details = LessonSerializer(source="lesson", read_only=True)
+
+    class Meta:
+        model = WeeklyLessonPlan
+        fields = "__all__"
+
+
 class EventSerializer(serializers.ModelSerializer):
     registrations_count = serializers.SerializerMethodField()
 
@@ -132,21 +140,6 @@ class EventRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EventRegistration
-        fields = "__all__"
-
-
-class ResourceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Resource
-        fields = "__all__"
-
-
-class ResourceLoanSerializer(serializers.ModelSerializer):
-    resource_details = ResourceSerializer(source="resource", read_only=True)
-    student_name = serializers.CharField(source="student.full_name", read_only=True)
-
-    class Meta:
-        model = ResourceLoan
         fields = "__all__"
 
 

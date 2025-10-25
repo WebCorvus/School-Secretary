@@ -5,7 +5,12 @@ from rest_framework.permissions import IsAuthenticated
 from users.permissions import IsStaff, IsProfessor
 from django.utils import timezone
 from utils.date import get_day_name
-from utils.reports import generate_group_performance_report
+from utils.reports import (
+    generate_group_performance_report,
+    generate_efficiency_analysis,
+    calculate_approval_rate,
+    calculate_dropout_rate,
+)
 
 from .models import (
     Professor,
@@ -16,10 +21,9 @@ from .models import (
     Book,
     Lesson,
     AgendaItem,
+    WeeklyLessonPlan,
     Event,
     EventRegistration,
-    Resource,
-    ResourceLoan,
     Room,
     RoomReservation,
     Notification,
@@ -33,10 +37,9 @@ from .serializers import (
     BookSerializer,
     LessonSerializer,
     AgendaItemSerializer,
+    WeeklyLessonPlanSerializer,
     EventSerializer,
     EventRegistrationSerializer,
-    ResourceSerializer,
-    ResourceLoanSerializer,
     RoomSerializer,
     RoomReservationSerializer,
     NotificationSerializer,
@@ -102,7 +105,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "get_lessons", "performance_report"]:
+        if self.action in ["list", "retrieve", "get_lessons", "performance_report", "efficiency_analysis"]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -129,6 +132,16 @@ class GroupViewSet(viewsets.ModelViewSet):
         group = self.get_object()
         report = generate_group_performance_report(group)
         return Response(report)
+
+    @action(detail=True, methods=["get"], url_path="efficiency-analysis")
+    def efficiency_analysis(self, request, pk=None):
+        """Generate efficiency analysis (approval and dropout rates) for group"""
+        group = self.get_object()
+        year = request.query_params.get('year', None)
+        if year:
+            year = int(year)
+        analysis = generate_efficiency_analysis(group, year)
+        return Response(analysis)
 
 
 class SchoolRecordViewSet(viewsets.ModelViewSet):
@@ -213,6 +226,37 @@ class AgendaItemViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+class WeeklyLessonPlanViewSet(viewsets.ModelViewSet):
+    queryset = WeeklyLessonPlan.objects.all().order_by("-week_start_date")
+    serializer_class = WeeklyLessonPlanSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "professor__full_name",
+        "lesson__subject__full_name",
+        "lesson__group__full_name",
+        "week_start_date",
+        "planning_content",
+    ]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve"]:
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsProfessor]
+        return super().get_permissions()
+
+    def get_queryset(self):
+        """Filter plans for the authenticated user if they are a professor"""
+        queryset = super().get_queryset()
+        user = self.request.user
+        
+        # If user is a professor, show only their plans (unless staff/superuser)
+        if hasattr(user, 'professor_profile') and not (user.is_staff or user.is_superuser):
+            queryset = queryset.filter(professor=user.professor_profile)
+        
+        return queryset
+
+
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all().order_by("-start_date", "-start_time")
     serializer_class = EventSerializer
@@ -287,39 +331,6 @@ class EventRegistrationViewSet(viewsets.ModelViewSet):
         "event__title",
         "student__full_name",
         "student__registration_number",
-    ]
-
-    def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
-
-
-class ResourceViewSet(viewsets.ModelViewSet):
-    queryset = Resource.objects.all().order_by("name")
-    serializer_class = ResourceSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["name", "resource_type", "status"]
-
-    def get_permissions(self):
-        if self.action in ["list", "retrieve"]:
-            self.permission_classes = [IsAuthenticated]
-        else:
-            self.permission_classes = [IsStaff]
-        return super().get_permissions()
-
-
-class ResourceLoanViewSet(viewsets.ModelViewSet):
-    queryset = ResourceLoan.objects.all().order_by("-loan_date")
-    serializer_class = ResourceLoanSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = [
-        "resource__name",
-        "student__full_name",
-        "student__registration_number",
-        "loan_date",
     ]
 
     def get_permissions(self):
