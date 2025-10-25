@@ -229,7 +229,7 @@ As seguintes funcionalidades **não estão no escopo final** mas foram mantidas 
 
 ## Referências
 
-- [ESCOPO FINAL](./docs/NEW_FEATURES_IMPLEMENTATION.md#final-scope-compliance)
-- [MIGRATION INSTRUCTIONS](./MIGRATION_INSTRUCTIONS.md)
-- [TODO Atualizado](./TODO.md)
-- [README Principal](./README.md)
+- [ESCOPO FINAL](NEW_FEATURES_IMPLEMENTATION.md#final-scope-compliance)
+- [MIGRATION INSTRUCTIONS](../MIGRATION_INSTRUCTIONS.md)
+- [TODO Atualizado](../TODO.md)
+- [README Principal](../README.md)
