@@ -20,6 +20,7 @@ api.interceptors.response.use(
   async (error: any) => {
     const originalRequest = error.config;
 
+    // Handle 401 Unauthorized - try to refresh token
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
@@ -35,7 +36,19 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.error("Refresh token failed", refreshError);
+        // Redirect to login if refresh fails
+        if (typeof window !== "undefined") {
+          window.location.href = "/auth/login";
+        }
         return Promise.reject(refreshError);
+      }
+    }
+
+    // Handle 403 Forbidden - redirect to login
+    if (error.response?.status === 403) {
+      console.error("Access forbidden - redirecting to login");
+      if (typeof window !== "undefined") {
+        window.location.href = "/auth/login";
       }
     }
 

@@ -31,6 +31,7 @@ from utils.reports import (
     generate_student_academic_report,
     generate_financial_report,
     identify_students_needing_notification,
+    generate_efficiency_analysis,
 )
 
 
@@ -62,6 +63,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             "academic_report",
             "download_academic_report",
             "students_needing_attention",
+            "efficiency_analysis",
         ]:
             self.permission_classes = [IsAuthenticated]
         else:
@@ -128,6 +130,15 @@ class StudentViewSet(viewsets.ModelViewSet):
         """Identify students needing notifications"""
         notifications = identify_students_needing_notification()
         return Response(notifications)
+
+    @action(detail=False, methods=["get"], url_path="efficiency-analysis")
+    def efficiency_analysis(self, request):
+        """Generate efficiency analysis (approval and dropout rates) for all students"""
+        year = request.query_params.get('year', None)
+        if year:
+            year = int(year)
+        analysis = generate_efficiency_analysis(None, year)
+        return Response(analysis)
 
 
 class GradeViewSet(viewsets.ModelViewSet):

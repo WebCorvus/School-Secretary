@@ -9,6 +9,7 @@ from school.models import (
     Lesson,
     Event,
     AgendaItem,
+    WeeklyLessonPlan,
     EventRegistration,
     Resource,
     ResourceLoan,
@@ -265,6 +266,34 @@ admin.site.register(
     AgendaItem,
     AgendaItemsAdmin,
 )
+
+
+class WeeklyLessonPlanAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "professor",
+        "lesson",
+        "week_start_date",
+        "created_at",
+    )
+    list_display_links = (
+        "professor",
+        "lesson",
+    )
+    search_fields = (
+        "professor__full_name",
+        "lesson__subject__full_name",
+        "planning_content",
+    )
+    list_filter = ("week_start_date", "professor")
+
+
+admin.site.register(
+    WeeklyLessonPlan,
+    WeeklyLessonPlanAdmin,
+)
+
+
 admin.site.register(
     Event,
     EventsAdmin,
