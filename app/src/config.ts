@@ -25,6 +25,9 @@ const subPaths = {
 	AGENDA_PENDENTS: "agenda/pendents/",
 	EVENTS: "events/",
 	EVENTS_PENDENTS: "events/pendents/",
+	NOTIFICATIONS: "notifications/",
+	NOTIFICATIONS_MARK_READ: "notifications/{id}/mark-read/",
+	NOTIFICATIONS_MARK_ALL_READ: "notifications/mark-all-read/",
 };
 
 function makeRoutes(base: string) {
@@ -49,6 +52,9 @@ function makeRoutes(base: string) {
 	routes.AGENDA_PENDENTS = `${routes.SCHOOL}${subPaths.AGENDA_PENDENTS}`;
 	routes.EVENTS = `${routes.SCHOOL}${subPaths.EVENTS}`;
 	routes.EVENTS_PENDENTS = `${routes.SCHOOL}${subPaths.EVENTS_PENDENTS}`;
+	routes.NOTIFICATIONS = `${routes.SCHOOL}${subPaths.NOTIFICATIONS}`;
+	routes.NOTIFICATIONS_MARK_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_READ}`;
+	routes.NOTIFICATIONS_MARK_ALL_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_ALL_READ}`;
 
 	return routes;
 }

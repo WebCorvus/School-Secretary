@@ -9,9 +9,8 @@ from school.models import (
     Lesson,
     Event,
     AgendaItem,
+    WeeklyLessonPlan,
     EventRegistration,
-    Resource,
-    ResourceLoan,
     Room,
     RoomReservation,
     Notification,
@@ -265,6 +264,34 @@ admin.site.register(
     AgendaItem,
     AgendaItemsAdmin,
 )
+
+
+class WeeklyLessonPlanAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "professor",
+        "lesson",
+        "week_start_date",
+        "created_at",
+    )
+    list_display_links = (
+        "professor",
+        "lesson",
+    )
+    search_fields = (
+        "professor__full_name",
+        "lesson__subject__full_name",
+        "planning_content",
+    )
+    list_filter = ("week_start_date", "professor")
+
+
+admin.site.register(
+    WeeklyLessonPlan,
+    WeeklyLessonPlanAdmin,
+)
+
+
 admin.site.register(
     Event,
     EventsAdmin,
@@ -276,27 +303,6 @@ class EventRegistrationAdmin(admin.ModelAdmin):
     list_display_links = ("event", "student")
     search_fields = ("event__title", "student__full_name")
     list_filter = ("event", "registration_date")
-
-
-class ResourceAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "resource_type", "status")
-    list_display_links = ("name",)
-    search_fields = ("name", "resource_type")
-    list_filter = ("resource_type", "status")
-
-
-class ResourceLoanAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "resource",
-        "student",
-        "loan_date",
-        "return_date",
-        "actual_return_date",
-    )
-    list_display_links = ("resource", "student")
-    search_fields = ("resource__name", "student__full_name")
-    list_filter = ("loan_date", "return_date")
 
 
 class RoomAdmin(admin.ModelAdmin):
@@ -321,8 +327,6 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(EventRegistration, EventRegistrationAdmin)
-admin.site.register(Resource, ResourceAdmin)
-admin.site.register(ResourceLoan, ResourceLoanAdmin)
 admin.site.register(Room, RoomAdmin)
 admin.site.register(RoomReservation, RoomReservationAdmin)
 admin.site.register(Notification, NotificationAdmin)

@@ -8,6 +8,10 @@ Para rodar todos os testes de uma só fez, em _containers_ separados e temporár
 
 ```bash
 ./controller.sh test
+
+# or, if running without interaction:
+
+./controller.sh test --no-confirm
 ```
 
 O qual executa [`./scripts/test.sh`](./scripts/test.sh), que cria todos os _containers_, roda, testa e apaga.

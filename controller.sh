@@ -5,28 +5,44 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-SCRIPT_DIR="$(dirname "$(realpath "$0")")/scripts"
-SCRIPT="$1.sh"
+NO_CONFIRM=false
+SCRIPT_NAME=""
 
-SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT"
+for arg in "$@"; do
+  if [ "$arg" == "--no-confirm" ]; then
+    NO_CONFIRM=true
+  else
+    SCRIPT_NAME="$arg"
+  fi
+done
+
+if [ -z "$SCRIPT_NAME" ]; then
+  echo "Script name is required."
+  exit 1
+fi
+
+SCRIPT_DIR="$(dirname "$(realpath "$0")")/scripts"
+SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT_NAME.sh"
 
 if [ ! -f "$SCRIPT_PATH" ]; then
-  echo "'$SCRIPT' not found in 'scripts/'."
+  echo "'$SCRIPT_NAME.sh' not found in 'scripts/'."
   exit 1
 fi
 
 CMD="$SCRIPT_PATH"
-
 OS=$(uname -s)
 if [[ "$OS" == "MINGW"* || "$OS" == "CYGWIN"* || "$OS" == "MSYS"* ]]; then
-    CMD="winpty $CMD"
+  CMD="winpty $CMD"
 fi
 
 chmod +x "$SCRIPT_PATH"
-echo "Executing $SCRIPT..."
+echo "----------------------"
+echo "Executing $SCRIPT_NAME..."
 "$CMD"
 
-chmod +x "$SCRIPT_DIR/on_exit.sh"
-"$SCRIPT_DIR/on_exit.sh"
+if [ "$NO_CONFIRM" = false ]; then
+  chmod +x "$SCRIPT_DIR/on_exit.sh"
+  "$SCRIPT_DIR/on_exit.sh"
+fi
 
 exit 0

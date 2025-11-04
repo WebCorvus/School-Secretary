@@ -1,9 +1,9 @@
 """
 Utility functions for generating comprehensive academic reports
 """
-from django.db.models import Count, Avg, Q, Sum
-from students.models import Student, Grade, Presence, Warning, Suspension, Tuition
-from school.models import Subject
+from django.db.models import Count, Avg, Q, Sum, Case, When, FloatField
+from students.models import Student, Grade, Presence, Warning, Suspension, Tuition, Enrollment
+from school.models import Subject, Group
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -260,3 +260,140 @@ def identify_students_needing_notification():
         })
     
     return notifications_needed
+
+
+def calculate_approval_rate(group=None, year=None):
+    """
+    Calculate approval rate (Taxa de aprovação) for students
+    A student is considered approved if their average grade >= 6.0
+    """
+    if year is None:
+        year = timezone.now().year
+    
+    # Filter students by group if provided
+    students_query = Student.objects.all()
+    if group:
+        students_query = students_query.filter(group=group)
+    
+    total_students = students_query.count()
+    if total_students == 0:
+        return {
+            'total_students': 0,
+            'approved_students': 0,
+            'failed_students': 0,
+            'approval_rate': 0,
+            'year': year,
+            'group': group.full_name if group else 'All groups'
+        }
+    
+    approved_count = 0
+    failed_count = 0
+    
+    for student in students_query:
+        # Get all grades for the student in the specified year
+        grades = Grade.objects.filter(student=student, year=year)
+        
+        if grades.exists():
+            avg_grade = grades.aggregate(Avg('value'))['value__avg']
+            if avg_grade and avg_grade >= 6.0:
+                approved_count += 1
+            else:
+                failed_count += 1
+    
+    approval_rate = (approved_count / total_students * 100) if total_students > 0 else 0
+    
+    return {
+        'total_students': total_students,
+        'approved_students': approved_count,
+        'failed_students': failed_count,
+        'approval_rate': round(approval_rate, 2),
+        'year': year,
+        'group': group.full_name if group else 'All groups'
+    }
+
+
+def calculate_dropout_rate(group=None, year=None):
+    """
+    Calculate dropout/evasion rate (Taxa de evasão)
+    A student is considered to have dropped out if:
+    - They have an enrollment in the specified year but no recent presence records
+    - Or they have an absence rate > 75% in recent months
+    """
+    if year is None:
+        year = timezone.now().year
+    
+    # Get enrollments for the year
+    enrollments_query = Enrollment.objects.filter(year=year, status='APPROVED')
+    if group:
+        enrollments_query = enrollments_query.filter(group=group)
+    
+    total_enrolled = enrollments_query.count()
+    if total_enrolled == 0:
+        return {
+            'total_enrolled': 0,
+            'active_students': 0,
+            'dropout_students': 0,
+            'dropout_rate': 0,
+            'year': year,
+            'group': group.full_name if group else 'All groups'
+        }
+    
+    # Define dropout criteria: no presence records in the last 30 days or absence rate > 75%
+    cutoff_date = timezone.now().date() - timedelta(days=30)
+    dropout_count = 0
+    active_count = 0
+    
+    for enrollment in enrollments_query:
+        student = enrollment.student
+        
+        # Check if student has any presence records in the last 30 days
+        recent_presences = Presence.objects.filter(
+            student=student,
+            date__gte=cutoff_date
+        )
+        
+        if not recent_presences.exists():
+            # No recent presence records - likely dropped out
+            dropout_count += 1
+        else:
+            # Check absence rate
+            total_days = recent_presences.count()
+            absences = recent_presences.filter(presence=False).count()
+            absence_rate = (absences / total_days * 100) if total_days > 0 else 0
+            
+            if absence_rate > 75:
+                dropout_count += 1
+            else:
+                active_count += 1
+    
+    dropout_rate = (dropout_count / total_enrolled * 100) if total_enrolled > 0 else 0
+    
+    return {
+        'total_enrolled': total_enrolled,
+        'active_students': active_count,
+        'dropout_students': dropout_count,
+        'dropout_rate': round(dropout_rate, 2),
+        'year': year,
+        'group': group.full_name if group else 'All groups'
+    }
+
+
+def generate_efficiency_analysis(group=None, year=None):
+    """
+    Generate comprehensive efficiency analysis including approval and dropout rates
+    """
+    approval_data = calculate_approval_rate(group, year)
+    dropout_data = calculate_dropout_rate(group, year)
+    
+    return {
+        'approval_analysis': approval_data,
+        'dropout_analysis': dropout_data,
+        'summary': {
+            'year': year or timezone.now().year,
+            'group': group.full_name if group else 'All groups',
+            'total_students_evaluated': approval_data['total_students'],
+            'approval_rate': approval_data['approval_rate'],
+            'dropout_rate': dropout_data['dropout_rate'],
+            'retention_rate': round(100 - dropout_data['dropout_rate'], 2),
+        }
+    }

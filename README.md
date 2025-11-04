@@ -331,7 +331,7 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
 
 **Exemplos de Uso:**
 
--   **Em um Hook (ex: [`useEvent.ts`](./app/src/hooks/useEvent.ts))**:
+-   **Em um Hook (ex: `app/src/hooks/useEvent.ts`)**:
 
     ```ts
     // app/src/hooks/useEvent.ts
