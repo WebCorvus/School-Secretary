@@ -28,12 +28,15 @@ Our project is fully containerized using Docker to ensure a consistent developme
 The entire setup process is managed by our `controller.sh` script.
 
 1.  **Generate Environment Files**: This command creates the necessary `.env` files for all services (API, database, etc.).
+
     ```bash
     ./controller.sh genenvs
     ```
-    *You can review and customize the generated `.env` files in each service directory (`api/`, `app/`, `db/`) if needed.*
+
+    _You can review and customize the generated `.env` files in each service directory (`api/`, `app/`, `db/`) if needed._
 
 2.  **Start the Application**: This will build the Docker images and start all the services.
+
     ```bash
     ./controller.sh start
     ```
@@ -50,6 +53,7 @@ Once these steps are complete, the application will be available at `http://loca
 ### Branching Strategy
 
 Create a new branch from `main` for every new feature or bug fix. Use a descriptive prefix, such as:
+
 -   `feat/new-login-page` for new features.
 -   `fix/user-auth-bug` for bug fixes.
 -   `docs/update-readme` for documentation changes.
@@ -75,20 +79,21 @@ We enforce a consistent code style using automated tools. Please run them before
     cd app/
     npm run lint
     ```
-    *We recommend integrating ESLint and a formatter like Prettier into your code editor to automatically format your code on save.*
+    _We recommend integrating ESLint and a formatter like Prettier into your code editor to automatically format your code on save._
 
 ### API and Frontend Synchronization
 
 A critical part of the workflow is ensuring that the frontend application and the backend API are always in sync.
 
 When you add or modify an endpoint in the Django API (e.g., in `api/school/urls.py`):
+
 1.  **Update Frontend Configuration**: You must update the corresponding route in the frontend. The API routes used by the app are defined in `app/src/config.ts`.
 2.  **Update Frontend Service**: Modify or create the frontend service or hook (e.g., in `app/src/hooks/` or `app/src/services/`) that consumes the endpoint.
 3.  **Verify Manually**: After making these changes, you **must** manually test the entire flow. Navigate to the relevant page in the application and verify that the frontend correctly fetches data from or sends data to the new/updated backend endpoint. Check the browser's developer console for network errors.
 
 ### Testing
 
-Tests are mandatory and are checked in our CI pipeline.
+Creste tests for all that you create (if applicable). Furthermore, reste the project until do it succefully. Tests are mandatory and are checked in our CI pipeline.
 
 -   **Backend Tests**: Written using Django's native test framework. Run them with:
     ```bash
