@@ -13,15 +13,9 @@ from utils.reports import (
 )
 
 from .models import (
-    Professor,
-    Subject,
-    Itinerary,
-    Group,
     SchoolRecord,
     Book,
-    Lesson,
     AgendaItem,
-    WeeklyLessonPlan,
     Event,
     EventRegistration,
     Room,
@@ -29,22 +23,27 @@ from .models import (
     Notification,
 )
 from .serializers import (
-    ProfessorSerializer,
-    SubjectSerializer,
-    ItinerarySerializer,
-    GroupSerializer,
     SchoolRecordSerializer,
     BookSerializer,
-    LessonSerializer,
     AgendaItemSerializer,
-    WeeklyLessonPlanSerializer,
     EventSerializer,
     EventRegistrationSerializer,
     RoomSerializer,
     RoomReservationSerializer,
     NotificationSerializer,
 )
-from .models import LESSONS_PER_DAY
+from accounts.models import Professor
+from accounts.serializers import ProfessorSerializer
+from academics.models import Subject, Itinerary, Group, Lesson, WeeklyLessonPlan
+from academics.serializers import (
+    SubjectSerializer,
+    ItinerarySerializer,
+    GroupSerializer,
+    LessonSerializer,
+    WeeklyLessonPlanSerializer,
+)
+
+LESSONS_PER_DAY = 6
 
 
 class ProfessorViewSet(viewsets.ModelViewSet):

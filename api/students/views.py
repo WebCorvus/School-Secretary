@@ -4,27 +4,19 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions import IsStaff, IsProfessor
 from .models import (
-    Student,
-    Grade,
-    Guardian,
-    Contract,
-    Presence,
     Warning,
     Suspension,
     Tuition,
-    Enrollment,
 )
 from .serializers import (
-    StudentSerializer,
-    GradeSerializer,
-    GuardianSerializer,
-    ContractSerializer,
-    PresenceSerializer,
     WarningSerializer,
     SuspensionSerializer,
     TuitionSerializer,
-    EnrollmentSerializer,
 )
+from accounts.models import Student, Guardian, Contract
+from accounts.serializers import StudentSerializer, GuardianSerializer, ContractSerializer
+from academics.models import Grade, Presence, Enrollment
+from academics.serializers import GradeSerializer, PresenceSerializer, EnrollmentSerializer
 from utils.pdfgen import pdfgen
 from utils.subject_utils import get_subject_names
 from utils.reports import (

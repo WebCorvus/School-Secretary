@@ -1,73 +1,14 @@
 from rest_framework import serializers
 from .models import (
-    Professor,
-    Subject,
-    Itinerary,
-    Group,
     SchoolRecord,
     Book,
-    Lesson,
     AgendaItem,
-    WeeklyLessonPlan,
     Event,
     EventRegistration,
     Room,
     RoomReservation,
     Notification,
 )
-
-
-class SubjectCompactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subject
-        fields = ["id", "short_name", "full_name"]
-
-
-class ItineraryCompactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Itinerary
-        fields = ["id", "short_name", "full_name"]
-
-
-class GroupCompactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ["id", "short_name", "full_name"]
-
-
-class ProfessorCompactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Professor
-        fields = ["id", "full_name", "cpf", "phone_number"]
-
-
-class SubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subject
-        fields = "__all__"
-
-
-class ItinerarySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Itinerary
-        fields = "__all__"
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    itinerary_details = ItineraryCompactSerializer(source="itinerary", read_only=True)
-
-    class Meta:
-        model = Group
-        fields = "__all__"
-
-
-class ProfessorSerializer(serializers.ModelSerializer):
-    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
-
-    class Meta:
-        model = Professor
-        exclude = ["user"]
-        extra_kwargs = {"user": {"read_only": True}}
 
 
 class SchoolRecordSerializer(serializers.ModelSerializer):
@@ -78,9 +19,10 @@ class SchoolRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from students.serializers import StudentCompactSerializer
-
-        return StudentCompactSerializer(obj.student).data
+        from accounts.serializers import StudentCompactSerializer
+        if obj.student:
+            return StudentCompactSerializer(obj.student).data
+        return None
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -91,36 +33,24 @@ class BookSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_tenant_details(self, obj):
-        from students.serializers import StudentCompactSerializer
-
-        return StudentCompactSerializer(obj.tenant).data
-
-
-class LessonSerializer(serializers.ModelSerializer):
-    group_details = GroupCompactSerializer(source="group", read_only=True)
-    professor_details = ProfessorCompactSerializer(source="professor", read_only=True)
-    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
-
-    class Meta:
-        model = Lesson
-        fields = "__all__"
+        from accounts.serializers import StudentCompactSerializer
+        if obj.tenant:
+            return StudentCompactSerializer(obj.tenant).data
+        return None
 
 
 class AgendaItemSerializer(serializers.ModelSerializer):
-    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
+    subject_details = serializers.SerializerMethodField()
 
     class Meta:
         model = AgendaItem
         fields = "__all__"
 
-
-class WeeklyLessonPlanSerializer(serializers.ModelSerializer):
-    professor_details = ProfessorCompactSerializer(source="professor", read_only=True)
-    lesson_details = LessonSerializer(source="lesson", read_only=True)
-
-    class Meta:
-        model = WeeklyLessonPlan
-        fields = "__all__"
+    def get_subject_details(self, obj):
+        from academics.serializers import SubjectCompactSerializer
+        if obj.subject:
+            return SubjectCompactSerializer(obj.subject).data
+        return None
 
 
 class EventSerializer(serializers.ModelSerializer):
