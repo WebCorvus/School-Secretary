@@ -58,7 +58,7 @@ class ResourceLoan(models.Model):
         related_name="loans",
     )
     student = models.ForeignKey(
-        "students.Student",
+        "accounts.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="resource_loans",

@@ -4,7 +4,7 @@ Signals to automatically trigger notifications for school events
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import AgendaItem
-from students.models import Student
+from accounts.models import Student
 from utils.notifications import (
     notify_student_new_assignment,
     notify_students_upcoming_exam,
@@ -23,7 +23,7 @@ def agenda_item_created(sender, instance, created, **kwargs):
         
         if is_exam:
             # Get all groups and notify students in those groups
-            from school.models import Group
+            from academics.models import Group
             groups = Group.objects.all()
             for group in groups:
                 notify_students_upcoming_exam(group, instance)

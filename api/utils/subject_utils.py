@@ -1,4 +1,4 @@
-from school.models import Subject
+from academics.models import Subject
 
 
 def get_subject_names():
