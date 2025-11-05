@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Boletim Escolar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 5px 0;
+            color: #2c3e50;
+        }
+        .section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+        .section-title {
+            background-color: #3498db;
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .info-table th,
+        .info-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        .info-table th {
+            background-color: #ecf0f1;
+            width: 30%;
+        }
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .grades-table th,
+        .grades-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: center;
+        }
+        .grades-table th {
+            background-color: #34495e;
+            color: white;
+        }
+        .grades-table td {
+            background-color: #f9f9f9;
+        }
+        .status-good {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .status-warning {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .status-danger {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .danger-box {
+            background-color: #f8d7da;
+            border: 1px solid #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BOLETIM ESCOLAR</h1>
+        <p><strong>{{ student.full_name }}</strong></p>
+        <p>Matrícula: {{ student.registration_number }} | Turma: {{ student.group.full_name|default:"N/A" }}</p>
+    </div>
+
+    <!-- Student Information -->
+    <div class="section">
+        <div class="section-title">INFORMAÇÕES DO ALUNO</div>
+        <table class="info-table">
+            <tr>
+                <th>Nome Completo</th>
+                <td>{{ student.full_name }}</td>
+            </tr>
+            <tr>
+                <th>Matrícula</th>
+                <td>{{ student.registration_number }}</td>
+            </tr>
+            <tr>
+                <th>Turma</th>
+                <td>{{ student.group.full_name|default:"-" }}</td>
+            </tr>
+            <tr>
+                <th>Itinerário</th>
+                <td>{{ student.group.itinerary.full_name|default:"-" }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Grades Section -->
+    <div class="section">
+        <div class="section-title">NOTAS POR DISCIPLINA</div>
+        <table class="grades-table">
+            <tr>
+                <th>Disciplina</th>
+                <th>1º Bimestre</th>
+                <th>2º Bimestre</th>
+                <th>3º Bimestre</th>
+                <th>4º Bimestre</th>
+                <th>Média</th>
+            </tr>
+            {% for subject, data in grades.items %}
+            <tr>
+                <td style="text-align: left;"><strong>{{ subject }}</strong></td>
+                <td>{{ data.grades.1B|default:"-" }}</td>
+                <td>{{ data.grades.2B|default:"-" }}</td>
+                <td>{{ data.grades.3B|default:"-" }}</td>
+                <td>{{ data.grades.4B|default:"-" }}</td>
+                <td>
+                    {% if data.average %}
+                        <span class="{% if data.average >= 7.0 %}status-good{% elif data.average >= 5.0 %}status-warning{% else %}status-danger{% endif %}">
+                            {{ data.average }}
+                        </span>
+                    {% else %}-{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="margin-top: 10px; font-size: 11px;">
+            <strong>Legenda:</strong> 
+            <span class="status-good">Verde</span> = Média ≥ 7,0 | 
+            <span class="status-warning">Amarelo</span> = Média entre 5,0 e 6,9 | 
+            <span class="status-danger">Vermelho</span> = Média < 5,0
+        </p>
+    </div>
+
+    <!-- Attendance Section -->
+    <div class="section">
+        <div class="section-title">FREQUÊNCIA</div>
+        <table class="info-table">
+            <tr>
+                <th>Total de Dias Letivos</th>
+                <td>{{ attendance.total_days }}</td>
+            </tr>
+            <tr>
+                <th>Presenças</th>
+                <td class="status-good">{{ attendance.presences }}</td>
+            </tr>
+            <tr>
+                <th>Faltas</th>
+                <td class="{% if attendance.needs_attention %}status-danger{% else %}status-good{% endif %}">
+                    {{ attendance.absences }}
+                </td>
+            </tr>
+            <tr>
+                <th>Taxa de Faltas</th>
+                <td class="{% if attendance.needs_attention %}status-danger{% else %}status-good{% endif %}">
+                    {{ attendance.absence_rate }}%
+                </td>
+            </tr>
+        </table>
+        
+        {% if attendance.needs_attention %}
+        <div class="danger-box">
+            <strong>⚠️ ATENÇÃO:</strong> Taxa de faltas acima de 25%. É necessário acompanhamento.
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <p>Boletim gerado em {{ now|date:"d/m/Y H:i" }}</p>
+        <p>Sistema de Secretaria Escolar</p>
+    </div>
+</body>
+</html>
