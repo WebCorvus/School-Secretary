@@ -62,6 +62,10 @@ const data = {
 					url: "/about",
 				},
 				{
+					title: "Recursos",
+					url: "/resources",
+				},
+				{
 					title: "Painel administrativo",
 					url: `${ROUTES.ADMIN}`,
 				},
