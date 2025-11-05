@@ -10,12 +10,10 @@ const paths = {
 };
 
 const subPaths = {
-	// USERS
 	USER_INFO: "me/",
 	LOGIN: "token/",
 	REFRESH: "token/refresh/",
 
-	// SCHOOL
 	GROUPS: "groups/",
 	ITINERARIES: "itineraries/",
 	LESSONS: "lessons/",
@@ -28,6 +26,8 @@ const subPaths = {
 	NOTIFICATIONS: "notifications/",
 	NOTIFICATIONS_MARK_READ: "notifications/{id}/mark-read/",
 	NOTIFICATIONS_MARK_ALL_READ: "notifications/mark-all-read/",
+	RESOURCES: "resources/",
+	RESOURCE_LOANS: "resources/loans/",
 };
 
 function makeRoutes(base: string) {
@@ -55,6 +55,8 @@ function makeRoutes(base: string) {
 	routes.NOTIFICATIONS = `${routes.SCHOOL}${subPaths.NOTIFICATIONS}`;
 	routes.NOTIFICATIONS_MARK_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_READ}`;
 	routes.NOTIFICATIONS_MARK_ALL_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_ALL_READ}`;
+	routes.RESOURCES = `${routes.SCHOOL}${subPaths.RESOURCES}`;
+	routes.RESOURCE_LOANS = `${routes.SCHOOL}${subPaths.RESOURCE_LOANS}`;
 
 	return routes;
 }
