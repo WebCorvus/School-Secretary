@@ -2,17 +2,18 @@ from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from school.models import (
-    Subject,
-    Itinerary,
-    Group,
-    Professor,
     SchoolRecord,
     Book,
-    Lesson,
     AgendaItem,
     Event,
 )
-from students.models import Student
+from academics.models import (
+    Subject,
+    Itinerary,
+    Group,
+    Lesson,
+)
+from accounts.models import Student, Professor
 import datetime
 
 

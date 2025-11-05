@@ -46,6 +46,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile = obj.profile
         if profile:
             if obj.role == get_user_model().Role.STUDENT:
+<<<<<<< HEAD
                 from students.serializers import StudentSerializer
 
                 return StudentSerializer(profile, context=self.context).data
@@ -56,5 +57,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
             elif obj.role == get_user_model().Role.PROFESSOR:
                 from school.serializers import ProfessorSerializer
 
+=======
+                from accounts.serializers import StudentSerializer
+                return StudentSerializer(profile, context=self.context).data
+            elif obj.role == get_user_model().Role.GUARDIAN:
+                from accounts.serializers import GuardianSerializer
+                return GuardianSerializer(profile, context=self.context).data
+            elif obj.role == get_user_model().Role.PROFESSOR:
+                from accounts.serializers import ProfessorSerializer
+>>>>>>> 3b049e0 (Fix: Updated all test imports, all 54 tests passing)
                 return ProfessorSerializer(profile, context=self.context).data
         return None

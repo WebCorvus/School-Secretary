@@ -1,34 +1,37 @@
 from rest_framework.test import APITestCase
 from rest_framework import serializers
 from school.serializers import (
-    SubjectCompactSerializer,
-    ItineraryCompactSerializer,
-    GroupCompactSerializer,
-    ProfessorCompactSerializer,
-    SubjectSerializer,
-    ItinerarySerializer,
-    GroupSerializer,
-    ProfessorSerializer,
     SchoolRecordSerializer,
     BookSerializer,
-    LessonSerializer,
     AgendaItemSerializer,
     EventSerializer,
 )
+from academics.serializers import (
+    SubjectCompactSerializer,
+    ItineraryCompactSerializer,
+    GroupCompactSerializer,
+    SubjectSerializer,
+    ItinerarySerializer,
+    GroupSerializer,
+    LessonSerializer,
+)
+from accounts.serializers import (
+    ProfessorCompactSerializer,
+    ProfessorSerializer,
+)
 from school.models import (
-    Subject,
-    Itinerary,
-    Group,
-    Professor,
     SchoolRecord,
     Book,
-    Lesson,
     AgendaItem,
     Event,
 )
-from students.models import (
-    Student,
-)  # Needed for SchoolRecordSerializer and BookSerializer
+from academics.models import (
+    Subject,
+    Itinerary,
+    Group,
+    Lesson,
+)
+from accounts.models import Professor, Student
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import datetime
