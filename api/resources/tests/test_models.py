@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from resources.models import Resource, ResourceLoan
-from students.models import Student
+from accounts.models import Student
 from django.contrib.auth import get_user_model
 
 
