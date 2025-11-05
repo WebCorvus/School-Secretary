@@ -41,11 +41,16 @@ class StudentViewSet(viewsets.ModelViewSet):
         
         # Check permission: student themselves, their guardian, or staff
         user = request.user
-        is_authorized = (
-            user.is_staff or
-            (hasattr(user, 'student_profile') and user.student_profile.id == student.id) or
-            (hasattr(user, 'guardian_profile') and user.guardian_profile.student and user.guardian_profile.student.id == student.id)
-        )
+        is_authorized = False
+        
+        if user.is_staff:
+            is_authorized = True
+        elif hasattr(user, 'student_profile') and user.student_profile and user.student_profile.id == student.id:
+            is_authorized = True
+        elif hasattr(user, 'guardian_profile') and user.guardian_profile:
+            # Check if this guardian is responsible for this student
+            if user.guardian_profile.student and user.guardian_profile.student.id == student.id:
+                is_authorized = True
         
         if not is_authorized:
             return Response({"detail": "Você não tem permissão para acessar este boletim."}, status=403)
@@ -108,11 +113,16 @@ class StudentViewSet(viewsets.ModelViewSet):
         
         # Check permission: student themselves, their guardian, or staff
         user = request.user
-        is_authorized = (
-            user.is_staff or
-            (hasattr(user, 'student_profile') and user.student_profile.id == student.id) or
-            (hasattr(user, 'guardian_profile') and user.guardian_profile.student and user.guardian_profile.student.id == student.id)
-        )
+        is_authorized = False
+        
+        if user.is_staff:
+            is_authorized = True
+        elif hasattr(user, 'student_profile') and user.student_profile and user.student_profile.id == student.id:
+            is_authorized = True
+        elif hasattr(user, 'guardian_profile') and user.guardian_profile:
+            # Check if this guardian is responsible for this student
+            if user.guardian_profile.student and user.guardian_profile.student.id == student.id:
+                is_authorized = True
         
         if not is_authorized:
             return Response({"detail": "Você não tem permissão para acessar este histórico."}, status=403)
