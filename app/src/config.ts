@@ -1,63 +1,49 @@
+// API URL configuration
 const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || "/api/";
-const API_INTERNAL_BASE =
-	process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
+const API_INTERNAL_BASE = process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
 
-const paths = {
-	ADMIN: "admin/",
-	USERS: "users/",
-	STUDENTS: "students/",
-	SCHOOL: "school/",
-};
+// Factory function to create routes based on a base URL
+function createRoutes(base: string) {
+	// Django apps base URLs as variables
+	const usersUrl = `${base}users/`;
+	const studentsUrl = `${base}students/`;
+	const schoolUrl = `${base}school/`;
+	const resourcesUrl = `${base}resources/`;
 
-const subPaths = {
-	// USERS
-	USER_INFO: "me/",
-	LOGIN: "token/",
-	REFRESH: "token/refresh/",
-
-	// SCHOOL
-	GROUPS: "groups/",
-	ITINERARIES: "itineraries/",
-	LESSONS: "lessons/",
-	PROFESSORS: "professors/",
-	SUBJECTS: "subjects/",
-	AGENDA: "agenda/",
-	AGENDA_PENDENTS: "agenda/pendents/",
-	EVENTS: "events/",
-	EVENTS_PENDENTS: "events/pendents/",
-	NOTIFICATIONS: "notifications/",
-	NOTIFICATIONS_MARK_READ: "notifications/{id}/mark-read/",
-	NOTIFICATIONS_MARK_ALL_READ: "notifications/mark-all-read/",
-};
-
-function makeRoutes(base: string) {
-	const routes: Record<string, string> = {};
-
-	(Object.keys(paths) as Array<keyof typeof paths>).forEach((key) => {
-		routes[key] = `${base}${paths[key]}`;
-	});
-
-	// USERS
-	routes.USER_INFO = `${routes.USERS}${subPaths.USER_INFO}`;
-	routes.LOGIN = `${routes.USERS}${subPaths.LOGIN}`;
-	routes.REFRESH = `${routes.USERS}${subPaths.REFRESH}`;
-
-	// SCHOOL
-	routes.GROUPS = `${routes.SCHOOL}${subPaths.GROUPS}`;
-	routes.ITINERARIES = `${routes.SCHOOL}${subPaths.ITINERARIES}`;
-	routes.LESSONS = `${routes.SCHOOL}${subPaths.LESSONS}`;
-	routes.PROFESSORS = `${routes.SCHOOL}${subPaths.PROFESSORS}`;
-	routes.SUBJECTS = `${routes.SCHOOL}${subPaths.SUBJECTS}`;
-	routes.AGENDA = `${routes.SCHOOL}${subPaths.AGENDA}`;
-	routes.AGENDA_PENDENTS = `${routes.SCHOOL}${subPaths.AGENDA_PENDENTS}`;
-	routes.EVENTS = `${routes.SCHOOL}${subPaths.EVENTS}`;
-	routes.EVENTS_PENDENTS = `${routes.SCHOOL}${subPaths.EVENTS_PENDENTS}`;
-	routes.NOTIFICATIONS = `${routes.SCHOOL}${subPaths.NOTIFICATIONS}`;
-	routes.NOTIFICATIONS_MARK_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_READ}`;
-	routes.NOTIFICATIONS_MARK_ALL_READ = `${routes.SCHOOL}${subPaths.NOTIFICATIONS_MARK_ALL_READ}`;
-
-	return routes;
+	return {
+		// Main paths
+		ADMIN: `${base}admin/`,
+		USERS: usersUrl,
+		STUDENTS: studentsUrl,
+		SCHOOL: schoolUrl,
+		RESOURCES: resourcesUrl,
+		
+		// USERS app subpaths
+		USER_INFO: `${usersUrl}me/`,
+		LOGIN: `${usersUrl}token/`,
+		REFRESH: `${usersUrl}token/refresh/`,
+		
+		// SCHOOL app subpaths
+		GROUPS: `${schoolUrl}groups/`,
+		ITINERARIES: `${schoolUrl}itineraries/`,
+		LESSONS: `${schoolUrl}lessons/`,
+		PROFESSORS: `${schoolUrl}professors/`,
+		SUBJECTS: `${schoolUrl}subjects/`,
+		AGENDA: `${schoolUrl}agenda/`,
+		AGENDA_PENDENTS: `${schoolUrl}agenda/pendents/`,
+		EVENTS: `${schoolUrl}events/`,
+		EVENTS_PENDENTS: `${schoolUrl}events/pendents/`,
+		NOTIFICATIONS: `${schoolUrl}notifications/`,
+		NOTIFICATIONS_MARK_READ: `${schoolUrl}notifications/{id}/mark-read/`,
+		NOTIFICATIONS_MARK_ALL_READ: `${schoolUrl}notifications/mark-all-read/`,
+		
+		// RESOURCES app subpaths
+		RESOURCE_LOANS: `${resourcesUrl}loans/`,
+	};
 }
 
-export const ROUTES = makeRoutes(API_BASE);
-export const ROUTES_INTERNAL = makeRoutes(API_INTERNAL_BASE);
+// Export routes for application use
+const ROUTES = createRoutes(API_BASE);
+const ROUTES_INTERNAL = createRoutes(API_INTERNAL_BASE);
+
+export { ROUTES, ROUTES_INTERNAL };
