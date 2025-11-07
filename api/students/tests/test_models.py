@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from accounts.models import Student, Guardian, Contract
+from students.models import Student, Guardian, Contract
 from academics.models import Grade, Presence, Group, Subject
 
 

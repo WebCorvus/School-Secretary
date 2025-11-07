@@ -1,7 +1,11 @@
 """
 Utility functions for automatic notification creation
 """
-
+from school.models import Notification
+from students.models import Student
+from academics.models import Grade, Presence
+from students.models import Warning, Suspension, Tuition
+from django.db.models import Avg
 from datetime import timedelta
 
 from django.db.models import Avg

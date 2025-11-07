@@ -14,7 +14,10 @@ from .models import (
     Student,
     Suspension,
     Tuition,
-    Warning,
+    Student,
+    Guardian,
+    Professor,
+    Contract
 )
 
 
@@ -30,51 +33,10 @@ class GuardianCompactSerializer(serializers.ModelSerializer):
         fields = ["id", "full_name", "cpf", "phone_number"]
 
 
-class GradeCompactSerializer(serializers.ModelSerializer):
+class ProfessorCompactSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Grade
-        fields = ["id", "value", "year", "bimester"]
-
-
-class PresenceCompactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Presence
-        fields = ["id", "date", "presence"]
-
-
-class GuardianSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-
-    class Meta:
-        model = Guardian
-        exclude = ["user"]
-        extra_kwargs = {"user": {"read_only": True}}
-
-
-class ContractSerializer(serializers.ModelSerializer):
-    guardian_details = GuardianCompactSerializer(source="guardian", read_only=True)
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-
-    class Meta:
-        model = Contract
-        fields = "__all__"
-
-
-class GradeSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-    subject_details = SubjectCompactSerializer(source="subject", read_only=True)
-
-    class Meta:
-        model = Grade
-        fields = "__all__"
-
-
-class PresenceSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-
-    class Meta:
-        model = Presence
-        fields = "__all__"
+        model = Professor
+        fields = ["id", "full_name", "cpf", "phone_number"]
 
 
 class WarningSerializer(serializers.ModelSerializer):
@@ -103,33 +65,28 @@ class TuitionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EnrollmentSerializer(serializers.ModelSerializer):
-    student_details = StudentCompactSerializer(source="student", read_only=True)
-    group_details = GroupCompactSerializer(source="group", read_only=True)
-
-    class Meta:
-        model = Enrollment
-        fields = "__all__"
-
 
 class StudentSerializer(serializers.ModelSerializer):
-    group_details = GroupCompactSerializer(source="group", read_only=True)
+    group_details = serializers.SerializerMethodField()
     grades_details = serializers.SerializerMethodField()
-    presence_details = PresenceSerializer(source="presence", many=True, read_only=True)
-    guardians_details = GuardianSerializer(
-        source="guardians", many=True, read_only=True
-    )
-    warnings_details = WarningSerializer(source="warnings", many=True, read_only=True)
-    suspensions_details = SuspensionSerializer(
-        source="suspensions", many=True, read_only=True
-    )
+    presence_details = serializers.SerializerMethodField()
+    guardians_details = serializers.SerializerMethodField()
+    warnings_details = serializers.SerializerMethodField()
+    suspensions_details = serializers.SerializerMethodField()
 
     class Meta:
         model = Student
         exclude = ["user"]
         extra_kwargs = {"user": {"read_only": True}}
 
+    def get_group_details(self, obj):
+        from academics.serializers import GroupCompactSerializer
+        if obj.group:
+            return GroupCompactSerializer(obj.group).data
+        return None
+
     def get_grades_details(self, obj):
+        from academics.models import Subject, Grade
         grades_details_list = []
 
         all_subjects = Subject.objects.all()
@@ -151,3 +108,51 @@ class StudentSerializer(serializers.ModelSerializer):
             )
 
         return grades_details_list
+
+    def get_presence_details(self, obj):
+        from academics.serializers import PresenceSerializer
+        return PresenceSerializer(obj.presence, many=True).data
+
+    def get_guardians_details(self, obj):
+        return GuardianCompactSerializer(obj.guardians, many=True).data
+
+    def get_warnings_details(self, obj):
+        from students.serializers import WarningSerializer
+        return WarningSerializer(obj.warnings, many=True).data
+
+    def get_suspensions_details(self, obj):
+        from students.serializers import SuspensionSerializer
+        return SuspensionSerializer(obj.suspensions, many=True).data
+
+
+class GuardianSerializer(serializers.ModelSerializer):
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+
+    class Meta:
+        model = Guardian
+        exclude = ["user"]
+        extra_kwargs = {"user": {"read_only": True}}
+
+
+class ProfessorSerializer(serializers.ModelSerializer):
+    subject_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Professor
+        exclude = ["user"]
+        extra_kwargs = {"user": {"read_only": True}}
+
+    def get_subject_details(self, obj):
+        from academics.serializers import SubjectCompactSerializer
+        if obj.subject:
+            return SubjectCompactSerializer(obj.subject).data
+        return None
+
+
+class ContractSerializer(serializers.ModelSerializer):
+    guardian_details = GuardianCompactSerializer(source="guardian", read_only=True)
+    student_details = StudentCompactSerializer(source="student", read_only=True)
+
+    class Meta:
+        model = Contract
+        fields = "__all__"

@@ -14,26 +14,33 @@ from utils.reports import (
 from utils.subject_utils import get_subject_names
 
 from .models import (
-    Contract,
-    Enrollment,
-    Grade,
-    Guardian,
-    Presence,
     Student,
+    Guardian,
+    Professor,
+    Contract,
+    Warning,
     Suspension,
     Tuition,
     Warning,
 )
 from .serializers import (
-    ContractSerializer,
-    EnrollmentSerializer,
-    GradeSerializer,
-    GuardianSerializer,
-    PresenceSerializer,
     StudentSerializer,
+    GuardianSerializer,
+    ProfessorSerializer,
+    ContractSerializer,
+    WarningSerializer,
     SuspensionSerializer,
     TuitionSerializer,
-    WarningSerializer,
+)
+from academics.models import Grade, Presence, Enrollment
+from academics.serializers import GradeSerializer, PresenceSerializer, EnrollmentSerializer
+from utils.pdfgen import pdfgen
+from utils.subject_utils import get_subject_names
+from utils.reports import (
+    generate_student_academic_report,
+    generate_financial_report,
+    identify_students_needing_notification,
+    generate_efficiency_analysis,
 )
 
 
@@ -400,3 +407,15 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
+
+
+class ProfessorViewSet(viewsets.ModelViewSet):
+    queryset = Professor.objects.all().order_by("full_name")
+    serializer_class = ProfessorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "full_name",
+        "cpf",
+        "phone_number",
+        "subject__full_name",
+    ]

@@ -1,7 +1,10 @@
 """
 Utility functions for generating comprehensive academic reports
 """
-
+from django.db.models import Count, Avg, Q, Sum, Case, When, FloatField
+from students.models import Student
+from academics.models import Grade, Presence, Enrollment, Subject, Group
+from students.models import Warning, Suspension, Tuition
 from datetime import datetime, timedelta
 
 from django.db.models import Avg, Case, Count, FloatField, Q, Sum, When

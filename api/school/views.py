@@ -34,7 +34,16 @@ from .serializers import (
     AgendaItemSerializer,
     BookSerializer,
     EventRegistrationSerializer,
-    EventSerializer,
+    RoomSerializer,
+    RoomReservationSerializer,
+    NotificationSerializer,
+)
+from students.models import Professor
+from students.serializers import ProfessorSerializer
+from academics.models import Subject, Itinerary, Group, Lesson, WeeklyLessonPlan
+from academics.serializers import (
+    SubjectSerializer,
+    ItinerarySerializer,
     GroupSerializer,
     ItinerarySerializer,
     LessonSerializer,

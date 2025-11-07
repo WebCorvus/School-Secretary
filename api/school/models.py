@@ -457,7 +457,11 @@ class RoomReservation(models.Model):
         related_name="reservations",
     )
     reserved_by = models.ForeignKey(
+<<<<<<< HEAD
         "school.Professor",
+=======
+        "students.Professor",
+>>>>>>> 19fc064 (api/fix accounts.students misinterpretation as students.students)
         on_delete=models.CASCADE,
         verbose_name="Reservado por",
         related_name="room_reservations",
