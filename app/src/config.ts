@@ -2,7 +2,6 @@
 const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || "/api/";
 const API_INTERNAL_BASE = process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
 
-<<<<<<< HEAD
 // Factory function to create routes based on a base URL
 function createRoutes(base: string) {
 	// Django apps base URLs as variables
