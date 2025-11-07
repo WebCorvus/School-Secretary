@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework import serializers
-from accounts.serializers import (
+from students.serializers import (
     StudentCompactSerializer,
     GuardianCompactSerializer,
     GuardianSerializer,
@@ -13,7 +13,7 @@ from academics.serializers import (
     GradeSerializer,
     PresenceSerializer,
 )
-from accounts.models import Student, Guardian, Contract
+from students.models import Student, Guardian, Contract
 from academics.models import Grade, Presence, Group, Subject
 from django.contrib.auth import get_user_model
 from django.utils import timezone

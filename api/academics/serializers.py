@@ -90,7 +90,7 @@ class WeeklyLessonPlanSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_professor_details(self, obj):
-        from accounts.serializers import ProfessorCompactSerializer
+        from students.serializers import ProfessorCompactSerializer
         if obj.professor:
             return ProfessorCompactSerializer(obj.professor).data
         return None
@@ -105,7 +105,7 @@ class GradeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from accounts.serializers import StudentCompactSerializer
+        from students.serializers import StudentCompactSerializer
         if obj.student:
             return StudentCompactSerializer(obj.student).data
         return None
@@ -119,7 +119,7 @@ class PresenceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from accounts.serializers import StudentCompactSerializer
+        from students.serializers import StudentCompactSerializer
         if obj.student:
             return StudentCompactSerializer(obj.student).data
         return None
@@ -134,7 +134,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from accounts.serializers import StudentCompactSerializer
+        from students.serializers import StudentCompactSerializer
         if obj.student:
             return StudentCompactSerializer(obj.student).data
         return None

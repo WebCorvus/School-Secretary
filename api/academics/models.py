@@ -135,7 +135,7 @@ class Lesson(models.Model):
     )
 
     professor = models.ForeignKey(
-        "accounts.Professor",
+        "students.Professor",
         on_delete=models.SET_NULL,
         verbose_name="Professor",
         related_name="lessons",
@@ -177,7 +177,7 @@ class Lesson(models.Model):
 class WeeklyLessonPlan(models.Model):
     """Weekly lesson planning for professors"""
     professor = models.ForeignKey(
-        "accounts.Professor",
+        "students.Professor",
         on_delete=models.CASCADE,
         verbose_name="Professor",
         related_name="weekly_plans",
@@ -226,7 +226,7 @@ class WeeklyLessonPlan(models.Model):
 
 class Grade(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.SET_NULL,
         verbose_name="Estudante",
         related_name="grade",
@@ -276,7 +276,7 @@ class Grade(models.Model):
 
 class Presence(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.SET_NULL,
         verbose_name="Estudante",
         related_name="presence",
@@ -308,7 +308,7 @@ class Enrollment(models.Model):
     ]
 
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="enrollments",

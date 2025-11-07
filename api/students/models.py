@@ -6,9 +6,194 @@ from utils.validators import phone_validator, cep_validator, cpf_validator
 from utils.date import get_current_year, get_today
 
 
+class Student(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+    )
+    full_name = models.CharField(verbose_name="Nome completo", max_length=255)
+    cpf = models.CharField(
+        verbose_name="CPF",
+        max_length=14,
+        unique=True,
+        validators=[cpf_validator],
+    )
+    registration_number = models.CharField(
+        verbose_name="Matrícula",
+        max_length=255,
+        unique=True,
+    )
+    birthday = models.DateField(verbose_name="Data de nascimento")
+    phone_number = models.CharField(
+        verbose_name="Telefone",
+        max_length=20,
+        validators=[phone_validator],
+        blank=True,
+        null=True,
+    )
+    cep = models.CharField(
+        verbose_name="CEP",
+        max_length=9,
+        validators=[cep_validator],
+        blank=True,
+        null=True,
+    )
+    address = models.CharField(verbose_name="Endereço", max_length=255)
+    group = models.ForeignKey(
+        "academics.Group",
+        on_delete=models.SET_NULL,
+        verbose_name="Turma",
+        related_name="students",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    def __str__(self):
+        return f"{self.full_name} - {self.registration_number}"
+
+    class Meta:
+        verbose_name = "Estudante"
+        verbose_name_plural = "Estudantes"
+
+
+class Guardian(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+    )
+    full_name = models.CharField(verbose_name="Nome completo", max_length=255)
+    cpf = models.CharField(
+        verbose_name="CPF",
+        max_length=14,
+        unique=True,
+        validators=[cpf_validator],
+    )
+    birthday = models.DateField(verbose_name="Data de nascimento")
+    phone_number = models.CharField(
+        verbose_name="Telefone",
+        max_length=20,
+        validators=[phone_validator],
+        blank=True,
+        null=True,
+    )
+    cep = models.CharField(
+        verbose_name="CEP",
+        max_length=9,
+        validators=[cep_validator],
+        blank=True,
+        null=True,
+    )
+    address = models.CharField(verbose_name="Endereço", max_length=255)
+    student = models.ForeignKey(
+        "students.Student",
+        on_delete=models.CASCADE,
+        verbose_name="Estudante",
+        related_name="guardians",
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    def __str__(self):
+        return f"{self.full_name} - Responsável por {self.student.full_name}"
+
+    class Meta:
+        verbose_name = "Responsável"
+        verbose_name_plural = "Responsáveis"
+
+
+class Professor(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="Usuário",
+    )
+    full_name = models.CharField(verbose_name="Nome completo", max_length=255)
+    cpf = models.CharField(
+        verbose_name="CPF",
+        max_length=14,
+        unique=True,
+        validators=[cpf_validator],
+    )
+    birthday = models.DateField(verbose_name="Data de nascimento")
+    phone_number = models.CharField(
+        verbose_name="Telefone",
+        max_length=20,
+        validators=[phone_validator],
+        blank=True,
+        null=True,
+    )
+    cep = models.CharField(
+        verbose_name="CEP",
+        max_length=9,
+        validators=[cep_validator],
+        blank=True,
+        null=True,
+    )
+    address = models.CharField(verbose_name="Endereço", max_length=255)
+    subject = models.ForeignKey(
+        "academics.Subject",
+        on_delete=models.SET_NULL,
+        verbose_name="Disciplina",
+        related_name="professors",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    def __str__(self):
+        return f"{self.full_name} - Professor de {self.subject.full_name}"
+
+    class Meta:
+        verbose_name = "Professor"
+        verbose_name_plural = "Professores"
+
+
+class Contract(models.Model):
+    guardian = models.ForeignKey(
+        "students.Guardian",
+        on_delete=models.CASCADE,
+        verbose_name="Responsável",
+        related_name="contracts",
+    )
+    student = models.ForeignKey(
+        "students.Student",
+        on_delete=models.CASCADE,
+        verbose_name="Estudante",
+        related_name="contracts",
+    )
+    year = models.IntegerField(verbose_name="Ano", default=get_current_year)
+    is_active = models.BooleanField(verbose_name="Ativo", default=True)
+    created_at = models.DateTimeField(
+        verbose_name="Criado em",
+        default=timezone.now,
+        editable=False,
+    )
+
+    def __str__(self):
+        return f"Contrato - {self.guardian.full_name} e {self.student.full_name} - {self.year}"
+
+    class Meta:
+        verbose_name = "Contrato"
+        verbose_name_plural = "Contratos"
+
+
 class Warning(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="warnings",
@@ -38,7 +223,7 @@ class Warning(models.Model):
 
 class Suspension(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="suspensions",
@@ -77,7 +262,7 @@ PAYMENT_STATUS_CHOICES = [
 
 class Tuition(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="tuitions",

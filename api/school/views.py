@@ -32,8 +32,8 @@ from .serializers import (
     RoomReservationSerializer,
     NotificationSerializer,
 )
-from accounts.models import Professor
-from accounts.serializers import ProfessorSerializer
+from students.models import Professor
+from students.serializers import ProfessorSerializer
 from academics.models import Subject, Itinerary, Group, Lesson, WeeklyLessonPlan
 from academics.serializers import (
     SubjectSerializer,

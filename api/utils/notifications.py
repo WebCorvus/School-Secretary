@@ -2,7 +2,7 @@
 Utility functions for automatic notification creation
 """
 from school.models import Notification
-from accounts.models import Student
+from students.models import Student
 from academics.models import Grade, Presence
 from students.models import Warning, Suspension, Tuition
 from django.db.models import Avg

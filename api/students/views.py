@@ -4,17 +4,23 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions import IsStaff, IsProfessor
 from .models import (
+    Student,
+    Guardian,
+    Professor,
+    Contract,
     Warning,
     Suspension,
     Tuition,
 )
 from .serializers import (
+    StudentSerializer,
+    GuardianSerializer,
+    ProfessorSerializer,
+    ContractSerializer,
     WarningSerializer,
     SuspensionSerializer,
     TuitionSerializer,
 )
-from accounts.models import Student, Guardian, Contract
-from accounts.serializers import StudentSerializer, GuardianSerializer, ContractSerializer
 from academics.models import Grade, Presence, Enrollment
 from academics.serializers import GradeSerializer, PresenceSerializer, EnrollmentSerializer
 from utils.pdfgen import pdfgen
@@ -390,3 +396,15 @@ class EnrollmentViewSet(viewsets.ModelViewSet):
         else:
             self.permission_classes = [IsStaff]
         return super().get_permissions()
+
+
+class ProfessorViewSet(viewsets.ModelViewSet):
+    queryset = Professor.objects.all().order_by("full_name")
+    serializer_class = ProfessorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = [
+        "full_name",
+        "cpf",
+        "phone_number",
+        "subject__full_name",
+    ]

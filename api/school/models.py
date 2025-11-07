@@ -8,7 +8,7 @@ from utils.date import get_today
 
 class SchoolRecord(models.Model):
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.SET_NULL,
         verbose_name="Estudante",
         related_name="school_record",
@@ -41,7 +41,7 @@ class Book(models.Model):
         null=True,
     )
     tenant = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.SET_NULL,
         verbose_name="Locatário",
         related_name="alugated_book",
@@ -143,7 +143,7 @@ class EventRegistration(models.Model):
         related_name="registrations",
     )
     student = models.ForeignKey(
-        "accounts.Student",
+        "students.Student",
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="event_registrations",
@@ -206,7 +206,7 @@ class RoomReservation(models.Model):
         related_name="reservations",
     )
     reserved_by = models.ForeignKey(
-        "accounts.Professor",
+        "students.Professor",
         on_delete=models.CASCADE,
         verbose_name="Reservado por",
         related_name="room_reservations",

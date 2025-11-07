@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from users.models import User
-from accounts.models import Student, Guardian, Professor
+from students.models import Student, Guardian, Professor
 
 
 class StudentInline(admin.StackedInline):
