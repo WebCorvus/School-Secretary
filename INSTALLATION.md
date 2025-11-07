@@ -1,39 +1,39 @@
-# Manual de Instalação - Secretaria Escolar
+# Installation Manual - School Secretary
 
-Este guia fornece instruções passo a passo para instalar e executar o sistema de Secretaria Escolar.
+This guide provides step-by-step instructions for installing and running the School Secretary system.
 
-## Usando Docker (Recomendado)
+## Using Docker (Recommended)
 
-### Pré-requisitos
+### Prerequisites
 
 -   Docker
 -   Docker Compose
 
-### Instruções
+### Instructions
 
-1.  Gere e, de preferência, edite os arquivos `.env`:
+1.  Generate and, preferably, edit the `.env` files:
 
     ```bash
     ./controller.sh genenvs
     ```
 
-2.  Inicialize o projeto com usando o [`controller.sh`](./controller.sh) (usa `docker` internamente):
+2.  Initialize the project using the [`controller.sh`](./controller.sh) (uses `docker` internally):
 
     ```bash
     ./controller.sh start
     ```
 
-3.  Crie um usuário administrador:
+3.  Create an administrator user:
 
     ```bash
     ./controller.sh createsuperuser
     ```
 
-Agora é possível acessar o site em: [`http://localhost:8080`](http://localhost:8080).
+Now you can access the site at: [`http://localhost:8080`](http://localhost:8080).
 
-## Localmente (Manual)
+## Locally (Manual)
 
-### Pré-requisitos
+### Prerequisites
 
 -   Python
 -   Node
@@ -41,25 +41,25 @@ Agora é possível acessar o site em: [`http://localhost:8080`](http://localhost
 
 ### API
 
-1. Instale as dependências:
+1. Install the dependencies:
 
     ```bash
     uv sync
     ```
 
-2. Crie as migrações:
+2. Create the migrations:
 
     ```bash
     uv run python manage.py makemigrations
     ```
 
-3. Atualize o banco de dados:
+3. Update the database:
 
     ```bash
     uv run python manage.py migrate
     ```
 
-4. Inicialize:
+4. Initialize:
 
     ```bash
     uv run python manage.py runserver
@@ -67,19 +67,19 @@ Agora é possível acessar o site em: [`http://localhost:8080`](http://localhost
 
 ### APP
 
-1. Vá para o [`app/`](./app/):
+1. Go to the [`app/`](./app/):
 
     ```bash
     cd app/
     ```
 
-2. Instale as dependências:
+2. Install the dependencies:
 
     ```bash
     npm install
     ```
 
-3. Rode em modo de desenvolvimento:
+3. Run in development mode:
 
     ```bash
     npm run dev

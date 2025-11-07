@@ -1,10 +1,10 @@
-# Manual de Testagem
+# Testing Manual
 
-## Executando Testes
+## Running Tests
 
-### Usando Docker (Recomendado)
+### Using Docker (Recommended)
 
-Para rodar todos os testes de uma só fez, em _containers_ separados e temporários, execute:
+To run all tests at once, in separate and temporary containers, run:
 
 ```bash
 ./controller.sh test
@@ -14,11 +14,11 @@ Para rodar todos os testes de uma só fez, em _containers_ separados e temporár
 ./controller.sh test --no-confirm
 ```
 
-O qual executa [`./scripts/test.sh`](./scripts/test.sh), que cria todos os _containers_, roda, testa e apaga.
+Which runs [`./scripts/test.sh`](./scripts/test.sh), which creates all containers, runs, tests and deletes them.
 
-### Localmente (Manual)
+### Locally (Manual)
 
-Para isso faça o _setup_ local do site, informado em [INSTALLATION](./INSTALLATION.md), depois siga as instruções abaixo:
+To do this, do the local setup of the site, informed in [INSTALLATION](./INSTALLATION.md), then follow the instructions below:
 
 #### API
 
@@ -34,35 +34,35 @@ cd app/
 npm run test
 ```
 
-## Criando Testes
+## Creating Tests
 
 ### API
 
-No [`api/`](./api/) os testes estão em arquivos específicos para cada _app_:
+In [`api/`](./api/) the tests are in specific files for each app:
 
 -   [`api/users/tests/test_models.py`](./api/users/tests/test_models.py)
 -   [`api/users/tests/test_serializers.py`](./api/users/tests/test_serializers.py)
 
-Para criar um novo arquivo de testes, basta colocá-lo dentro da pasta `tests/` do _App Django_ (criado com `./manage.py startapp`). Lembre-se de seguir a convensão de nomenclatura `test_*` para o arquivo.
+To create a new test file, just put it inside the `tests/` folder of the Django App (created with `./manage.py startapp`). Remember to follow the `test_*` naming convention for the file.
 
 ### APP
 
-No [`app/`](./app/) os testes estão ao lado de seu respectivo arquivo `*.tsx` e possuem, obrigatoriamente, o nome `*.test.tsx`. Por exemplo:
+In [`app/`](./app/) the tests are next to their respective `*.tsx` file and must have the name `*.test.tsx`. For example:
 
--   [`UserInfoCard/index.tsx`](./app/src/components/UserInfoCard/index.tsx) é testado por [`UserInfoCard/index.test.tsx`](./app/src/components/UserInfoCard/index.test.tsx)
+-   [`UserInfoCard/index.tsx`](./app/src/components/UserInfoCard/index.tsx) is tested by [`UserInfoCard/index.test.tsx`](./app/src/components/UserInfoCard/index.test.tsx)
 
-## Logging de Exceções com Usuário
+## User Exception Logging
 
-Siga os tópicos anteriores parar inicializar o projeto
+Follow the previous topics to initialize the project
 
--   O middleware está em: [`school/middleware.py`](./api/school/middleware.py).
--   Logs de erro podem ser visualizados com:
+-   The middleware is in: [`school/middleware.py`](./api/school/middleware.py).
+-   Error logs can be viewed with:
 
     ```bash
     docker compose logs -f school-secretary-api
 
-    # ou apenas observe o output se tiver feito localmente
+    # or just watch the output if you have done it locally
     ```
 
--   Para testar, provoque uma exceção em uma view autenticada e verifique o log.
--   O logger pode ser aprimorado para incluir mais contexto, formatar mensagens ou integrar com sistemas externos.
+-   To test, trigger an exception in an authenticated view and check the log.
+-   The logger can be improved to include more context, format messages or integrate with external systems.

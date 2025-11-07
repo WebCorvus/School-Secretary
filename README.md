@@ -1,39 +1,39 @@
-# Secretaria Escolar
+# School Secretary
 
-Sistema simples de gerenciamento escolar usando Django no Backend e Next.js no Frontend.
+Simple school management system using Django in the Backend and Next.js in the Frontend.
 
-## Tecnologias
+## Technologies
 
 -   Django + Django REST Framework + WhiteNoise
 -   Next.js + Axios
 -   PostgreSQL
 
-## Estrutura
+## Structure
 
 ```
 School-Secretary/
-├── .github/            # Configuração para GitHub Actions
-├── api/                # API com Django
-├── app/                # Interface com Next.js
-├── db/                 # Configuração do BD local
-├── docs/               # Documentos do projeto
-├── proxy/              # Proxy com Nginx
-├── scripts/            # Scripts de propósito geral usados or controller.sh
-├── .gitattributes      # Configuração de codificação de arquivos salvos pelo git
-├── .gitignore          # Arquivos ignorados pelo Git, às vezes por segurança
-├── compose.test.yaml   # Configuração de testes do Docker Compose
-├── compose.yaml        # Configuração Docker Compose
-├── controller.sh       # Script que cuida da execução dos outros em script/
-├── INSTALLATION.md     # Informações de instalação
-├── README.md           # Informações gerais do projeto
-└── TODO.md             # Tarefas a serem feitas no futuro
+├── .github/            # Configuration for GitHub Actions
+├── api/                # API with Django
+├── app/                # Interface with Next.js
+├── db/                 # Local DB configuration
+├── docs/               # Project documents
+├── proxy/              # Proxy with Nginx
+├── scripts/            # General purpose scripts used by controller.sh
+├── .gitattributes      # File encoding configuration saved by git
+├── .gitignore          # Files ignored by Git, sometimes for security
+├── compose.test.yaml   # Docker Compose test configuration
+├── compose.yaml        # Docker Compose configuration
+├── controller.sh       # Script that takes care of running the others in script/
+├── INSTALLATION.md     # Installation information
+├── README.md           # General project information
+└── TODO.md             # Tasks to be done in the future
 ```
 
-## Configurações
+## Settings
 
-As configurações são injetadas no Backend e Frontend sem a necessidade de mudar código.
+The settings are injected into the Backend and Frontend without the need to change code.
 
-Para inserir novas configurações, basta sobrescrever as variáveis do arquivo base `.env` , dentro da pasta de cada container. Localmente, serão incluídas assim:
+To insert new settings, just overwrite the variables of the base `.env` file, inside the folder of each container. Locally, they will be included as follows:
 
 ```yaml
 # compose.yaml
@@ -43,13 +43,13 @@ env_file:
 . . .
 ```
 
-## Fluxo de Dados
+## Data Flow
 
-O Nginx atua como o ponto de entrada para todas as requisições, direcionando-as para a interface (Frontend) ou para a API (Backend).
+Nginx acts as the entry point for all requests, directing them to the interface (Frontend) or to the API (Backend).
 
-A interface consome a API REST do Backend via `axios`. Verifique as URLs utilizadas pelo Frontend no arquivo [`config.ts`](./app/src/config.ts).
+The interface consumes the Backend's REST API via `axios`. Check the URLs used by the Frontend in the [`config.ts`](./app/src/config.ts) file.
 
-Sendo assim, o trecho do Frontend a seguir, na página de eventos
+Therefore, the following Frontend excerpt, on the events page
 
 ```ts
 // app/src/app/(annoucements)/events/page.tsx
@@ -59,7 +59,7 @@ export default function EventsPage() {
 	if (loading) return <FullScreenLoading />;
 	if (error) return <FullScreenError error={error} />;
 	if (!data || data.length === 0)
-		return <FullScreenError error="Nenhum evento encontrado." />;
+		return <FullScreenError error="No events found." />;
 
 	return (
 		<div className="space-y-6">
@@ -72,13 +72,13 @@ export default function EventsPage() {
 								{event.title}
 							</CardTitle>
 							<CardDescription>
-								De {event.start_date} até {event.end_date}
+								From {event.start_date} to {event.end_date}
 							</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-2">
 							<p className="font-medium text-sm">
 								<span className="text-muted-foreground">
-									Local:
+									Location:
 								</span>{" "}
 								{event.location}
 							</p>
@@ -92,7 +92,7 @@ export default function EventsPage() {
 }
 ```
 
-O hook [`useEvent`](./app/src/hooks/useEvent.ts) se comunica, na URL `http://{BASE_URL}/api/school/events/`, com o trecho do Backend
+The [`useEvent`](./app/src/hooks/useEvent.ts) hook communicates, at the URL `http://{BASE_URL}/api/school/events/`, with the Backend excerpt
 
 ```py
 # api/school/views.py
@@ -103,19 +103,19 @@ class EventViewSet(viewsets.ModelViewSet):
     search_fields = ["title", "description", "location", "start_date"]
 ```
 
-e, se adquirindo os dados, armazena na variável `data`, de forma que os dados podem ser facilmente exibidos em [`EventsPage`](<./app/src/app/(annoucements)/events/page.tsx>).
+and, if acquiring the data, stores it in the `data` variable, so that the data can be easily displayed in [`EventsPage`](<./app/src/app/(annoucements)/events/page.tsx>).
 
-## Arquitetura do APP
+## APP Architecture
 
-O APP utiliza NextJS, um framework web, utilizado na construção dos componentes, juntamente com o React, assim como na função de build e para servir os arquivos estáticos.
+The APP uses NextJS, a web framework, used in the construction of the components, together with React, as well as in the build function and to serve the static files.
 
-### Configurações dos Endpoints
+### Endpoint Settings
 
-As configurações dos endpoints da API são definidas em [`config.ts`](./app/src/config.ts).
+The API endpoint settings are defined in [`config.ts`](./app/src/config.ts).
 
-Uma concatenação com o host base da API é realizada no para gerar os objectos `ROUTES` e `ROUTES_INTERNAL` que guardam as rotas.
+A concatenation with the base host of the API is performed to generate the `ROUTES` and `ROUTES_INTERNAL` objects that store the routes.
 
-Para definir a rota da API é usando:
+To define the API route, it is used:
 
 ```ts
 // app/src/config.ts
@@ -124,7 +124,7 @@ const API_INTERNAL_BASE =
 	process.env.NEXT_PUBLIC_PRIVATE_API_HOST || "http://api:8000/api/";
 ```
 
-Exemplo de como as rotas são acessadas de [`config.ts`](./app/src/config.ts):
+Example of how routes are accessed from [`config.ts`](./app/src/config.ts):
 
 ```ts
 // app/src/hooks/useEvent.ts
@@ -134,11 +134,11 @@ let payload = Array.isArray(response.data) ? response.data : [];
 . . .
 ```
 
-## Arquitetura da API
+## API Architecture
 
 ### URLs
 
-São configurados usando o `DefaultRouter` do `rest_framework`
+They are configured using the `DefaultRouter` of the `rest_framework`
 
 ```py
 # api/school/urls.py
@@ -156,9 +156,9 @@ router.register(r"events", EventViewSet, basename="event")
 
 ### Serializers
 
-Estão nos arquivos `serializers.py` dentro de cada app.
+They are in the `serializers.py` files inside each app.
 
-Há as versões padrão, como esta:
+There are the standard versions, like this one:
 
 ```py
 . . .
@@ -171,7 +171,7 @@ class GroupSerializer(serializers.ModelSerializer):
 . . .
 ```
 
-e também suas respectivas verões compact, sem alguns atributos ou detalhes de outras classes:
+and also their respective compact versions, without some attributes or details of other classes:
 
 ```py
 . . .
@@ -182,13 +182,13 @@ class GroupCompactSerializer(serializers.ModelSerializer):
 . . .
 ```
 
-Siga esse padrão para evitar importações circulares.
+Follow this pattern to avoid circular imports.
 
 ### Viewset Functions
 
-Há funções em alguns serializers, que servem para propósitos específicos, as chamadas actions.
+There are functions in some serializers, which serve specific purposes, the so-called actions.
 
-Quando dados relacionados a algum model forem extraídos, como as notas de um determinado aluno, é recomendável usar uma action:
+When data related to some model is extracted, such as the grades of a certain student, it is recommended to use an action:
 
 ```py
 . . .
@@ -212,13 +212,13 @@ class StudentViewSet(viewsets.ModelViewSet):
 . . .
 ```
 
-## Arquitetura do Banco de Dados
+## Database Architecture
 
-O sistema de banco de dados utilizado é o PostgreSQL. A estrutura e os dados do DB são controlados pelo Django.
+The database system used is PostgreSQL. The structure and data of the DB are controlled by Django.
 
-### Configuração
+### Configuration
 
-O PostgreSQL, é conectado ao Django por meio das configurações nas `.env` de cada um, veja o [`.env.example`](./db/.env.example) do Postgres para ter uma ideia:
+PostgreSQL is connected to Django through the settings in the `.env` of each one, see the Postgres [`.env.example`](./db/.env.example) to get an idea:
 
 ```
 # .env.example
@@ -230,11 +230,11 @@ POSTGRES_USER="postgres"
 SSL_CERT_DAYS="820". . .
 ```
 
-Mas, para um ambiente de produção, mudar os valores - em especial das credenciais - será necessário, faça isso no arquivo `.env`, gerado pelo [`controller.sh`](./controller.sh).
+But, for a production environment, changing the values - especially the credentials - will be necessary, do this in the `.env` file, generated by [`controller.sh`](./controller.sh).
 
-### Modelos
+### Models
 
-Os modelos são definidos nos arquivos `api/{app}/models.py`
+The models are defined in the `api/{app}/models.py` files
 
 ```py
 # api/school/models.py
@@ -251,39 +251,39 @@ class Event(models.Model):
         return self.title
 ```
 
-Cada campo é criado a partir de um objeto, como `CharField` e `DateField`, classes que recebem dados e os constroem.
+Each field is created from an object, such as `CharField` and `DateField`, classes that receive data and build them.
 
-Quando o usuário utiliza o comando
+When the user uses the command
 
 ```
 python manage.py makemigrations
 ```
 
-essas classes de objetos (dos arquivos `models.py`) são lidas e a arquitetura deles é gerada.
+these object classes (from the `models.py` files) are read and their architecture is generated.
 
-Após isso, ao usuário utilizar o comando
+After that, when the user uses the command
 
 ```
 python manage.py migrate
 ```
 
-essa arquitetura é aplicada no banco de dados, criando as tabelas necessárias.
+this architecture is applied to the database, creating the necessary tables.
 
-## Proxy Reverso (Nginx)
+## Reverse Proxy (Nginx)
 
-O Nginx atua como um proxy reverso para a aplicação, lidando com as rotas de acesso à aplicação. Sua configuração fica em [`nginx.conf`](./proxy/nginx.conf), consulte para entender as rotas.
+Nginx acts as a reverse proxy for the application, handling the access routes to the application. Its configuration is in [`nginx.conf`](./proxy/nginx.conf), consult it to understand the routes.
 
-Use-o para garantir o funcionamento local, com Docker Compose, do projeto. Em produção, algo diferente será usado.
+Use it to ensure the local operation, with Docker Compose, of the project. In production, something different will be used.
 
-## Servidor de Aplicação (Gunicorn)
+## Application Server (Gunicorn)
 
-O Gunicorn (Green Unicorn) é um servidor de aplicação WSGI (Web Server Gateway Interface) para Python. Ele é utilizado para servir a aplicação Django, atuando como uma interface de acesso.
+Gunicorn (Green Unicorn) is a WSGI (Web Server Gateway Interface) application server for Python. It is used to serve the Django application, acting as an access interface.
 
-### Uso no projeto
+### Use in the project
 
-O servidor de desenvolvimento do Django (`manage.py runserver`) é usado para desenvolvimento, mas não é robusto o suficiente para produção. O `gunicorn`, por outro lado, é projetado para produção, gerenciando múltiplos processos de trabalho para lidar com requisições concorrentes de forma eficiente.
+The Django development server (`manage.py runserver`) is used for development, but it is not robust enough for production. `gunicorn`, on the other hand, is designed for production, managing multiple worker processes to handle concurrent requests efficiently.
 
-No [`api/entrypoint.sh`](./api/entrypoint.sh), o `gunicorn` é usado para esse fim:
+In [`api/entrypoint.sh`](./api/entrypoint.sh), `gunicorn` is used for this purpose:
 
 ```bash
 # api/entrypoint.sh
@@ -293,17 +293,17 @@ uv run gunicorn School-Secretary.wsgi:application --bind 0.0.0.0:8000
 . . .
 ```
 
-O comando acima instrui o `gunicorn` a servir a API nas interfaces da rede `0.0.0.0` na porta `8000`, tornando o Django acessível por lá.
+The command above instructs `gunicorn` to serve the API on the `0.0.0.0` network interfaces on port `8000`, making Django accessible there.
 
-## Sistema de Autenticação
+## Authentication System
 
 ### Backend
 
--   A API fornece tokens JWT para autenticação.
--   O APP fornece so tokens como Bearer no header Authorization da comunicação HTTP.
--   Após o login, o Backend retorna os tokens `access` e `refresh`, que o APP armazena em forma de cookies no navegador.
+-   The API provides JWT tokens for authentication.
+-   The APP provides the tokens as Bearer in the Authorization header of the HTTP communication.
+-   After login, the Backend returns the `access` and `refresh` tokens, which the APP stores as cookies in the browser.
 
-Exemplo de endpoint de login:
+Example of login endpoint:
 
 ```http
 POST /api/users/token/
@@ -311,27 +311,27 @@ POST /api/users/token/
 
 ### Frontend
 
--   O login é feito através da rota `/auth/login`, criado pelo arquivo [`login.ts`](<./app/src/app/(account)/auth/login/route.ts>), que envia as credenciais para o backend e armazena os tokens em cookies:
--   O middleware ([`middleware.ts`](./app/src/middleware.ts)) protege as rotas sensíveis:
--   Enquanto os cookies persistirem, o usuário permanecerá autenticado mesmo (salvo política de expiração configurada no Backend e limpeza de cache).
+-   Login is done through the `/auth/login` route, created by the [`login.ts`](<./app/src/app/(account)/auth/login/route.ts>) file, which sends the credentials to the backend and stores the tokens in cookies:
+-   The middleware ([`middleware.ts`](./app/src/middleware.ts)) protects sensitive routes:
+-   As long as the cookies persist, the user will remain authenticated even (except for the expiration policy configured in the Backend and cache cleaning).
 
-Outros arquivos em [`auth/`](<./app/src/app/(account)/auth>) fazem coisas como [`logout`](<./app/src/app/(account)/auth/logout/route.ts>) e [`refresh`](<./app/src/app/(account)/auth/refresh/route.ts>)
+Other files in [`auth/`](<./app/src/app/(account)/auth>) do things like [`logout`](<./app/src/app/(account)/auth/logout/route.ts>) and [`refresh`](<./app/src/app/(account)/auth/refresh/route.ts>)
 
-#### Gerenciamento de Requisições Autenticadas no Frontend
+#### Management of Authenticated Requests in the Frontend
 
-Para garantir autentificação das operações, foi implementada uma instância centralizada do `axios`.
+To ensure authentication of operations, a centralized instance of `axios` was implemented.
 
-Tal instância está em [`api.ts`](./app/src/services/api.ts). Esta instância é configurada com interceptadores de requisição e resposta que automatizam o processo de autenticação.
+This instance is in [`api.ts`](./app/src/services/api.ts). This instance is configured with request and response interceptors that automate the authentication process.
 
-**Processo de Uso:**
-Para utilizar essa instância e garantir a autenticação, os componentes e rotas de API do Next.js que interagem com a API Django devem seguir o seguinte padrão:
+**Process of Use:**
+To use this instance and ensure authentication, the Next.js components and API routes that interact with the Django API must follow the following pattern:
 
-1.  **Importar a instância `api`:** Em vez de `import axios from "axios";`, utilize `import api from "@/services/api";`.
-2.  **Utilizar `api` para requisições:** Substitua todas as chamadas `axios.get()`, `axios.post()`, `axios.delete()`, etc., pelas suas equivalentes `api.get()`, `api.post()`, `api.delete()`.
+1.  **Import the `api` instance:** Instead of `import axios from "axios";`, use `import api from "@/services/api";`.
+2.  **Use `api` for requests:** Replace all `axios.get()`, `axios.post()`, `axios.delete()`, etc., calls with their `api.get()`, `api.post()`, `api.delete()` equivalents.
 
-**Exemplos de Uso:**
+**Examples of Use:**
 
--   **Em um Hook (ex: `app/src/hooks/useEvent.ts`)**:
+-   **In a Hook (ex: `app/src/hooks/useEvent.ts`)**:
 
     ```ts
     // app/src/hooks/useEvent.ts
@@ -343,7 +343,7 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
     // ...
     ```
 
--   **Em uma Rota de API do Next.js (ex: [`login/route.ts`](<app/src/app/(account)/auth/login/route.ts>))**:
+-   **In a Next.js API Route (ex: [`login/route.ts`](<app/src/app/(account)/auth/login/route.ts>))**:
 
     ```ts
     // app/src/app/(account)/auth/login/route.ts
@@ -363,23 +363,23 @@ Para utilizar essa instância e garantir a autenticação, os componentes e rota
     );
     ```
 
-### Níveis de Acesso e Permissões
+### Access Levels and Permissions
 
-O sistema utiliza um modelo de controle de acesso baseado em papéis (Role-Based Access Control - RBAC) para proteger os dados e as ações. Cada usuário possui um papel que define seu nível de acesso.
+The system uses a Role-Based Access Control (RBAC) model to protect data and actions. Each user has a role that defines their access level.
 
-#### Papéis de Usuário
+#### User Roles
 
-Existem quatro papéis definidos no sistema:
+There are four roles defined in the system:
 
--   **`STUDENT`**: O nível de acesso mais básico. Pode apenas visualizar informações públicas e, em parte, manipular seus próprios dados.
--   **`GUARDIAN`**: Pode acessar tudo que o aluno acessa, apenas.
--   **`PROFESSOR`**: Pode gerenciar informações relacionadas às suas próprias turmas e alunos.
--   **`STAFF`**: Possui acesso administrativo, mas não pode criar outro `STAFF`.
--   **`SUPERUSER`**: Possui acesso irrestrito a todo o sistema.
+-   **`STUDENT`**: The most basic access level. Can only view public information and, in part, manipulate their own data.
+-   **`GUARDIAN`**: Can access everything the student accesses, only.
+-   **`PROFESSOR`**: Can manage information related to their own classes and students.
+-   **`STAFF`**: Has administrative access, but cannot create another `STAFF`.
+-   **`SUPERUSER`**: Has unrestricted access to the entire system.
 
-#### Proteção de Endpoints
+#### Endpoint Protection
 
-A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API com base no papel do usuário autenticado. Por exemplo, o modelo de estudante possui a seguinte configuração:
+Security is applied in the Backend, controlling access to each API endpoint based on the role of the authenticated user. For example, the student model has the following configuration:
 
 ```py
     def get_permissions(self):
@@ -398,22 +398,22 @@ A segurança é aplicada no Backend, controlando o acesso a cada endpoint da API
         return super().get_permissions()
 ```
 
-Que define a a permission com base na ação que será tomada.
+Which defines the permission based on the action to be taken.
 
-### Estrutura do Usuário
+### User Structure
 
-O modelo de usuário (`User`) é a base do sistema de autenticação e autorização. Ele é definido em [`users/models.py`](./api/users/models.py) e estende as funcionalidades padrão do Django para se adequar às necessidades específicas da aplicação.
+The user model (`User`) is the basis of the authentication and authorization system. It is defined in [`users/models.py`](./api/users/models.py) and extends the standard Django functionalities to suit the specific needs of the application.
 
-#### Modelo `User`
+#### `User` Model
 
-O modelo de user foi construído a partir de `AbstractBaseUser` e `PermissionsMixin` e possui campos usados base para todos os usuários de todos os tipos. Depois, é linkado um perfil a esse usuário, com dados específicos de seu papel no sistema, se aplicável.
+The user model was built from `AbstractBaseUser` and `PermissionsMixin` and has base fields used for all users of all types. Then, a profile is linked to this user, with specific data of their role in the system, if applicable.
 
-#### Modelo `UserManager`
+#### `UserManager` Model
 
-O `UserManager` é o gerenciador personalizado para o nosso modelo `User`. Ele atua como a interface principal para operações de banco de dados relacionadas ao usuário.
+The `UserManager` is the custom manager for our `User` model. It acts as the main interface for user-related database operations.
 
-## Autoria
+## Authorship
 
-Frontend e Sistema de Autenticação de Usuários - João Victor Pinheiro Reis - Desenvolvedor Fullstack em formação.
+Frontend and User Authentication System - João Victor Pinheiro Reis - Fullstack Developer in training.
 
-Backend e Sistema de logs - João Miguel Freire de Oliveira Mendes - Desenvolvedor Fullstack em formação.
+Backend and Log System - João Miguel Freire de Oliveira Mendes - Fullstack Developer in training.

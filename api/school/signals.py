@@ -23,7 +23,7 @@ def agenda_item_created(sender, instance, created, **kwargs):
         
         if is_exam:
             # Get all groups and notify students in those groups
-            from school.models import Group
+            from academics.models import Group
             groups = Group.objects.all()
             for group in groups:
                 notify_students_upcoming_exam(group, instance)
