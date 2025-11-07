@@ -2,23 +2,43 @@
 
 import * as React from "react";
 
-import { SearchForm } from "@/components/SearchForm";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
-	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavMain } from "@/components/NavMain";
 import { NavSecondary } from "@/components/NavSecondary";
 
-import { Home, Inbox } from "lucide-react";
+import { Home, Inbox, LucideIcon } from "lucide-react";
 
 import { ROUTES } from "@/config";
 import { Button } from "../ui/button";
 import { logout } from "@/services/auth";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
+import { UserRole } from "@/types/user";
+
+type NavItem = {
+	title: string;
+	url: string;
+	icon: LucideIcon;
+	blockedRoles?: UserRole[];
+};
+
+type NavSecondaryChildItem = {
+	title: string;
+	url: string;
+	blockedRoles?: UserRole[];
+};
+
+type NavSecondaryItem = {
+	title: string;
+	url: string;
+	items: NavSecondaryChildItem[];
+	blockedRoles?: UserRole[];
+};
 
 const data = {
 	navMain: [
@@ -28,7 +48,6 @@ const data = {
 			icon: Home,
 		},
 		{
-			// TODO create inbox
 			title: "Notificações",
 			url: "/inbox",
 			icon: Inbox,
@@ -50,6 +69,7 @@ const data = {
 				{
 					title: "Aulas",
 					url: "/lessons",
+					blockedRoles: [UserRole.STAFF],
 				},
 			],
 		},
@@ -64,10 +84,16 @@ const data = {
 				{
 					title: "Recursos",
 					url: "/resources",
+					blockedRoles: [UserRole.GUARDIAN],
 				},
 				{
 					title: "Painel administrativo",
 					url: `${ROUTES.ADMIN}`,
+					blockedRoles: [
+						UserRole.STUDENT,
+						UserRole.GUARDIAN,
+						UserRole.PROFESSOR,
+					],
 				},
 			],
 		},
@@ -76,19 +102,62 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();
+	const { data: user, loading } = useUser();
 
 	function handleClick() {
 		logout();
 		router.push("/");
 	}
 
+	if (loading) {
+		return null;
+	}
+
+	const userRole = user?.role;
+
+	const filterNavMainItems = (items: NavItem[]): NavItem[] => {
+		if (!userRole) return [];
+		return items.filter(
+			(item) =>
+				!item.blockedRoles || !item.blockedRoles.includes(userRole)
+		);
+	};
+
+	const filterNavSecondaryChildItems = (
+		items: NavSecondaryChildItem[]
+	): NavSecondaryChildItem[] => {
+		if (!userRole) return [];
+		return items.filter(
+			(item) =>
+				!item.blockedRoles || !item.blockedRoles.includes(userRole)
+		);
+	};
+
+	const filterNavSecondaryItems = (
+		items: NavSecondaryItem[]
+	): NavSecondaryItem[] => {
+		if (!userRole) return [];
+		return items
+			.map((item) => ({
+				...item,
+				items: filterNavSecondaryChildItems(item.items),
+			}))
+			.filter(
+				(item) =>
+					(!item.blockedRoles ||
+						!item.blockedRoles.includes(userRole)) &&
+					item.items.length > 0
+			);
+	};
+
+	const filteredNavMain = filterNavMainItems(data.navMain);
+	const filteredNavSecondary = filterNavSecondaryItems(data.navSecondary);
+
 	return (
 		<Sidebar {...props}>
-			<SidebarHeader>
-				<NavMain items={data.navMain} />
-			</SidebarHeader>
 			<SidebarContent>
-				<NavSecondary items={data.navSecondary} />
+				<NavMain items={filteredNavMain} />
+				<NavSecondary items={filteredNavSecondary} />
 			</SidebarContent>
 			<SidebarRail />
 			<SidebarFooter>
