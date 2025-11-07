@@ -1,8 +1,10 @@
 import re
+
 from django.core.exceptions import ValidationError
 
 try:
     from validate_docbr import CPF
+
     HAS_VALIDATE_DOCBR = True
 except ImportError:
     HAS_VALIDATE_DOCBR = False

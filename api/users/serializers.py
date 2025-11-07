@@ -1,9 +1,10 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from students.models import Student, Guardian
+from rest_framework import serializers
+
 from school.models import Professor
-from students.serializers import StudentSerializer, GuardianSerializer
 from school.serializers import ProfessorSerializer
+from students.models import Guardian, Student
+from students.serializers import GuardianSerializer, StudentSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -46,11 +47,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if profile:
             if obj.role == get_user_model().Role.STUDENT:
                 from students.serializers import StudentSerializer
+
                 return StudentSerializer(profile, context=self.context).data
             elif obj.role == get_user_model().Role.GUARDIAN:
                 from students.serializers import GuardianSerializer
+
                 return GuardianSerializer(profile, context=self.context).data
             elif obj.role == get_user_model().Role.PROFESSOR:
                 from school.serializers import ProfessorSerializer
+
                 return ProfessorSerializer(profile, context=self.context).data
         return None

@@ -1,68 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<title>Boletim Escolar</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-				font-size: 12px;
-			}
-			.header {
-				text-align: center;
-			}
-			.content {
-				margin: 10px;
-			}
-			.content-table {
-				width: 100%;
-				border-collapse: collapse;
-			}
-			.content-table th,
-			.content-table td {
-				border: 1px solid #ddd;
-				padding: 4px 6px;
-				text-align: center;
-			}
-			.content-table th {
-				background-color: #ededed;
-			}
-			.content-table td {
-				background-color: #f7f7f7;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="header">
-			<h1>Boletim de {{ student.full_name }}</h1>
-			<p>Matrícula: {{ student.registration_number }}</p>
-			<p>Grupo: {{ student.group }}</p>
-			<p>Itinerário: {{ student.group.itinerary }}</p>
-		</div>
-		<div class="content">
-			<table class="content-table">
-				<tr>
-					<th>Disciplina</th>
-					<th>1º Bimestre</th>
-					<th>2º Bimestre</th>
-					<th>3º Bimestre</th>
-					<th>4º Bimestre</th>
-				</tr>
-				{% for subject, grades in data.items %}
-				<tr>
-					<th>{{ subject }}</th>
-					{% if grades %} {% for grade in grades %}
-					<td>{{ grade.value|default_if_none:"-" }}</td>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Boletim Escolar</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+            }
+            .header {
+                text-align: center;
+            }
+            .content {
+                margin: 10px;
+            }
+            .content-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .content-table th,
+            .content-table td {
+                border: 1px solid #ddd;
+                padding: 4px 6px;
+                text-align: center;
+            }
+            .content-table th {
+                background-color: #ededed;
+            }
+            .content-table td {
+                background-color: #f7f7f7;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Boletim de {{ student.full_name }}</h1>
+            <p>Matrícula: {{ student.registration_number }}</p>
+            <p>Grupo: {{ student.group }}</p>
+            <p>Itinerário: {{ student.group.itinerary }}</p>
+        </div>
+        <div class="content">
+            <table class="content-table">
+                <tr>
+                    <th>Disciplina</th>
+                    <th>1º Bimestre</th>
+                    <th>2º Bimestre</th>
+                    <th>3º Bimestre</th>
+                    <th>4º Bimestre</th>
+                </tr>
+                {% for subject, grades in data.items %}
+                <tr>
+                    <th>{{ subject }}</th>
+                    {% if grades %} {% for grade in grades %}
+                    <td>{{ grade.value|default_if_none:"-" }}</td>
 
-					{% endfor %} {% else %}
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					<td>-</td>
-					{% endif %}
-				</tr>
-				{% endfor %}
-			</table>
-		</div>
-	</body>
+                    {% endfor %} {% else %}
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </body>
 </html>

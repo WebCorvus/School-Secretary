@@ -1,54 +1,54 @@
-import { useState, useEffect, useCallback } from "react";
-import api from "@/services/api";
-import { EventProps, FakeEvent } from "@/types/event";
-import { ROUTES } from "@/config";
+import { useCallback, useEffect, useState } from 'react'
+import { ROUTES } from '@/config'
+import api from '@/services/api'
+import { type EventProps, FakeEvent } from '@/types/event'
 
 export function useEvent() {
-	const [data, setData] = useState<EventProps[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<EventProps[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
-	const generateMockEvents = useCallback((): EventProps[] => {
-		return Array.from({ length: 10 }, (_, i) => ({
-			...FakeEvent,
-			id: i + 1,
-			title: `Evento mock #${i + 1}`,
-			description: `Descrição do evento mock #${i + 1}`,
-		}));
-	}, []);
+    const generateMockEvents = useCallback((): EventProps[] => {
+        return Array.from({ length: 10 }, (_, i) => ({
+            ...FakeEvent,
+            id: i + 1,
+            title: `Evento mock #${i + 1}`,
+            description: `Descrição do evento mock #${i + 1}`,
+        }))
+    }, [])
 
-	const fetchData = useCallback(async () => {
-		setLoading(true);
-		setError(null);
+    const fetchData = useCallback(async () => {
+        setLoading(true)
+        setError(null)
 
-		try {
-			const response = await api.get<EventProps[]>(`${ROUTES.EVENTS}`);
-			let payload = Array.isArray(response.data) ? response.data : [];
+        try {
+            const response = await api.get<EventProps[]>(`${ROUTES.EVENTS}`)
+            let payload = Array.isArray(response.data) ? response.data : []
 
-			if (
-				process.env.NODE_ENV === "development" &&
-				payload.length === 0
-			) {
-				payload = generateMockEvents();
-			}
+            if (
+                process.env.NODE_ENV === 'development' &&
+                payload.length === 0
+            ) {
+                payload = generateMockEvents()
+            }
 
-			setData(payload);
-		} catch {
-			if (process.env.NODE_ENV === "development") {
-				setData(generateMockEvents());
-				setError(null);
-			} else {
-				setData([]);
-				setError("Não foi possível carregar os eventos.");
-			}
-		} finally {
-			setLoading(false);
-		}
-	}, [generateMockEvents]);
+            setData(payload)
+        } catch {
+            if (process.env.NODE_ENV === 'development') {
+                setData(generateMockEvents())
+                setError(null)
+            } else {
+                setData([])
+                setError('Não foi possível carregar os eventos.')
+            }
+        } finally {
+            setLoading(false)
+        }
+    }, [generateMockEvents])
 
-	useEffect(() => {
-		fetchData();
-	}, [fetchData]);
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
-	return { data, loading, error, refetch: fetchData };
+    return { data, loading, error, refetch: fetchData }
 }

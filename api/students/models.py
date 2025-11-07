@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
 
-from utils.validators import phone_validator, cep_validator, cpf_validator
 from utils.date import get_current_year, get_today
+from utils.validators import cep_validator, cpf_validator, phone_validator
 
 BIMESTER_CHOICES = [
     ("1B", "1º Bimestre"),

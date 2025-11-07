@@ -1,86 +1,93 @@
 services:
-  proxy:
-    build: ./proxy
-    image: webcorvus/school-secretary-proxy:latest
-    container_name: school-secretary-proxy
-    ports:
-      - 8080:80
-    env_file:
-      - ./proxy/.env
-    depends_on:
-      api:
-        condition: service_healthy
-      app:
-        condition: service_healthy
-    networks:
-      - public
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:80/healthcheck || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 20
-      start_period: 30s
+    proxy:
+        build: ./proxy
+        image: webcorvus/school-secretary-proxy:latest
+        container_name: school-secretary-proxy
+        ports:
+            - 8080:80
+        env_file:
+            - ./proxy/.env
+        depends_on:
+            api:
+                condition: service_healthy
+            app:
+                condition: service_healthy
+        networks:
+            - public
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "curl -f http://localhost:80/healthcheck || exit 1",
+                ]
+            interval: 10s
+            timeout: 10s
+            retries: 20
+            start_period: 30s
 
-  app:
-    build: ./app
-    image: webcorvus/school-secretary-app:latest
-    container_name: school-secretary-app
-    environment:
-      - NODE_ENV=production
-    env_file:
-      - ./app/.env
-    depends_on:
-      api:
-        condition: service_healthy
-    networks:
-      - public
-    restart: unless-stopped
-    healthcheck:
-      test:
-        ["CMD-SHELL", "curl -sf http://localhost:3000/healthcheck || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
+    app:
+        build: ./app
+        image: webcorvus/school-secretary-app:latest
+        container_name: school-secretary-app
+        environment:
+            - NODE_ENV=production
+        env_file:
+            - ./app/.env
+        depends_on:
+            api:
+                condition: service_healthy
+        networks:
+            - public
+        restart: unless-stopped
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "curl -sf http://localhost:3000/healthcheck || exit 1",
+                ]
+            interval: 10s
+            timeout: 10s
+            retries: 10
+            start_period: 30s
 
-  api:
-    build: ./api
-    image: webcorvus/school-secretary-api:latest
-    container_name: school-secretary-api
-    env_file:
-      - ./api/.env
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - public
-      - private
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "python /api/healthcheck.py"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+    api:
+        build: ./api
+        image: webcorvus/school-secretary-api:latest
+        container_name: school-secretary-api
+        env_file:
+            - ./api/.env
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - public
+            - private
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "python /api/healthcheck.py"]
+            interval: 10s
+            timeout: 10s
+            retries: 5
+            start_period: 30s
 
-  db:
-    build: ./db
-    image: webcorvus/school-secretary-db:latest
-    container_name: school-secretary-db
-    env_file:
-      - ./db/.env
-    networks:
-      - private
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-      start_period: 20s
+    db:
+        build: ./db
+        image: webcorvus/school-secretary-db:latest
+        container_name: school-secretary-db
+        env_file:
+            - ./db/.env
+        networks:
+            - private
+        restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 10s
+            retries: 5
+            start_period: 20s
 
 networks:
-  public:
-    driver: bridge
-  private:
-    driver: bridge
+    public:
+        driver: bridge
+    private:
+        driver: bridge

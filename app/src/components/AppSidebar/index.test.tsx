@@ -1,156 +1,146 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { SidebarProvider } from '@/components/ui/sidebar'
+import { ROUTES } from '@/config'
+import { useUser } from '@/hooks/useUser'
+import { logout } from '@/services/auth'
+import { UserRole } from '@/types/user'
+import { AppSidebar } from './index'
 
-import { AppSidebar } from "./index";
+vi.mock('@/hooks/useUser', () => ({
+    useUser: vi.fn(),
+}))
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+const mockPush = vi.fn()
+vi.mock('next/navigation', () => ({
+    useRouter: () => ({
+        push: mockPush,
+    }),
+}))
 
-import { logout } from "@/services/auth";
-import { useUser } from "@/hooks/useUser";
+vi.mock('@/services/auth', () => ({
+    logout: vi.fn(),
+}))
 
-import { ROUTES } from "@/config";
-import { UserRole } from "@/types/user";
+describe('AppSidebar', () => {
+    beforeEach(() => {
+        vi.clearAllMocks()
+    })
 
-vi.mock("@/hooks/useUser", () => ({
-	useUser: vi.fn(),
-}));
+    it('deve renderizar o sidebar com todos os itens de navegação e o botão de logout para SUPERUSER', () => {
+        ;(useUser as vi.Mock).mockReturnValue({
+            data: { role: UserRole.SUPERUSER },
+            loading: false,
+            error: null,
+        })
 
-const mockPush = vi.fn();
-vi.mock("next/navigation", () => ({
-	useRouter: () => ({
-		push: mockPush,
-	}),
-}));
+        render(
+            <SidebarProvider>
+                <AppSidebar />
+            </SidebarProvider>,
+        )
 
-vi.mock("@/services/auth", () => ({
-	logout: vi.fn(),
-}));
+        expect(
+            screen.getByRole('link', { name: /Início/i }),
+        ).toBeInTheDocument()
+        expect(
+            screen.getByRole('link', { name: /Notificações/i }),
+        ).toBeInTheDocument()
 
-describe("AppSidebar", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
+        expect(screen.getByText('Anúncios')).toBeInTheDocument()
+        expect(screen.getByText('Escola')).toBeInTheDocument()
 
-	it("deve renderizar o sidebar com todos os itens de navegação e o botão de logout para SUPERUSER", () => {
-		(useUser as vi.Mock).mockReturnValue({
-			data: { role: UserRole.SUPERUSER },
-			loading: false,
-			error: null,
-		});
+        expect(
+            screen.getByRole('link', { name: /Atividades/i }),
+        ).toBeInTheDocument()
+        expect(
+            screen.getByRole('link', { name: /Eventos/i }),
+        ).toBeInTheDocument()
+        expect(screen.getByRole('link', { name: /Aulas/i })).toBeInTheDocument()
+        expect(screen.getByRole('link', { name: /Sobre/i })).toBeInTheDocument()
+        expect(
+            screen.getByRole('link', { name: /Painel administrativo/i }),
+        ).toBeInTheDocument()
 
-		render(
-			<SidebarProvider>
-				<AppSidebar />
-			</SidebarProvider>
-		);
+        expect(
+            screen.getByRole('button', { name: /Logout/i }),
+        ).toBeInTheDocument()
+    })
 
-		expect(
-			screen.getByRole("link", { name: /Início/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Notificações/i })
-		).toBeInTheDocument();
+    it('deve ter os links de navegação com as URLs corretas para SUPERUSER', () => {
+        ;(useUser as vi.Mock).mockReturnValue({
+            data: { role: UserRole.SUPERUSER },
+            loading: false,
+            error: null,
+        })
 
-		expect(screen.getByText("Anúncios")).toBeInTheDocument();
-		expect(screen.getByText("Escola")).toBeInTheDocument();
+        render(
+            <SidebarProvider>
+                <AppSidebar />
+            </SidebarProvider>,
+        )
 
-		expect(
-			screen.getByRole("link", { name: /Atividades/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Eventos/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Aulas/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Sobre/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Painel administrativo/i })
-		).toBeInTheDocument();
+        expect(screen.getByRole('link', { name: /Início/i })).toHaveAttribute(
+            'href',
+            '/dashboard',
+        )
 
-		expect(
-			screen.getByRole("button", { name: /Logout/i })
-		).toBeInTheDocument();
-	});
+        expect(
+            screen.getByRole('link', { name: /Atividades/i }),
+        ).toHaveAttribute('href', '/agenda')
 
-	it("deve ter os links de navegação com as URLs corretas para SUPERUSER", () => {
-		(useUser as vi.Mock).mockReturnValue({
-			data: { role: UserRole.SUPERUSER },
-			loading: false,
-			error: null,
-		});
+        const adminLink = screen.getByRole('link', {
+            name: /Painel administrativo/i,
+        })
+        expect(adminLink).toHaveAttribute('href', `${ROUTES.ADMIN}`)
+    })
 
-		render(
-			<SidebarProvider>
-				<AppSidebar />
-			</SidebarProvider>
-		);
+    it('deve renderizar itens de navegação corretos para STUDENT (deve ter acesso a aulas mas não ao painel admin)', () => {
+        ;(useUser as vi.Mock).mockReturnValue({
+            data: { role: UserRole.STUDENT },
+            loading: false,
+            error: null,
+        })
 
-		expect(screen.getByRole("link", { name: /Início/i })).toHaveAttribute(
-			"href",
-			"/dashboard"
-		);
+        render(
+            <SidebarProvider>
+                <AppSidebar />
+            </SidebarProvider>,
+        )
 
-		expect(
-			screen.getByRole("link", { name: /Atividades/i })
-		).toHaveAttribute("href", "/agenda");
+        expect(
+            screen.getByRole('link', { name: /Início/i }),
+        ).toBeInTheDocument()
+        expect(
+            screen.getByRole('link', { name: /Notificações/i }),
+        ).toBeInTheDocument()
+        expect(screen.getByRole('link', { name: /Aulas/i })).toBeInTheDocument() // STUDENT should see classes
 
-		const adminLink = screen.getByRole("link", {
-			name: /Painel administrativo/i,
-		});
-		expect(adminLink).toHaveAttribute("href", `${ROUTES.ADMIN}`);
-	});
+        expect(
+            screen.queryByRole('link', { name: /Painel administrativo/i }),
+        ).not.toBeInTheDocument() // STUDENT should not see admin panel
+    })
 
-	it("deve renderizar itens de navegação corretos para STUDENT (deve ter acesso a aulas mas não ao painel admin)", () => {
-		(useUser as vi.Mock).mockReturnValue({
-			data: { role: UserRole.STUDENT },
-			loading: false,
-			error: null,
-		});
+    it('deve chamar a função de logout e redirecionar para a página inicial ao clicar no botão "Logout"', async () => {
+        ;(useUser as vi.Mock).mockReturnValue({
+            data: { role: UserRole.STUDENT },
+            loading: false,
+            error: null,
+        })
 
-		render(
-			<SidebarProvider>
-				<AppSidebar />
-			</SidebarProvider>
-		);
+        render(
+            <SidebarProvider>
+                <AppSidebar />
+            </SidebarProvider>,
+        )
 
-		expect(
-			screen.getByRole("link", { name: /Início/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Notificações/i })
-		).toBeInTheDocument();
-		expect(
-			screen.getByRole("link", { name: /Aulas/i })
-		).toBeInTheDocument(); // STUDENT should see classes
+        const logoutButton = screen.getByRole('button', { name: /Logout/i })
 
-		expect(
-			screen.queryByRole("link", { name: /Painel administrativo/i })
-		).not.toBeInTheDocument(); // STUDENT should not see admin panel
-	});
+        fireEvent.click(logoutButton)
 
-	it('deve chamar a função de logout e redirecionar para a página inicial ao clicar no botão "Logout"', async () => {
-		(useUser as vi.Mock).mockReturnValue({
-			data: { role: UserRole.STUDENT },
-			loading: false,
-			error: null,
-		});
+        expect(logout).toHaveBeenCalledTimes(1)
 
-		render(
-			<SidebarProvider>
-				<AppSidebar />
-			</SidebarProvider>
-		);
-
-		const logoutButton = screen.getByRole("button", { name: /Logout/i });
-
-		fireEvent.click(logoutButton);
-
-		expect(logout).toHaveBeenCalledTimes(1);
-
-		expect(mockPush).toHaveBeenCalledTimes(1);
-		expect(mockPush).toHaveBeenCalledWith("/");
-	});
-});
+        expect(mockPush).toHaveBeenCalledTimes(1)
+        expect(mockPush).toHaveBeenCalledWith('/')
+    })
+})

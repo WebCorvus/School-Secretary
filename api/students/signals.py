@@ -1,14 +1,17 @@
 """
 Signals to automatically trigger notifications
 """
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Warning, Suspension, Tuition
+
 from utils.notifications import (
-    notify_guardians_new_warning,
     notify_guardians_new_suspension,
+    notify_guardians_new_warning,
     notify_guardians_overdue_payment,
 )
+
+from .models import Suspension, Tuition, Warning
 
 
 @receiver(post_save, sender=Warning)
@@ -28,9 +31,9 @@ def suspension_created(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Tuition)
 def tuition_status_changed(sender, instance, created, **kwargs):
     """Send notification when tuition becomes overdue"""
-    if not created and instance.status == 'OVERDUE':
+    if not created and instance.status == "OVERDUE":
         # Check if status just changed to overdue
         if sender.objects.filter(id=instance.id).exists():
             old_instance = sender.objects.get(id=instance.id)
-            if old_instance.status != 'OVERDUE':
+            if old_instance.status != "OVERDUE":
                 notify_guardians_overdue_payment(instance.student, instance)

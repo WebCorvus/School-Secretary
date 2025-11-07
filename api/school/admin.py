@@ -1,19 +1,20 @@
 from django.contrib import admin
+
 from school.models import (
-    Subject,
-    Itinerary,
-    Group,
-    Professor,
-    SchoolRecord,
-    Book,
-    Lesson,
-    Event,
     AgendaItem,
-    WeeklyLessonPlan,
+    Book,
+    Event,
     EventRegistration,
+    Group,
+    Itinerary,
+    Lesson,
+    Notification,
+    Professor,
     Room,
     RoomReservation,
-    Notification,
+    SchoolRecord,
+    Subject,
+    WeeklyLessonPlan,
 )
 
 
@@ -313,14 +314,29 @@ class RoomAdmin(admin.ModelAdmin):
 
 
 class RoomReservationAdmin(admin.ModelAdmin):
-    list_display = ("id", "room", "reserved_by", "purpose", "date", "start_time", "end_time")
+    list_display = (
+        "id",
+        "room",
+        "reserved_by",
+        "purpose",
+        "date",
+        "start_time",
+        "end_time",
+    )
     list_display_links = ("room", "reserved_by")
     search_fields = ("room__name", "reserved_by__full_name", "purpose")
     list_filter = ("date",)
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ("id", "recipient", "notification_type", "title", "read", "created_at")
+    list_display = (
+        "id",
+        "recipient",
+        "notification_type",
+        "title",
+        "read",
+        "created_at",
+    )
     list_display_links = ("title",)
     search_fields = ("recipient__name", "title", "message")
     list_filter = ("notification_type", "read", "created_at")

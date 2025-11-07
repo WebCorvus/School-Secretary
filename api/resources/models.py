@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
-from utils.date import get_today
 
+from utils.date import get_today
 
 RESOURCE_TYPE_CHOICES = [
     ("COMPUTER", "Computador"),

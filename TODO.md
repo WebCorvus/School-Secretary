@@ -6,10 +6,12 @@
         CAUSE: The frontend is trying to access protected routes without a valid token or login flow, resulting in a 401 from the backend.
     - Create Inbox page (done)
     - Widely implement the search field in the app/
+
 ### Pending:
+
     - Test end-to-end authentication (apparently it was, I recommend testing more)
         TODO: Validate complete login flow, refresh and access to protected routes
-    
+
     - Create and apply database migrations (done)
         TODO: Run makemigrations and migrate for WeeklyLessonPlan model
 

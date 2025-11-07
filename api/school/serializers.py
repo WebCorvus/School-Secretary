@@ -1,19 +1,20 @@
 from rest_framework import serializers
+
 from .models import (
-    Professor,
-    Subject,
-    Itinerary,
-    Group,
-    SchoolRecord,
-    Book,
-    Lesson,
     AgendaItem,
-    WeeklyLessonPlan,
+    Book,
     Event,
     EventRegistration,
+    Group,
+    Itinerary,
+    Lesson,
+    Notification,
+    Professor,
     Room,
     RoomReservation,
-    Notification,
+    SchoolRecord,
+    Subject,
+    WeeklyLessonPlan,
 )
 
 

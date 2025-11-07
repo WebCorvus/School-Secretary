@@ -1,36 +1,36 @@
-import { NextResponse, NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server'
 
 const protectedRoutes = [
-	"/dashboard",
-	"/agenda",
-	"/events",
-	"/lessons",
-	"/groups",
-];
-const loginRoute = "/";
+    '/dashboard',
+    '/agenda',
+    '/events',
+    '/lessons',
+    '/groups',
+]
+const loginRoute = '/'
 
 export function middleware(request: NextRequest) {
-	if (process.env.NODE_ENV === "development") {
-		return NextResponse.next();
-	}
+    if (process.env.NODE_ENV === 'development') {
+        return NextResponse.next()
+    }
 
-	const { pathname } = request.nextUrl;
+    const { pathname } = request.nextUrl
 
-	const accessToken = request.cookies.get("access")?.value;
+    const accessToken = request.cookies.get('access')?.value
 
-	const isProtectedRoute = protectedRoutes.some((route) =>
-		pathname.startsWith(route)
-	);
+    const isProtectedRoute = protectedRoutes.some((route) =>
+        pathname.startsWith(route),
+    )
 
-	if (isProtectedRoute && !accessToken) {
-		const loginUrl = new URL(loginRoute, request.url);
-		loginUrl.searchParams.set("from", pathname);
-		return NextResponse.redirect(loginUrl);
-	}
+    if (isProtectedRoute && !accessToken) {
+        const loginUrl = new URL(loginRoute, request.url)
+        loginUrl.searchParams.set('from', pathname)
+        return NextResponse.redirect(loginUrl)
+    }
 
-	return NextResponse.next();
+    return NextResponse.next()
 }
 
 export const config = {
-	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+}

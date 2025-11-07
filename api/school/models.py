@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils import timezone
-from utils.validators import cep_validator, cpf_validator, phone_validator
 
 from utils.date import get_today
+from utils.validators import cep_validator, cpf_validator, phone_validator
 
 DAY_CHOICES = [
     (0, "Domingo"),
@@ -303,6 +303,7 @@ class AgendaItem(models.Model):
 
 class WeeklyLessonPlan(models.Model):
     """Weekly lesson planning for professors"""
+
     professor = models.ForeignKey(
         "school.Professor",
         on_delete=models.CASCADE,
@@ -317,20 +318,19 @@ class WeeklyLessonPlan(models.Model):
     )
     week_start_date = models.DateField(verbose_name="Início da semana")
     planning_content = models.TextField(
-        verbose_name="Planejamento",
-        help_text="Conteúdo programado para a semana"
+        verbose_name="Planejamento", help_text="Conteúdo programado para a semana"
     )
     objectives = models.TextField(
         verbose_name="Objetivos",
         blank=True,
         null=True,
-        help_text="Objetivos de aprendizagem da semana"
+        help_text="Objetivos de aprendizagem da semana",
     )
     resources_needed = models.TextField(
         verbose_name="Recursos necessários",
         blank=True,
         null=True,
-        help_text="Materiais e recursos necessários"
+        help_text="Materiais e recursos necessários",
     )
     notes = models.TextField(
         verbose_name="Observações",
