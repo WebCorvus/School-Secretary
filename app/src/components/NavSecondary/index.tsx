@@ -1,15 +1,10 @@
-import { LucideIcon } from 'lucide-react'
 import {
-    Sidebar,
-    SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
-    SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarRail,
 } from '@/components/ui/sidebar'
 
 export function NavSecondary({

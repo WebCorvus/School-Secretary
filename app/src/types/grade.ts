@@ -1,4 +1,4 @@
-import { faker, fakerLV } from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 import { createFakeStudentCompact, type StudentCompactProps } from './student'
 import { createFakeSubjectCompact, type SubjectCompactProps } from './subject'
 

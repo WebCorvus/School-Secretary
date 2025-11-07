@@ -28,7 +28,7 @@ export type UserPostProps = Omit<
     'id' | 'is_staff' | 'is_active' | 'profile_details'
 > & {
     password?: string
-    profile?: any
+    profile?: StudentProps | GuardianProps | ProfessorProps
 }
 
 export function createFakeUser(): UserProps {

@@ -12,7 +12,7 @@ import {
 import { useEvent } from '@/hooks/useEvent'
 
 export default function EventsPage() {
-    const { data, loading, error, refetch } = useEvent()
+    const { data, loading, error } = useEvent()
 
     if (loading) return <FullScreenLoading />
     if (error) return <FullScreenError error={error} />

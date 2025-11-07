@@ -11,10 +11,14 @@ describe('SearchForm', () => {
 
     it('deve enviar o formulário', () => {
         const handleSubmit = vi.fn((e) => e.preventDefault())
-        render(<SearchForm onSubmit={handleSubmit} />)
+        const { container } = render(<SearchForm onSubmit={handleSubmit} />)
 
-        const form = screen.getByRole('search')
-        fireEvent.submit(form)
+        // Find the search element using the container
+        const searchElement = container.querySelector('search')
+
+        if (searchElement) {
+            fireEvent.submit(searchElement)
+        }
 
         expect(handleSubmit).toHaveBeenCalledTimes(1)
     })

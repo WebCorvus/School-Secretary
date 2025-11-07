@@ -51,11 +51,31 @@ export async function POST(req: NextRequest) {
         })
 
         return res
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Erro na rota /auth/login:', error)
-        const status = error.response?.status || 500
+        // Type guard to handle axios error properties
+        const status =
+            error &&
+            typeof error === 'object' &&
+            'response' in error &&
+            error.response &&
+            typeof error.response === 'object' &&
+            'status' in error.response
+                ? (error.response as { status?: number }).status || 500
+                : 500
         const message =
-            error.response?.data?.detail || 'Erro interno do servidor.'
+            error &&
+            typeof error === 'object' &&
+            'response' in error &&
+            error.response &&
+            typeof error.response === 'object' &&
+            'data' in error.response &&
+            error.response.data &&
+            typeof error.response.data === 'object' &&
+            'detail' in error.response.data
+                ? (error.response.data as { detail?: string }).detail ||
+                  'Erro interno do servidor.'
+                : 'Erro interno do servidor.'
         return new NextResponse(JSON.stringify({ error: message }), { status })
     }
 }

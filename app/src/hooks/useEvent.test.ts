@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { ROUTES } from '@/config'
-import api from '@/services/api'
-import { createFakeEvent } from '@/types/event'
+import { ROUTES } from '../config'
+import api from '../services/api'
+import { createFakeEvent } from '../types/event'
 import { useEvent } from './useEvent'
 
 // Mock the API service

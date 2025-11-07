@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { ROUTES } from '@/config'
-import api from '@/services/api'
-import { createFakeResource, createFakeResourceLoan } from '@/types/resources'
+import { ROUTES } from '../config'
+import api from '../services/api'
+import { createFakeResource, createFakeResourceLoan } from '../types/resources'
 import { useResourceLoans, useResources } from './useResource'
 
 // Mock the API service

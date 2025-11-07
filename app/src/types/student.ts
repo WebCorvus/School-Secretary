@@ -73,7 +73,7 @@ export type StudentPostProps = Omit<
 export function createFakeStudent(): StudentProps {
     const baseYear = faker.date.past({ years: 5 }).getFullYear()
     const yearsCount = faker.number.int({ min: 2, max: 5 })
-    const years = Array.from({ length: yearsCount }, (_, i) => baseYear + i)
+    const _years = Array.from({ length: yearsCount }, (_, i) => baseYear + i)
 
     return {
         id: faker.number.int(),

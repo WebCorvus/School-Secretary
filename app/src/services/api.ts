@@ -4,10 +4,12 @@ import { getCookie, setCookie } from 'cookies-next'
 const api = axios.create()
 
 api.interceptors.request.use(
-    (config: any) => {
+    (config) => {
         const token = getCookie('access')
         if (token) {
-            if (!config.headers) config.headers = {}
+            if (!config.headers) {
+                config.headers = axios.AxiosHeaders.from({})
+            }
             config.headers.Authorization = `Bearer ${token}`
         }
         return config
@@ -17,7 +19,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
     (response) => response,
-    async (error: any) => {
+    async (error) => {
         const originalRequest = error.config
 
         // Handle 401 Unauthorized - try to refresh token
@@ -29,7 +31,9 @@ api.interceptors.response.use(
 
                 setCookie('access', access, { path: '/', sameSite: 'lax' })
 
-                if (!originalRequest.headers) originalRequest.headers = {}
+                if (!originalRequest.headers) {
+                    originalRequest.headers = axios.AxiosHeaders.from({})
+                }
                 originalRequest.headers.Authorization = `Bearer ${access}`
 
                 console.log('Token refreshed!')

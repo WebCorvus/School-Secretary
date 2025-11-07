@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
 import { FullScreenError } from '@/components/FullScreenError'
 import { FullScreenLoading } from '@/components/FullScreenLoading'
@@ -96,9 +95,11 @@ export default function LessonsPage() {
                                         <TableCell className="font-medium">
                                             {day}
                                         </TableCell>
-                                        {lessons.map((lesson, idx) => (
+                                        {lessons.map((lesson) => (
                                             <TableCell
-                                                key={idx}
+                                                key={
+                                                    lesson?.id || Math.random()
+                                                }
                                                 className="text-center"
                                             >
                                                 {lesson?.subject_details

@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import { ROUTES } from '@/config'
-import api from '@/services/api'
-import { createFakeAgendaItem } from '@/types/agendaItem'
+import { ROUTES } from '../config'
+import api from '../services/api'
+import { createFakeAgendaItem } from '../types/agendaItem'
 import { useAgenda } from './useAgenda'
 
 // Mock the API service

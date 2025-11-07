@@ -58,7 +58,7 @@ export function GradesTableCard({
                                     <TableCell>{item.subject}</TableCell>
                                     {item.grades.map((note, idx) => (
                                         <TableCell
-                                            key={idx}
+                                            key={`${item.subject}-${idx}`}
                                             className="text-center"
                                         >
                                             {typeof note === 'number'

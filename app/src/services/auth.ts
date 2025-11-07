@@ -3,7 +3,7 @@ import axios from 'axios'
 export async function login(email: string, password: string): Promise<void> {
     try {
         await axios.post('/auth/login', { email, password })
-    } catch (error) {
+    } catch (_error) {
         throw new Error('Login falhou. Verifique email e senha.')
     }
 }

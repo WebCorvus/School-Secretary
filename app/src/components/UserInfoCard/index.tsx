@@ -1,11 +1,10 @@
 import { User } from 'lucide-react'
+import Image from 'next/image'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { GroupCompactProps } from '@/types/group'
 import type { GuardianProps } from '@/types/guardian'
 import type { ProfessorProps } from '@/types/professor'
 import type { StudentProps } from '@/types/student'
-import { SubjectCompactProps } from '@/types/subject'
-import { type UserProps, UserRole } from '@/types/user'
+import type { UserProps } from '@/types/user'
 
 export function UserInfoCard({
     data,
@@ -25,9 +24,11 @@ export function UserInfoCard({
                 <div className="flex flex-col lg:flex-row gap-3">
                     <div className="flex w-full lg:w-1/2 justify-center items-center">
                         {profile?.photoUrl ? (
-                            <img
+                            <Image
                                 src={profile.photoUrl}
-                                alt="User Photo"
+                                alt={profile?.full_name || 'User photo'}
+                                width={320}
+                                height={320}
                                 className="h-80 object-cover border-1 border-[var(--primary)] shadow-md"
                             />
                         ) : (

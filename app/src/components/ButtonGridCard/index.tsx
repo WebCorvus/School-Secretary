@@ -47,8 +47,8 @@ export function ButtonGridCard({
             </CardHeader>
             <CardContent>
                 <ul className="grid grid-cols-2 gap-2">
-                    {data.map((item, index) => (
-                        <li key={index}>
+                    {data.map((item) => (
+                        <li key={item.id}>
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                     <Button

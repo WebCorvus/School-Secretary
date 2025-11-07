@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { useIsMobile } from './use-mobile'
 
 describe('useIsMobile', () => {
-    const MOBILE_BREAKPOINT = 768
+    const _MOBILE_BREAKPOINT = 768
     let originalMatchMedia: (query: string) => MediaQueryList
     let mockMediaQueryList: MediaQueryList & {
         dispatchEvent: vi.Mock
@@ -28,9 +28,9 @@ describe('useIsMobile', () => {
                             )
                     }),
                     dispatchEvent: vi.fn((event) => {
-                        mockMediaQueryList._listeners.forEach((listener) =>
-                            listener(event as unknown as MediaQueryListEvent),
-                        )
+                        mockMediaQueryList._listeners.forEach((listener) => {
+                            listener(event as unknown as MediaQueryListEvent)
+                        })
                     }),
                     _listeners: [],
                 }

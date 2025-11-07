@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { FullScreenError } from '@/components/FullScreenError'
 import { FullScreenLoading } from '@/components/FullScreenLoading'
 import {
@@ -21,7 +20,7 @@ import {
 import { useAgenda } from '@/hooks/useAgenda'
 
 export default function AgendaPage() {
-    const { data, loading, error, refetch } = useAgenda()
+    const { data, loading, error } = useAgenda()
 
     if (loading) return <FullScreenLoading />
     if (error) return <FullScreenError error={error} />

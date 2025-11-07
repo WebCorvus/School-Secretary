@@ -16,7 +16,7 @@ export function useNotification() {
             message: `Mensagem da notificação #${i + 1}`,
             notification_type: ['GRADE', 'ABSENCE', 'EVENT', 'GENERAL'][
                 i % 4
-            ] as any,
+            ] as 'GRADE' | 'ABSENCE' | 'EVENT' | 'GENERAL',
             read: i % 2 === 0,
         }))
     }, [])

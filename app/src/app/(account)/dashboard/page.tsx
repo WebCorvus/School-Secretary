@@ -14,10 +14,10 @@ import type { StudentProps } from '@/types/student'
 import { type UserProps, UserRole } from '@/types/user'
 
 const documentRequests: DocumentRequest[] = [
-    { title: 'Boletim', type: 'BULLETIN' },
-    { title: 'Presenças', type: 'PRESENCE' },
-    { title: 'Declaração de Matrícula', type: 'DECLARATION' },
-    { title: 'Histórico Acadêmico', type: 'HISTORY' },
+    { id: 1, title: 'Boletim', type: 'BULLETIN' },
+    { id: 2, title: 'Presenças', type: 'PRESENCE' },
+    { id: 3, title: 'Declaração de Matrícula', type: 'DECLARATION' },
+    { id: 4, title: 'Histórico Acadêmico', type: 'HISTORY' },
 ]
 
 function isStudentProfile(

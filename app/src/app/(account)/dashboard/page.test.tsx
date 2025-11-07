@@ -4,10 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { useUser } from '@/hooks/useUser'
 import { createFakeGuardian } from '@/types/guardian'
 import { createFakeProfessor } from '@/types/professor'
-import {
-    createFakeStudent,
-    createFakeStudentSubjectGrades,
-} from '@/types/student'
+import { createFakeStudent } from '@/types/student'
 import { createFakeUser, UserRole } from '@/types/user'
 import DashboardPage from './page'
 
@@ -18,11 +15,23 @@ vi.mock('@/components/Paragraph', () => ({
     Paragraph: ({ text }: { text: string }) => <p>{text}</p>,
 }))
 vi.mock('@/components/ButtonGridCard', () => ({
-    ButtonGridCard: ({ header, data, handleClick }: any) => (
+    ButtonGridCard: ({
+        header,
+        data,
+        handleClick,
+    }: {
+        header: string
+        data: Array<{ id: string | number; title: string }>
+        handleClick: (item: { id: string | number; title: string }) => void
+    }) => (
         <div>
             <h2>{header}</h2>
-            {data.map((item: any) => (
-                <button key={item.id} onClick={() => handleClick(item)}>
+            {data.map((item) => (
+                <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => handleClick(item)}
+                >
                     {item.title}
                 </button>
             ))}
@@ -30,7 +39,9 @@ vi.mock('@/components/ButtonGridCard', () => ({
     ),
 }))
 vi.mock('@/components/UserInfoCard', () => ({
-    UserInfoCard: ({ data }: any) => <div>User Info: {data.name}</div>,
+    UserInfoCard: ({ data }: { data: { name: string } }) => (
+        <div>User Info: {data.name}</div>
+    ),
 }))
 vi.mock('@/components/FullScreenLoading', () => ({
     FullScreenLoading: () => <div>Loading...</div>,
@@ -41,7 +52,7 @@ vi.mock('@/components/FullScreenError', () => ({
     ),
 }))
 vi.mock('@/components/GradesTableCard', () => ({
-    GradesTableCard: ({ data }: any) => (
+    GradesTableCard: ({ data }: { data: { length: number } }) => (
         <div>Grades Table: {data.length} subjects</div>
     ),
 }))

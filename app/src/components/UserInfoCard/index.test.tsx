@@ -27,9 +27,11 @@ describe('UserInfoCard', () => {
         expect(screen.getByText(mockStudent.cpf)).toBeInTheDocument()
         expect(screen.getByText(mockStudent.birthday)).toBeInTheDocument()
         expect(screen.getByText(mockStudent.address)).toBeInTheDocument()
-        expect(
-            screen.getByText(mockStudent.group_details!.full_name),
-        ).toBeInTheDocument()
+        if (mockStudent.group_details) {
+            expect(
+                screen.getByText(mockStudent.group_details.full_name),
+            ).toBeInTheDocument()
+        }
         expect(screen.getByText(UserRole.STUDENT)).toBeInTheDocument()
     })
 
@@ -46,9 +48,11 @@ describe('UserInfoCard', () => {
         expect(screen.getByText('Suas Informações')).toBeInTheDocument()
         expect(screen.getByText(mockGuardian.full_name)).toBeInTheDocument()
         expect(screen.getByText('Responsável por:')).toBeInTheDocument()
-        expect(
-            screen.getByText(mockGuardian.student_details!.full_name),
-        ).toBeInTheDocument()
+        if (mockGuardian.student_details) {
+            expect(
+                screen.getByText(mockGuardian.student_details.full_name),
+            ).toBeInTheDocument()
+        }
         expect(screen.getByText(mockGuardian.phone_number)).toBeInTheDocument()
         expect(screen.getByText(mockGuardianData.email)).toBeInTheDocument()
         expect(screen.getByText(mockGuardian.cpf)).toBeInTheDocument()
@@ -74,9 +78,11 @@ describe('UserInfoCard', () => {
         expect(screen.getByText(mockProfessor.cpf)).toBeInTheDocument()
         expect(screen.getByText(mockProfessor.birthday)).toBeInTheDocument()
         expect(screen.getByText(mockProfessor.address)).toBeInTheDocument()
-        expect(
-            screen.getByText(mockProfessor.subject_details!.full_name),
-        ).toBeInTheDocument()
+        if (mockProfessor.subject_details) {
+            expect(
+                screen.getByText(mockProfessor.subject_details.full_name),
+            ).toBeInTheDocument()
+        }
         expect(screen.getByText(UserRole.PROFESSOR)).toBeInTheDocument()
     })
 })
