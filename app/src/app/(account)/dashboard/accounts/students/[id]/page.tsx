@@ -12,7 +12,7 @@ export default function StudentDetailPage() {
 
 	const handleDownloadBulletin = async () => {
 		try {
-			const response = await api.get(`/accounts/students/${studentId}/bulletin/`, {
+			const response = await api.get(`/students/${studentId}/bulletin/`, {
 				responseType: 'blob'
 			});
 			
@@ -34,7 +34,7 @@ export default function StudentDetailPage() {
 
 	const handleDownloadHistory = async () => {
 		try {
-			const response = await api.get(`/accounts/students/${studentId}/academic_history/`, {
+			const response = await api.get(`/students/${studentId}/academic_history/`, {
 				responseType: 'blob'
 			});
 			
