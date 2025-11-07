@@ -191,6 +191,43 @@
         {% endif %}
     </div>
 
+    <!-- Discipline Section -->
+    <div class="section">
+        <div class="section-title">REGISTROS DISCIPLINARES</div>
+        <table class="info-table">
+            <tr>
+                <th>Total de Advertências</th>
+                <td class="{% if discipline.warnings_count > 0 %}status-warning{% else %}status-good{% endif %}">
+                    {{ discipline.warnings_count }}
+                </td>
+            </tr>
+            <tr>
+                <th>Total de Suspensões</th>
+                <td class="{% if discipline.suspensions_count > 0 %}status-danger{% else %}status-good{% endif %}">
+                    {{ discipline.suspensions_count }}
+                </td>
+            </tr>
+        </table>
+
+        {% if discipline.recent_warnings %}
+        <p><strong>Advertências Recentes:</strong></p>
+        <ul>
+            {% for warning in discipline.recent_warnings %}
+            <li>{{ warning.date }} - {{ warning.reason }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if discipline.recent_suspensions %}
+        <p><strong>Suspensões Recentes:</strong></p>
+        <ul>
+            {% for suspension in discipline.recent_suspensions %}
+            <li>{{ suspension.start_date }} a {{ suspension.end_date }} - {{ suspension.reason }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
     <div class="footer">
         <p>Boletim gerado em {{ now|date:"d/m/Y H:i" }}</p>
         <p>Sistema de Secretaria Escolar</p>
