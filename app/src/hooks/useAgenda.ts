@@ -1,53 +1,53 @@
-import { useState, useEffect, useCallback } from "react";
-import api from "@/services/api";
-import { AgendaItemProps, FakeAgendaItem } from "@/types/agendaItem";
-import { ROUTES } from "@/config";
+import { useCallback, useEffect, useState } from 'react'
+import { ROUTES } from '@/config'
+import api from '@/services/api'
+import { type AgendaItemProps, FakeAgendaItem } from '@/types/agendaItem'
 
 export function useAgenda() {
-	const [data, setData] = useState<AgendaItemProps[]>([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<AgendaItemProps[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
 
-	const generateMockAgenda = useCallback((): AgendaItemProps[] => {
-		return Array.from({ length: 10 }, (_, i) => ({
-			...FakeAgendaItem,
-			id: i + 1,
-			title: `Evento mock #${i + 1}`,
-		}));
-	}, []);
+    const generateMockAgenda = useCallback((): AgendaItemProps[] => {
+        return Array.from({ length: 10 }, (_, i) => ({
+            ...FakeAgendaItem,
+            id: i + 1,
+            title: `Evento mock #${i + 1}`,
+        }))
+    }, [])
 
-	const fetchData = useCallback(async () => {
-		setLoading(true);
-		setError(null);
+    const fetchData = useCallback(async () => {
+        setLoading(true)
+        setError(null)
 
-		try {
-			const response = await api.get(`${ROUTES.AGENDA}`);
-			let payload = Array.isArray(response.data) ? response.data : [];
+        try {
+            const response = await api.get(`${ROUTES.AGENDA}`)
+            let payload = Array.isArray(response.data) ? response.data : []
 
-			if (
-				process.env.NODE_ENV === "development" &&
-				payload.length === 0
-			) {
-				payload = generateMockAgenda();
-			}
+            if (
+                process.env.NODE_ENV === 'development' &&
+                payload.length === 0
+            ) {
+                payload = generateMockAgenda()
+            }
 
-			setData(payload);
-		} catch {
-			if (process.env.NODE_ENV === "development") {
-				setData(generateMockAgenda());
-				setError(null);
-			} else {
-				setData([]);
-				setError("Não foi possível carregar a agenda.");
-			}
-		} finally {
-			setLoading(false);
-		}
-	}, [generateMockAgenda]);
+            setData(payload)
+        } catch {
+            if (process.env.NODE_ENV === 'development') {
+                setData(generateMockAgenda())
+                setError(null)
+            } else {
+                setData([])
+                setError('Não foi possível carregar a agenda.')
+            }
+        } finally {
+            setLoading(false)
+        }
+    }, [generateMockAgenda])
 
-	useEffect(() => {
-		fetchData();
-	}, [fetchData]);
+    useEffect(() => {
+        fetchData()
+    }, [fetchData])
 
-	return { data, loading, error, refetch: fetchData };
+    return { data, loading, error, refetch: fetchData }
 }

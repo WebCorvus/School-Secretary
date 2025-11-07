@@ -1,5 +1,6 @@
 from rest_framework import routers
-from .views import ResourceViewSet, ResourceLoanViewSet
+
+from .views import ResourceLoanViewSet, ResourceViewSet
 
 router = routers.DefaultRouter()
 router.register(r"", ResourceViewSet, basename="resource")

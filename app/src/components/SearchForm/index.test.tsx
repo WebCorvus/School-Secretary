@@ -1,22 +1,25 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { SearchForm } from './index'
 
-import { SearchForm } from "./index";
+describe('SearchForm', () => {
+    it('deve renderizar o campo de busca', () => {
+        render(<SearchForm />)
+        expect(screen.getByLabelText('Search')).toBeInTheDocument()
+    })
 
-describe("SearchForm", () => {
-	it("deve renderizar o campo de busca", () => {
-		render(<SearchForm />);
-		expect(screen.getByLabelText("Search")).toBeInTheDocument();
-	});
+    it('deve enviar o formulário', () => {
+        const handleSubmit = vi.fn((e) => e.preventDefault())
+        const { container } = render(<SearchForm onSubmit={handleSubmit} />)
 
-	it("deve enviar o formulário", () => {
-		const handleSubmit = vi.fn((e) => e.preventDefault());
-		render(<SearchForm onSubmit={handleSubmit} />);
+        // Find the search element using the container
+        const searchElement = container.querySelector('search')
 
-		const form = screen.getByRole("search");
-		fireEvent.submit(form);
+        if (searchElement) {
+            fireEvent.submit(searchElement)
+        }
 
-		expect(handleSubmit).toHaveBeenCalledTimes(1);
-	});
-});
+        expect(handleSubmit).toHaveBeenCalledTimes(1)
+    })
+})

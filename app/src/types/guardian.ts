@@ -1,58 +1,58 @@
-import { faker } from "@faker-js/faker";
-import { StudentCompactProps, createFakeStudentCompact } from "./student";
+import { faker } from '@faker-js/faker'
+import { createFakeStudentCompact, type StudentCompactProps } from './student'
 
 export interface GuardianProps {
-	id: number;
-	user: number;
-	full_name: string;
-	student: number;
-	student_details?: StudentCompactProps;
-	phone_number: string;
-	email: string;
-	cpf: string;
-	birthday: string;
-	address: string;
-	photoUrl?: string;
-	created_at: string;
+    id: number
+    user: number
+    full_name: string
+    student: number
+    student_details?: StudentCompactProps
+    phone_number: string
+    email: string
+    cpf: string
+    birthday: string
+    address: string
+    photoUrl?: string
+    created_at: string
 }
 
 export type GuardianPostProps = Omit<
-	GuardianProps,
-	"id" | "created_at" | "user" | "student_details"
->;
+    GuardianProps,
+    'id' | 'created_at' | 'user' | 'student_details'
+>
 
 export function createFakeGuardian(): GuardianProps {
-	return {
-		id: faker.number.int(),
-		user: faker.number.int(),
-		full_name: faker.person.fullName(),
-		student: faker.number.int(),
-		student_details: createFakeStudentCompact(),
-		phone_number: faker.phone.number(),
-		email: faker.internet.email(),
-		cpf: faker.string.numeric(11),
-		birthday: faker.date.past({ years: 30 }).toISOString().split("T")[0],
-		address: faker.location.zipCode(),
-		photoUrl: faker.image.avatar(),
-		created_at: faker.date.past().toISOString(),
-	};
+    return {
+        id: faker.number.int(),
+        user: faker.number.int(),
+        full_name: faker.person.fullName(),
+        student: faker.number.int(),
+        student_details: createFakeStudentCompact(),
+        phone_number: faker.phone.number(),
+        email: faker.internet.email(),
+        cpf: faker.string.numeric(11),
+        birthday: faker.date.past({ years: 30 }).toISOString().split('T')[0],
+        address: faker.location.zipCode(),
+        photoUrl: faker.image.avatar(),
+        created_at: faker.date.past().toISOString(),
+    }
 }
 
-export const FakeGuardian: GuardianProps = createFakeGuardian();
+export const FakeGuardian: GuardianProps = createFakeGuardian()
 
 export interface GuardianCompactProps {
-	id: number;
-	full_name: string;
-	phone_number: string;
+    id: number
+    full_name: string
+    phone_number: string
 }
 
 export function createFakeGuardianCompact(): GuardianCompactProps {
-	return {
-		id: faker.number.int(),
-		full_name: faker.person.fullName(),
-		phone_number: faker.phone.number(),
-	};
+    return {
+        id: faker.number.int(),
+        full_name: faker.person.fullName(),
+        phone_number: faker.phone.number(),
+    }
 }
 
 export const FakeGuardianCompact: GuardianCompactProps =
-	createFakeGuardianCompact();
+    createFakeGuardianCompact()

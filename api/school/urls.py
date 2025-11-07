@@ -1,20 +1,21 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+
 from .views import (
-    ProfessorViewSet,
-    SubjectViewSet,
-    ItineraryViewSet,
-    GroupViewSet,
-    SchoolRecordViewSet,
-    BookViewSet,
-    LessonViewSet,
     AgendaItemViewSet,
-    WeeklyLessonPlanViewSet,
-    EventViewSet,
+    BookViewSet,
     EventRegistrationViewSet,
-    RoomViewSet,
-    RoomReservationViewSet,
+    EventViewSet,
+    GroupViewSet,
+    ItineraryViewSet,
+    LessonViewSet,
     NotificationViewSet,
+    ProfessorViewSet,
+    RoomReservationViewSet,
+    RoomViewSet,
+    SchoolRecordViewSet,
+    SubjectViewSet,
+    WeeklyLessonPlanViewSet,
 )
 
 router = DefaultRouter()
@@ -28,9 +29,13 @@ router.register(r"lessons", LessonViewSet, basename="lesson")
 router.register(r"agenda", AgendaItemViewSet, basename="agendaitem")
 router.register(r"weekly-plans", WeeklyLessonPlanViewSet, basename="weeklylessonplan")
 router.register(r"events", EventViewSet, basename="event")
-router.register(r"event-registrations", EventRegistrationViewSet, basename="event-registration")
+router.register(
+    r"event-registrations", EventRegistrationViewSet, basename="event-registration"
+)
 router.register(r"rooms", RoomViewSet, basename="room")
-router.register(r"room-reservations", RoomReservationViewSet, basename="room-reservation")
+router.register(
+    r"room-reservations", RoomReservationViewSet, basename="room-reservation"
+)
 router.register(r"notifications", NotificationViewSet, basename="notification")
 
 urlpatterns = router.urls

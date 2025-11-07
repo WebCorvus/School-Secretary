@@ -1,14 +1,15 @@
 from django.contrib import admin
+
 from .models import (
-    Student,
-    Guardian,
     Contract,
+    Enrollment,
     Grade,
+    Guardian,
     Presence,
-    Warning,
+    Student,
     Suspension,
     Tuition,
-    Enrollment,
+    Warning,
 )
 
 

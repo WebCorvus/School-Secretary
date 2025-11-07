@@ -1,37 +1,39 @@
-from rest_framework import viewsets, filters
+from rest_framework import filters, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.permissions import IsStaff, IsProfessor
+
+from users.permissions import IsProfessor, IsStaff
+from utils.pdfgen import pdfgen
+from utils.reports import (
+    generate_efficiency_analysis,
+    generate_financial_report,
+    generate_student_academic_report,
+    identify_students_needing_notification,
+)
+from utils.subject_utils import get_subject_names
+
 from .models import (
-    Student,
+    Contract,
+    Enrollment,
     Grade,
     Guardian,
-    Contract,
     Presence,
-    Warning,
+    Student,
     Suspension,
     Tuition,
-    Enrollment,
+    Warning,
 )
 from .serializers import (
-    StudentSerializer,
+    ContractSerializer,
+    EnrollmentSerializer,
     GradeSerializer,
     GuardianSerializer,
-    ContractSerializer,
     PresenceSerializer,
-    WarningSerializer,
+    StudentSerializer,
     SuspensionSerializer,
     TuitionSerializer,
-    EnrollmentSerializer,
-)
-from utils.pdfgen import pdfgen
-from utils.subject_utils import get_subject_names
-from utils.reports import (
-    generate_student_academic_report,
-    generate_financial_report,
-    identify_students_needing_notification,
-    generate_efficiency_analysis,
+    WarningSerializer,
 )
 
 
@@ -134,7 +136,7 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="efficiency-analysis")
     def efficiency_analysis(self, request):
         """Generate efficiency analysis (approval and dropout rates) for all students"""
-        year = request.query_params.get('year', None)
+        year = request.query_params.get("year", None)
         if year:
             year = int(year)
         analysis = generate_efficiency_analysis(None, year)

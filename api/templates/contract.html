@@ -1,111 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<title>Contract</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-				font-size: 14px;
-			}
-			.header {
-				text-align: center;
-				margin-bottom: 20px;
-			}
-			.content {
-				margin: 10px;
-			}
-			.content-table {
-				width: 100%;
-				border-collapse: collapse;
-			}
-			.content-table td {
-				vertical-align: top;
-			}
-			.signature {
-				margin: 50px 10px 10px 10px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="header">
-			<h1>{{data}}</h1>
-		</div>
-		<div class="content">
-			<br />
+    <head>
+        <title>Contract</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .content {
+                margin: 10px;
+            }
+            .content-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .content-table td {
+                vertical-align: top;
+            }
+            .signature {
+                margin: 50px 10px 10px 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>{{data}}</h1>
+        </div>
+        <div class="content">
+            <br />
 
-			<table class="content-table">
-				<tr>
-					<td>
-						<h2>Guardian Information</h2>
-						<p>
-							<strong>Name:</strong>
-							{{ data.guardian.full_name }}
-						</p>
-						<p>
-							<strong>Phone:</strong>
-							{{ data.guardian.phone_number }}
-						</p>
-						<p>
-							<strong>Email:</strong>
-							{{ data.guardian.email }}
-						</p>
-						<p>
-							<strong>Address:</strong>
-							{{ data.guardian.address }}
-						</p>
-					</td>
-					<td>
-						<h2>Student Information</h2>
-						<p>
-							<strong>Name:</strong>
-							{{ data.student.full_name }}
-						</p>
-						<p>
-							<strong>Registration Number:</strong>
-							{{ data.student.registration_number }}
-						</p>
-						<p>
-							<strong>Phone:</strong>
-							{{ data.student.phone_number }}
-						</p>
-						<p>
-							<strong>Email:</strong>
-							{{ data.student.email }}
-						</p>
-						<p>
-							<strong>CPF:</strong>
-							{{ data.student.cpf }}
-						</p>
-						<p>
-							<strong>Birthday:</strong>
-							{{ data.student.birthday }}
-						</p>
-						<p>
-							<strong>Address:</strong>
-							{{ data.student.address }}
-						</p>
-						<br />
-					</td>
-				</tr>
-			</table>
+            <table class="content-table">
+                <tr>
+                    <td>
+                        <h2>Guardian Information</h2>
+                        <p>
+                            <strong>Name:</strong>
+                            {{ data.guardian.full_name }}
+                        </p>
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ data.guardian.phone_number }}
+                        </p>
+                        <p>
+                            <strong>Email:</strong>
+                            {{ data.guardian.email }}
+                        </p>
+                        <p>
+                            <strong>Address:</strong>
+                            {{ data.guardian.address }}
+                        </p>
+                    </td>
+                    <td>
+                        <h2>Student Information</h2>
+                        <p>
+                            <strong>Name:</strong>
+                            {{ data.student.full_name }}
+                        </p>
+                        <p>
+                            <strong>Registration Number:</strong>
+                            {{ data.student.registration_number }}
+                        </p>
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ data.student.phone_number }}
+                        </p>
+                        <p>
+                            <strong>Email:</strong>
+                            {{ data.student.email }}
+                        </p>
+                        <p>
+                            <strong>CPF:</strong>
+                            {{ data.student.cpf }}
+                        </p>
+                        <p>
+                            <strong>Birthday:</strong>
+                            {{ data.student.birthday }}
+                        </p>
+                        <p>
+                            <strong>Address:</strong>
+                            {{ data.student.address }}
+                        </p>
+                        <br />
+                    </td>
+                </tr>
+            </table>
 
-			<h2>Class Information</h2>
-			<p>
-				<strong>Group:</strong>
-				{{ data.student.group }}
-			</p>
-			<p>
-				<strong>Itinerary:</strong>
-				{{ data.student.group.itinerary }}
-			</p>
-		</div>
-		<br />
+            <h2>Class Information</h2>
+            <p>
+                <strong>Group:</strong>
+                {{ data.student.group }}
+            </p>
+            <p>
+                <strong>Itinerary:</strong>
+                {{ data.student.group.itinerary }}
+            </p>
+        </div>
+        <br />
 
-		<div class="signature">
-			<p>
-				<strong>Signature:</strong>
-				________________________________________________________________________X
-			</p>
-		</div>
-	</body>
+        <div class="signature">
+            <p>
+                <strong>Signature:</strong>
+                ________________________________________________________________________X
+            </p>
+        </div>
+    </body>
 </html>

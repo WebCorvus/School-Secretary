@@ -1,15 +1,15 @@
 from rest_framework import routers
 
 from .views import (
-    StudentViewSet,
+    ContractViewSet,
+    EnrollmentViewSet,
     GradeViewSet,
     GuardianViewSet,
-    ContractViewSet,
     PresenceViewSet,
-    WarningViewSet,
+    StudentViewSet,
     SuspensionViewSet,
     TuitionViewSet,
-    EnrollmentViewSet,
+    WarningViewSet,
 )
 
 router = routers.DefaultRouter()

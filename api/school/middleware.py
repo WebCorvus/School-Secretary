@@ -1,9 +1,9 @@
 import logging
-from django.utils.deprecation import MiddlewareMixin
-
 import threading
 import time
 from datetime import datetime
+
+from django.utils.deprecation import MiddlewareMixin
 
 
 class LogUserExceptionMiddleware(MiddlewareMixin):

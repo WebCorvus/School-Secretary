@@ -1,50 +1,51 @@
-from rest_framework import viewsets, filters, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from users.permissions import IsStaff, IsProfessor
 from django.utils import timezone
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from users.permissions import IsProfessor, IsStaff
 from utils.date import get_day_name
 from utils.reports import (
-    generate_group_performance_report,
-    generate_efficiency_analysis,
     calculate_approval_rate,
     calculate_dropout_rate,
+    generate_efficiency_analysis,
+    generate_group_performance_report,
 )
 
 from .models import (
-    Professor,
-    Subject,
-    Itinerary,
-    Group,
-    SchoolRecord,
-    Book,
-    Lesson,
+    LESSONS_PER_DAY,
     AgendaItem,
-    WeeklyLessonPlan,
+    Book,
     Event,
     EventRegistration,
+    Group,
+    Itinerary,
+    Lesson,
+    Notification,
+    Professor,
     Room,
     RoomReservation,
-    Notification,
+    SchoolRecord,
+    Subject,
+    WeeklyLessonPlan,
 )
 from .serializers import (
-    ProfessorSerializer,
-    SubjectSerializer,
-    ItinerarySerializer,
-    GroupSerializer,
-    SchoolRecordSerializer,
-    BookSerializer,
-    LessonSerializer,
     AgendaItemSerializer,
-    WeeklyLessonPlanSerializer,
-    EventSerializer,
+    BookSerializer,
     EventRegistrationSerializer,
-    RoomSerializer,
-    RoomReservationSerializer,
+    EventSerializer,
+    GroupSerializer,
+    ItinerarySerializer,
+    LessonSerializer,
     NotificationSerializer,
+    ProfessorSerializer,
+    RoomReservationSerializer,
+    RoomSerializer,
+    SchoolRecordSerializer,
+    SubjectSerializer,
+    WeeklyLessonPlanSerializer,
 )
-from .models import LESSONS_PER_DAY
 
 
 class ProfessorViewSet(viewsets.ModelViewSet):
@@ -105,7 +106,13 @@ class GroupViewSet(viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        if self.action in ["list", "retrieve", "get_lessons", "performance_report", "efficiency_analysis"]:
+        if self.action in [
+            "list",
+            "retrieve",
+            "get_lessons",
+            "performance_report",
+            "efficiency_analysis",
+        ]:
             self.permission_classes = [IsAuthenticated]
         else:
             self.permission_classes = [IsStaff]
@@ -137,7 +144,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     def efficiency_analysis(self, request, pk=None):
         """Generate efficiency analysis (approval and dropout rates) for group"""
         group = self.get_object()
-        year = request.query_params.get('year', None)
+        year = request.query_params.get("year", None)
         if year:
             year = int(year)
         analysis = generate_efficiency_analysis(group, year)
@@ -249,11 +256,13 @@ class WeeklyLessonPlanViewSet(viewsets.ModelViewSet):
         """Filter plans for the authenticated user if they are a professor"""
         queryset = super().get_queryset()
         user = self.request.user
-        
+
         # If user is a professor, show only their plans (unless staff/superuser)
-        if hasattr(user, 'professor_profile') and not (user.is_staff or user.is_superuser):
+        if hasattr(user, "professor_profile") and not (
+            user.is_staff or user.is_superuser
+        ):
             queryset = queryset.filter(professor=user.professor_profile)
-        
+
         return queryset
 
 

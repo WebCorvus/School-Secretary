@@ -1,15 +1,15 @@
 export function Header1({
-	text,
-	className,
+    text,
+    className,
 }: {
-	text: string;
-	className?: string;
+    text: string
+    className?: string
 }) {
-	return (
-		<h1
-			className={`scroll-m-20 text-4xl font-bold tracking-tight text-balance ${className}`}
-		>
-			{text}
-		</h1>
-	);
+    return (
+        <h1
+            className={`scroll-m-20 text-4xl font-bold tracking-tight text-balance ${className}`}
+        >
+            {text}
+        </h1>
+    )
 }
