@@ -71,6 +71,16 @@ const data = {
             ],
         },
         {
+            title: 'Professor',
+            url: '#',
+            items: [
+                {
+                    title: 'Planejamento Semanal',
+                    url: '/week-planning',
+                },
+            ],
+        },
+        {
             title: 'Escola',
             url: '#',
             items: [
