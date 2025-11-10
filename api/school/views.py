@@ -19,24 +19,23 @@ from .models import (
     Book,
     Event,
     EventRegistration,
-    Group,
-    Itinerary,
-    Lesson,
     Notification,
     Professor,
     Room,
     RoomReservation,
     SchoolRecord,
-    Subject,
-    WeeklyLessonPlan,
 )
+from academics.models import Group, Itinerary, Lesson, Subject, WeeklyLessonPlan
 from .serializers import (
-    AgendaItemSerializer,
     BookSerializer,
     EventRegistrationSerializer,
     RoomSerializer,
     RoomReservationSerializer,
     NotificationSerializer,
+    SchoolRecordSerializer,
+    AgendaItemSerializer,
+    WeeklyLessonPlanSerializer,
+    EventSerializer,
 )
 from students.models import Professor
 from students.serializers import ProfessorSerializer
@@ -45,16 +44,10 @@ from academics.serializers import (
     SubjectSerializer,
     ItinerarySerializer,
     GroupSerializer,
-    ItinerarySerializer,
     LessonSerializer,
-    NotificationSerializer,
-    ProfessorSerializer,
-    RoomReservationSerializer,
-    RoomSerializer,
-    SchoolRecordSerializer,
-    SubjectSerializer,
-    WeeklyLessonPlanSerializer,
 )
+
+from rest_framework import viewsets, status
 
 
 class ProfessorViewSet(viewsets.ModelViewSet):

@@ -5,79 +5,15 @@ from school.models import (
     Book,
     Event,
     EventRegistration,
-    Group,
-    Itinerary,
-    Lesson,
     Notification,
     Professor,
     Room,
     RoomReservation,
     SchoolRecord,
-    Subject,
-    WeeklyLessonPlan,
 )
 
 
-class SubjectsAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "full_name",
-        "short_name",
-    )
-    list_display_links = (
-        "full_name",
-        "short_name",
-    )
-    search_fields = (
-        "full_name",
-        "short_name",
-    )
-    list_filter = (
-        "full_name",
-        "short_name",
-    )
 
-
-class ItinerariesAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "full_name",
-        "short_name",
-    )
-    list_display_links = (
-        "full_name",
-        "short_name",
-    )
-    search_fields = (
-        "full_name",
-        "short_name",
-    )
-    list_filter = (
-        "full_name",
-        "short_name",
-    )
-
-
-class GroupsAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "full_name",
-        "short_name",
-        "itinerary",
-    )
-    list_display_links = (
-        "full_name",
-        "short_name",
-    )
-    search_fields = (
-        "full_name",
-        "short_name",
-    )
-    list_filter = (
-        "full_name",
-        "short_name",
-        "itinerary",
-    )
 
 
 class ProfessorsAdmin(admin.ModelAdmin):
@@ -137,25 +73,7 @@ class BooksAdmin(admin.ModelAdmin):
     list_filter = ("tenant",)
 
 
-class LessonsAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "professor",
-        "subject",
-        "time",
-        "day",
-    )
-    list_display_links = (
-        "professor",
-        "subject",
-    )
-    search_fields = (
-        "professor",
-        "subject",
-        "time",
-        "day",
-    )
-    list_filter = ("professor", "subject", "time", "day")
+
 
 
 class AgendaItemsAdmin(admin.ModelAdmin):
@@ -226,20 +144,7 @@ class EventsAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(
-    Subject,
-    SubjectsAdmin,
-)
 
-admin.site.register(
-    Itinerary,
-    ItinerariesAdmin,
-)
-
-admin.site.register(
-    Group,
-    GroupsAdmin,
-)
 
 admin.site.register(
     Professor,
@@ -256,10 +161,7 @@ admin.site.register(
     BooksAdmin,
 )
 
-admin.site.register(
-    Lesson,
-    LessonsAdmin,
-)
+
 
 admin.site.register(
     AgendaItem,
@@ -267,30 +169,7 @@ admin.site.register(
 )
 
 
-class WeeklyLessonPlanAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "professor",
-        "lesson",
-        "week_start_date",
-        "created_at",
-    )
-    list_display_links = (
-        "professor",
-        "lesson",
-    )
-    search_fields = (
-        "professor__full_name",
-        "lesson__subject__full_name",
-        "planning_content",
-    )
-    list_filter = ("week_start_date", "professor")
 
-
-admin.site.register(
-    WeeklyLessonPlan,
-    WeeklyLessonPlanAdmin,
-)
 
 
 admin.site.register(

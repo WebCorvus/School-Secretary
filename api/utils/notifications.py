@@ -1,18 +1,14 @@
 """
 Utility functions for automatic notification creation
 """
-from school.models import Notification
-from students.models import Student
-from academics.models import Grade, Presence
-from students.models import Warning, Suspension, Tuition
-from django.db.models import Avg
 from datetime import timedelta
 
 from django.db.models import Avg
 from django.utils import timezone
 
+from academics.models import Grade, Presence
 from school.models import Notification
-from students.models import Grade, Presence, Student, Suspension, Tuition, Warning
+from students.models import Student, Suspension, Tuition, Warning
 
 
 def create_notification(recipient, notification_type, title, message):

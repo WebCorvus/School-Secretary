@@ -13,7 +13,8 @@ from academics.models import (
     Group,
     Lesson,
 )
-from accounts.models import Student, Professor
+from students.models import Student
+from school.models import Professor
 import datetime
 
 

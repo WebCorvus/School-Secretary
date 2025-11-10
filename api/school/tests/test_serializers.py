@@ -31,7 +31,8 @@ from academics.models import (
     Group,
     Lesson,
 )
-from accounts.models import Professor, Student
+from school.models import Professor
+from students.models import Student
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import datetime

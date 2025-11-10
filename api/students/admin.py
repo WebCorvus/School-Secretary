@@ -1,20 +1,14 @@
 from django.contrib import admin
 
+from academics.models import Grade, Presence
 from .models import (
     Contract,
-    Enrollment,
-    Grade,
     Guardian,
-    Presence,
     Student,
     Suspension,
     Tuition,
-    Student,
-    Guardian,
-    Professor,
-    Contract,
+    Warning,
 )
-from academics.models import Grade, Presence
 
 
 class GradeInline(admin.TabularInline):
@@ -244,5 +238,4 @@ admin.site.register(Suspension, SuspensionAdmin)
 admin.site.register(Tuition, TuitionAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Guardian, GuardianAdmin)
-admin.site.register(Professor, ProfessorsAdmin)
 admin.site.register(Contract, ContractAdmin)

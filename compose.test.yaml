@@ -49,6 +49,10 @@ services:
             timeout: 10s
             retries: 10
             start_period: 30s
+        volumes:
+            - ./app:/app
+            - /app/node_modules
+            - /app/.next
 
     api:
         build:
@@ -70,6 +74,8 @@ services:
             timeout: 10s
             retries: 5
             start_period: 30s
+        volumes:
+            - ./api:/api
 
     db:
         build: ./db

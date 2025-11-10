@@ -5,15 +5,17 @@ from .models import (
     Book,
     Event,
     EventRegistration,
-    Group,
-    Itinerary,
-    Lesson,
     Notification,
     Professor,
     Room,
     RoomReservation,
     SchoolRecord,
+)
+from academics.models import (
     Subject,
+    Itinerary,
+    Group,
+    Lesson,
     WeeklyLessonPlan,
 )
 

@@ -9,6 +9,7 @@ from .views import (
     SuspensionViewSet,
     TuitionViewSet,
     WarningViewSet,
+    EnrollmentViewSet,
 )
 
 router = routers.DefaultRouter()

@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from resources.serializers import ResourceSerializer, ResourceLoanSerializer
 from resources.models import Resource, ResourceLoan
-from accounts.models import Student
+from students.models import Student
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 

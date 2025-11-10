@@ -17,104 +17,7 @@ DAY_CHOICES = [
 LESSONS_PER_DAY = 6
 
 
-class Subject(models.Model):
-    short_name = models.CharField(
-        verbose_name="Nome curto",
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
 
-    full_name = models.CharField(
-        verbose_name="Nome completo",
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
-
-    created_at = models.DateTimeField(
-        verbose_name="Criado em",
-        default=timezone.now,
-        editable=False,
-    )
-
-    def __str__(self):
-        return self.full_name
-
-    class Meta:
-        verbose_name = "Matéria"
-        verbose_name_plural = "Matérias"
-
-
-class Itinerary(models.Model):
-    full_name = models.CharField(
-        verbose_name="Nome completo",
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
-
-    short_name = models.CharField(
-        verbose_name="Nome curto",
-        max_length=200,
-        unique=True,
-        blank=False,
-        null=True,
-    )
-
-    created_at = models.DateTimeField(
-        verbose_name="Criado em",
-        default=timezone.now,
-        editable=False,
-    )
-
-    def __str__(self):
-        return self.full_name
-
-    class Meta:
-        verbose_name = "Itinerário"
-        verbose_name_plural = "Itinerários"
-
-
-class Group(models.Model):
-    full_name = models.CharField(
-        verbose_name="Nome completo",
-        max_length=200,
-        unique=True,
-        null=True,
-    )
-
-    short_name = models.CharField(
-        verbose_name="Nome curto",
-        max_length=200,
-        unique=True,
-        null=True,
-    )
-
-    itinerary = models.ForeignKey(
-        "school.Itinerary",
-        on_delete=models.SET_NULL,
-        verbose_name="Itinerário",
-        related_name="group",
-        blank=True,
-        null=True,
-    )
-
-    created_at = models.DateTimeField(
-        verbose_name="Criado em",
-        default=timezone.now,
-        editable=False,
-    )
-
-    def __str__(self):
-        return self.full_name
-
-    class Meta:
-        verbose_name = "Turma"
-        verbose_name_plural = "Turmas"
 
 
 class Professor(models.Model):
@@ -140,10 +43,10 @@ class Professor(models.Model):
         verbose_name="CEP", max_length=100, validators=[cep_validator]
     )
     subject = models.ForeignKey(
-        "Subject",
+        "academics.Subject",
         verbose_name="Matéria",
         on_delete=models.SET_NULL,
-        related_name="professors",
+        related_name="school_professors",
         null=True,
         blank=True,
     )
@@ -227,59 +130,13 @@ class Book(models.Model):
         verbose_name_plural = "Livros"
 
 
-class Lesson(models.Model):
-    group = models.ForeignKey(
-        "school.Group",
-        on_delete=models.SET_NULL,
-        verbose_name="Turma",
-        related_name="lessons",
-        null=True,
-        blank=False,
-    )
 
-    professor = models.ForeignKey(
-        "school.Professor",
-        on_delete=models.SET_NULL,
-        verbose_name="Professor",
-        related_name="lessons",
-        null=True,
-        blank=False,
-    )
-    subject = models.ForeignKey(
-        "school.Subject",
-        on_delete=models.SET_NULL,
-        verbose_name="Disciplina",
-        related_name="lessons",
-        null=True,
-        blank=False,
-    )
-    time = models.IntegerField(
-        verbose_name="Horário (1 a 6)",
-        null=True,
-    )
-    day = models.IntegerField(
-        verbose_name="Dia",
-        choices=DAY_CHOICES,
-        null=True,
-    )
-    created_at = models.DateTimeField(
-        verbose_name="Criado em",
-        default=timezone.now,
-        editable=False,
-    )
-
-    def __str__(self):
-        return f"{self.professor} - {self.subject} - {self.get_day_display()} - {self.time}"
-
-    class Meta:
-        verbose_name = "Aula"
-        verbose_name_plural = "Aulas"
 
 
 class AgendaItem(models.Model):
     title = models.CharField(verbose_name="Título", max_length=200)
     subject = models.ForeignKey(
-        "school.Subject",
+        "academics.Subject",
         on_delete=models.SET_NULL,
         verbose_name="Matéria",
         related_name="agenda_item",
@@ -301,53 +158,7 @@ class AgendaItem(models.Model):
         return self.title
 
 
-class WeeklyLessonPlan(models.Model):
-    """Weekly lesson planning for professors"""
 
-    professor = models.ForeignKey(
-        "school.Professor",
-        on_delete=models.CASCADE,
-        verbose_name="Professor",
-        related_name="weekly_plans",
-    )
-    lesson = models.ForeignKey(
-        "school.Lesson",
-        on_delete=models.CASCADE,
-        verbose_name="Aula",
-        related_name="weekly_plans",
-    )
-    week_start_date = models.DateField(verbose_name="Início da semana")
-    planning_content = models.TextField(
-        verbose_name="Planejamento", help_text="Conteúdo programado para a semana"
-    )
-    objectives = models.TextField(
-        verbose_name="Objetivos",
-        blank=True,
-        null=True,
-        help_text="Objetivos de aprendizagem da semana",
-    )
-    resources_needed = models.TextField(
-        verbose_name="Recursos necessários",
-        blank=True,
-        null=True,
-        help_text="Materiais e recursos necessários",
-    )
-    notes = models.TextField(
-        verbose_name="Observações",
-        blank=True,
-        null=True,
-    )
-    created_at = models.DateTimeField(verbose_name="Criado em", auto_now_add=True)
-    updated_at = models.DateTimeField(verbose_name="Atualizado em", auto_now=True)
-
-    class Meta:
-        verbose_name = "Planejamento Semanal"
-        verbose_name_plural = "Planejamentos Semanais"
-        ordering = ["-week_start_date"]
-        unique_together = ["lesson", "week_start_date"]
-
-    def __str__(self):
-        return f"{self.professor.full_name} - {self.lesson} - Semana de {self.week_start_date}"
 
 
 class Event(models.Model):
@@ -457,11 +268,7 @@ class RoomReservation(models.Model):
         related_name="reservations",
     )
     reserved_by = models.ForeignKey(
-<<<<<<< HEAD
         "school.Professor",
-=======
-        "students.Professor",
->>>>>>> 19fc064 (api/fix accounts.students misinterpretation as students.students)
         on_delete=models.CASCADE,
         verbose_name="Reservado por",
         related_name="room_reservations",
