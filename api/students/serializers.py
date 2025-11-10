@@ -1,23 +1,16 @@
 from rest_framework import serializers
 
-from school.models import (
-    Subject,
-)
-from school.serializers import GroupCompactSerializer, SubjectCompactSerializer
+from academics.models import Grade, Presence, Enrollment, Subject
+from academics.serializers import GroupCompactSerializer, SubjectCompactSerializer
 
 from .models import (
-    Contract,
-    Enrollment,
-    Grade,
-    Guardian,
-    Presence,
-    Student,
-    Suspension,
-    Tuition,
     Student,
     Guardian,
     Professor,
-    Contract
+    Contract,
+    Warning,
+    Suspension,
+    Tuition,
 )
 
 

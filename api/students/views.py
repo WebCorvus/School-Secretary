@@ -21,7 +21,6 @@ from .models import (
     Warning,
     Suspension,
     Tuition,
-    Warning,
 )
 from .serializers import (
     StudentSerializer,
@@ -34,14 +33,6 @@ from .serializers import (
 )
 from academics.models import Grade, Presence, Enrollment
 from academics.serializers import GradeSerializer, PresenceSerializer, EnrollmentSerializer
-from utils.pdfgen import pdfgen
-from utils.subject_utils import get_subject_names
-from utils.reports import (
-    generate_student_academic_report,
-    generate_financial_report,
-    identify_students_needing_notification,
-    generate_efficiency_analysis,
-)
 
 
 class StudentViewSet(viewsets.ModelViewSet):
