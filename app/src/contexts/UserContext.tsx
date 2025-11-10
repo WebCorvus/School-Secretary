@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import type React from "react";
+import type React from 'react'
 import {
     createContext,
     type ReactNode,
@@ -8,85 +8,83 @@ import {
     useContext,
     useEffect,
     useState,
-} from "react";
-import { ROUTES } from "@/config";
-import api from "@/services/api";
-import { FakeUser, type UserProps } from "@/types/user";
+} from 'react'
+import { ROUTES } from '@/config'
+import api from '@/services/api'
+import { FakeUser, type UserProps } from '@/types/user'
 
 interface UserContextType {
-    user: UserProps | null;
-    loading: boolean;
-    error: string | null;
-    setUser: (user: UserProps | null) => void;
-    getUser: (forceRefetch?: boolean) => Promise<UserProps | null>;
-    refetch: () => void;
+    user: UserProps | null
+    loading: boolean
+    error: string | null
+    setUser: (user: UserProps | null) => void
+    getUser: (forceRefetch?: boolean) => Promise<UserProps | null>
+    refetch: () => void
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+const UserContext = createContext<UserContextType | undefined>(undefined)
 
 interface UserProviderProps {
-    children: ReactNode;
+    children: ReactNode
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<UserProps | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [user, setUser] = useState<UserProps | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
 
     const getUser = useCallback(
         async (forceRefetch: boolean = false): Promise<UserProps | null> => {
             if (user && !forceRefetch) {
                 // If user data already exists and we're not forcing a refetch, return it without making a new request
-                return user;
+                return user
             }
 
             try {
-                setLoading(true);
-                setError(null);
+                setLoading(true)
+                setError(null)
 
-                const response = await api.get<UserProps>(
-                    `${ROUTES.USER_INFO}`,
-                );
-                const payload = response.data || null;
+                const response = await api.get<UserProps>(`${ROUTES.USER_INFO}`)
+                const payload = response.data || null
 
-                if (process.env.NODE_ENV === "development" && !payload) {
+                if (process.env.NODE_ENV === 'development' && !payload) {
                     // In development, use the exported FakeUser for consistency
-                    setUser(FakeUser);
-                    return FakeUser;
+                    setUser(FakeUser)
+                    return FakeUser
                 } else {
-                    setUser(payload);
-                    return payload;
+                    setUser(payload)
+                    return payload
                 }
             } catch (err) {
-                console.error("Error fetching user data:", err);
-                if (process.env.NODE_ENV === "development") {
+                console.error('Error fetching user data:', err)
+                if (process.env.NODE_ENV === 'development') {
                     // In development, use the exported FakeUser for consistency
-                    setUser(FakeUser);
-                    setError(null);
-                    return FakeUser;
+                    setUser(FakeUser)
+                    setError(null)
+                    return FakeUser
                 } else {
-                    setUser(null);
+                    setUser(null)
                     setError(
-                        "Não foi possível carregar as informações do usuário.",
-                    );
-                    return null;
+                        'Não foi possível carregar as informações do usuário.',
+                    )
+                    return null
                 }
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
         },
         [user],
-    );
+    )
 
     const refetch = useCallback(() => {
-        setUser(null);
-        void getUser(true); // force refetch
-    }, [getUser]);
+        setUser(null)
+        void getUser(true) // force refetch
+    }, [getUser])
 
     // Initialize user data on mount
     useEffect(() => {
-        void getUser(false);
-    }, [getUser]);
+        void getUser(false)
+    }, [getUser])
 
     const value = {
         user,
@@ -95,17 +93,15 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setUser,
         getUser,
         refetch,
-    };
+    }
 
-    return (
-        <UserContext.Provider value={value}>{children}</UserContext.Provider>
-    );
-};
+    return <UserContext.Provider value={value}>{children}</UserContext.Provider>
+}
 
 export const useUser = (): UserContextType => {
-    const context = useContext(UserContext);
+    const context = useContext(UserContext)
     if (context === undefined) {
-        throw new Error("useUser must be used within a UserProvider");
+        throw new Error('useUser must be used within a UserProvider')
     }
-    return context;
-};
+    return context
+}
