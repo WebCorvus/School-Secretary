@@ -19,6 +19,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
+import { useUser } from '@/hooks/useUser'
 
 import type { DocumentRequest } from '@/types/documentRequest'
 
@@ -37,6 +38,11 @@ export function ButtonGridCard({
     handleClick,
     className,
 }: ButtonGridCardProps) {
+    const { data: userInfo } = useUser()
+
+    // Check if user is staff (which includes superuser in Django) to determine if confirmation dialog should be shown
+    const shouldShowConfirmation = !userInfo?.is_staff
+
     return (
         <Card className={`w-full ${className}`}>
             <CardHeader>
@@ -49,37 +55,49 @@ export function ButtonGridCard({
                 <ul className="grid grid-cols-2 gap-2">
                     {data.map((item) => (
                         <li key={item.id}>
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="w-full text-blue-500 hover:bg-blue-100"
-                                    >
-                                        {item.title}
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>
-                                            Confirmar ação
-                                        </AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Você deseja realmente selecionar{' '}
-                                            <strong>{item.title}</strong>?
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>
-                                            Cancelar
-                                        </AlertDialogCancel>
-                                        <AlertDialogAction
-                                            onClick={() => handleClick(item)}
+                            {shouldShowConfirmation ? (
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full text-blue-500 hover:bg-blue-100"
                                         >
-                                            Confirmar
-                                        </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                                            {item.title}
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Confirmar ação
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Você deseja realmente selecionar{' '}
+                                                <strong>{item.title}</strong>?
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancelar
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction
+                                                onClick={() =>
+                                                    handleClick(item)
+                                                }
+                                            >
+                                                Confirmar
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            ) : (
+                                <Button
+                                    variant="outline"
+                                    className="w-full text-blue-500 hover:bg-blue-100"
+                                    onClick={() => handleClick(item)}
+                                >
+                                    {item.title}
+                                </Button>
+                            )}
                         </li>
                     ))}
                 </ul>

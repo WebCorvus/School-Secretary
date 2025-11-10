@@ -60,65 +60,6 @@ export function StudentInfoCard({
             </div>
 
             {/* Additional student-specific info */}
-            {profile?.grades_details && profile.grades_details.length > 0 && (
-                <UserDetailSection title="Notas">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                        {profile.grades_details.map((grade, index) => (
-                            <div
-                                key={`grade-${index}-${grade.subject}`}
-                                className="p-2 border rounded"
-                            >
-                                <div>
-                                    <strong>Disciplina:</strong> {grade.subject}
-                                </div>
-                                <div>
-                                    <strong>Notas:</strong>{' '}
-                                    {grade.grades.join(', ')}
-                                </div>
-                                <div>
-                                    <strong>Média:</strong>{' '}
-                                    {(
-                                        grade.grades.reduce(
-                                            (a, b) => a + b,
-                                            0,
-                                        ) / grade.grades.length
-                                    ).toFixed(2)}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </UserDetailSection>
-            )}
-
-            {profile?.presence_details &&
-                profile.presence_details.length > 0 && (
-                    <UserDetailSection title="Presenças">
-                        <div className="space-y-1">
-                            {profile.presence_details
-                                .slice(0, 5)
-                                .map((presence, index) => (
-                                    <div
-                                        key={`presence-${index}-${presence.date}`}
-                                        className="flex justify-between"
-                                    >
-                                        <span>{presence.date}</span>
-                                        <span
-                                            className={
-                                                presence.presence
-                                                    ? 'text-green-600'
-                                                    : 'text-red-600'
-                                            }
-                                        >
-                                            {presence.presence
-                                                ? 'Presente'
-                                                : 'Ausente'}
-                                        </span>
-                                    </div>
-                                ))}
-                        </div>
-                    </UserDetailSection>
-                )}
-
             {profile?.guardians_details &&
                 profile.guardians_details.length > 0 && (
                     <UserDetailSection title="Responsáveis">

@@ -19,6 +19,7 @@ export interface UserProps {
     name: string
     role: UserRole
     is_staff: boolean
+    is_superuser: boolean
     is_active: boolean
     profile_details?: StudentProps | GuardianProps | ProfessorProps
 }
@@ -62,12 +63,17 @@ export function createFakeUser(): UserProps {
 
     const profile_details = createFakeStudent()
 
+    // Set is_staff and is_superuser based on role
+    const isStaff = userRole === 'STAFF' || userRole === 'SUPERUSER'
+    const isSuperuser = userRole === 'SUPERUSER'
+
     return {
         id: faker.number.int(),
         email: faker.internet.email(),
         name: faker.person.fullName(),
         role: userRole,
-        is_staff: faker.datatype.boolean(),
+        is_staff: isStaff,
+        is_superuser: isSuperuser,
         is_active: faker.datatype.boolean(),
         profile_details,
     }

@@ -135,13 +135,37 @@ describe('DashboardPage', () => {
             ),
         ).toBeInTheDocument()
 
+        // Mock window.open to prevent jsdom error
+        Object.defineProperty(window, 'open', {
+            value: vi.fn(),
+            writable: true,
+        })
+
+        // Mock window.location to prevent navigation error
+        const originalLocation = window.location
+        Object.defineProperty(window, 'location', {
+            value: {
+                ...originalLocation,
+                href: '',
+                assign: vi.fn(),
+                replace: vi.fn(),
+            },
+            writable: true,
+        })
+
         // Test handleClick for ButtonGridCard
         const bulletinButton = screen.getByRole('button', { name: /Boletim/i })
         fireEvent.click(bulletinButton)
         await waitFor(() => {
             expect(toast.success).toHaveBeenCalledWith(
-                'Foi feita a requisição de: Boletim',
+                'Requisição de Boletim enviada com sucesso!',
             )
+        })
+
+        // Restore original location
+        Object.defineProperty(window, 'location', {
+            value: originalLocation,
+            writable: true,
         })
     })
 

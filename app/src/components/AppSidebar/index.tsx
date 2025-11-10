@@ -11,7 +11,7 @@ import {
     SidebarFooter,
     SidebarRail,
 } from '@/components/ui/sidebar'
-import { ROUTES } from '@/config'
+import { NAVIGATION } from '@/config'
 import { useUser } from '@/hooks/useUser'
 import { logout } from '@/services/auth'
 import { UserRole } from '@/types/user'
@@ -41,17 +41,17 @@ const data = {
     navMain: [
         {
             title: 'Início',
-            url: '/dashboard',
+            url: NAVIGATION.DASHBOARD,
             icon: Home,
         },
         {
             title: 'Perfil',
-            url: '/profile',
+            url: NAVIGATION.PROFILE,
             icon: User,
         },
         {
             title: 'Notificações',
-            url: '/inbox',
+            url: NAVIGATION.INBOX,
             icon: Inbox,
         },
     ],
@@ -62,15 +62,15 @@ const data = {
             items: [
                 {
                     title: 'Atividades',
-                    url: '/agenda',
+                    url: NAVIGATION.AGENDA,
                 },
                 {
                     title: 'Eventos',
-                    url: '/events',
+                    url: NAVIGATION.EVENTS,
                 },
                 {
                     title: 'Aulas',
-                    url: '/lessons',
+                    url: NAVIGATION.LESSONS,
                     blockedRoles: [UserRole.STAFF],
                 },
             ],
@@ -82,7 +82,7 @@ const data = {
             items: [
                 {
                     title: 'Planejamento Semanal',
-                    url: '/week-planning',
+                    url: NAVIGATION.WEEK_PLANNING,
                 },
             ],
         },
@@ -92,16 +92,16 @@ const data = {
             items: [
                 {
                     title: 'Sobre',
-                    url: '/about',
+                    url: NAVIGATION.ABOUT,
                 },
                 {
                     title: 'Recursos',
-                    url: '/resources',
+                    url: NAVIGATION.RESOURCES,
                     blockedRoles: [UserRole.GUARDIAN],
                 },
                 {
                     title: 'Painel administrativo',
-                    url: `${ROUTES.ADMIN}`,
+                    url: NAVIGATION.ADMIN,
                     blockedRoles: [
                         UserRole.STUDENT,
                         UserRole.GUARDIAN,
