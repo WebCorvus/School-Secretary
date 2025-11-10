@@ -1,101 +1,101 @@
-"use client";
+'use client'
 
-import { Home, Inbox, type LucideIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import type * as React from "react";
-import { NavMain } from "@/components/NavMain";
-import { NavSecondary } from "@/components/NavSecondary";
+import { Home, Inbox, type LucideIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import type * as React from 'react'
+import { NavMain } from '@/components/NavMain'
+import { NavSecondary } from '@/components/NavSecondary'
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarRail,
-} from "@/components/ui/sidebar";
-import { ROUTES } from "@/config";
-import { useUser } from "@/hooks/useUser";
-import { logout } from "@/services/auth";
-import { UserRole } from "@/types/user";
-import { Button } from "../ui/button";
+} from '@/components/ui/sidebar'
+import { ROUTES } from '@/config'
+import { useUser } from '@/hooks/useUser'
+import { logout } from '@/services/auth'
+import { UserRole } from '@/types/user'
+import { Button } from '../ui/button'
 
 type NavItem = {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-    blockedRoles?: UserRole[];
-};
+    title: string
+    url: string
+    icon: LucideIcon
+    blockedRoles?: UserRole[]
+}
 
 type NavSecondaryChildItem = {
-    title: string;
-    url: string;
-    blockedRoles?: UserRole[];
-};
+    title: string
+    url: string
+    blockedRoles?: UserRole[]
+}
 
 type NavSecondaryItem = {
-    title: string;
-    url: string;
-    items: NavSecondaryChildItem[];
-    blockedRoles?: UserRole[];
-};
+    title: string
+    url: string
+    items: NavSecondaryChildItem[]
+    blockedRoles?: UserRole[]
+}
 
 const data = {
     navMain: [
         {
-            title: "Início",
-            url: "/dashboard",
+            title: 'Início',
+            url: '/dashboard',
             icon: Home,
         },
         {
-            title: "Notificações",
-            url: "/inbox",
+            title: 'Notificações',
+            url: '/inbox',
             icon: Inbox,
         },
     ],
     navSecondary: [
         {
-            title: "Anúncios",
-            url: "#",
+            title: 'Anúncios',
+            url: '#',
             items: [
                 {
-                    title: "Atividades",
-                    url: "/agenda",
+                    title: 'Atividades',
+                    url: '/agenda',
                 },
                 {
-                    title: "Eventos",
-                    url: "/events",
+                    title: 'Eventos',
+                    url: '/events',
                 },
                 {
-                    title: "Aulas",
-                    url: "/lessons",
+                    title: 'Aulas',
+                    url: '/lessons',
                     blockedRoles: [UserRole.STAFF],
                 },
             ],
         },
         {
-            title: "Professor",
-            url: "#",
+            title: 'Professor',
+            url: '#',
             blockedRoles: [UserRole.STUDENT, UserRole.GUARDIAN],
             items: [
                 {
-                    title: "Planejamento Semanal",
-                    url: "/week-planning",
+                    title: 'Planejamento Semanal',
+                    url: '/week-planning',
                 },
             ],
         },
         {
-            title: "Escola",
-            url: "#",
+            title: 'Escola',
+            url: '#',
             items: [
                 {
-                    title: "Sobre",
-                    url: "/about",
+                    title: 'Sobre',
+                    url: '/about',
                 },
                 {
-                    title: "Recursos",
-                    url: "/resources",
+                    title: 'Recursos',
+                    url: '/resources',
                     blockedRoles: [UserRole.GUARDIAN],
                 },
                 {
-                    title: "Painel administrativo",
+                    title: 'Painel administrativo',
                     url: `${ROUTES.ADMIN}`,
                     blockedRoles: [
                         UserRole.STUDENT,
@@ -106,45 +106,45 @@ const data = {
             ],
         },
     ],
-};
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const router = useRouter();
-    const { data: user, loading } = useUser();
+    const router = useRouter()
+    const { data: user, loading } = useUser()
 
     function handleClick() {
-        logout();
-        router.push("/");
+        logout()
+        router.push('/')
     }
 
     if (loading) {
-        return null;
+        return null
     }
 
-    const userRole = user?.role;
+    const userRole = user?.role
 
     const filterNavMainItems = (items: NavItem[]): NavItem[] => {
-        if (!userRole) return [];
+        if (!userRole) return []
         return items.filter(
             (item) =>
                 !item.blockedRoles || !item.blockedRoles.includes(userRole),
-        );
-    };
+        )
+    }
 
     const filterNavSecondaryChildItems = (
         items: NavSecondaryChildItem[],
     ): NavSecondaryChildItem[] => {
-        if (!userRole) return [];
+        if (!userRole) return []
         return items.filter(
             (item) =>
                 !item.blockedRoles || !item.blockedRoles.includes(userRole),
-        );
-    };
+        )
+    }
 
     const filterNavSecondaryItems = (
         items: NavSecondaryItem[],
     ): NavSecondaryItem[] => {
-        if (!userRole) return [];
+        if (!userRole) return []
         return items
             .map((item) => ({
                 ...item,
@@ -155,11 +155,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     (!item.blockedRoles ||
                         !item.blockedRoles.includes(userRole)) &&
                     item.items.length > 0,
-            );
-    };
+            )
+    }
 
-    const filteredNavMain = filterNavMainItems(data.navMain);
-    const filteredNavSecondary = filterNavSecondaryItems(data.navSecondary);
+    const filteredNavMain = filterNavMainItems(data.navMain)
+    const filteredNavSecondary = filterNavSecondaryItems(data.navSecondary)
 
     return (
         <Sidebar {...props}>
@@ -169,10 +169,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarRail />
             <SidebarFooter>
-                <Button variant={"outline"} onClick={() => handleClick()}>
+                <Button variant={'outline'} onClick={() => handleClick()}>
                     Logout
                 </Button>
             </SidebarFooter>
         </Sidebar>
-    );
+    )
 }

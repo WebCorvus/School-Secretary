@@ -34,6 +34,7 @@ function createRoutes(base: string) {
         AGENDA_PENDENTS: `${schoolUrl}agenda/pendents/`,
         EVENTS: `${schoolUrl}events/`,
         EVENTS_PENDENTS: `${schoolUrl}events/pendents/`,
+        WEEKLY_PLANS: `${schoolUrl}weekly-plans/`,
         NOTIFICATIONS: `${schoolUrl}notifications/`,
         NOTIFICATIONS_MARK_READ: `${schoolUrl}notifications/{id}/mark-read/`,
         NOTIFICATIONS_MARK_ALL_READ: `${schoolUrl}notifications/mark-all-read/`,
