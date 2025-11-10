@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, Inbox, type LucideIcon } from 'lucide-react'
+import { Home, Inbox, type LucideIcon, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type * as React from 'react'
 import { NavMain } from '@/components/NavMain'
@@ -43,6 +43,11 @@ const data = {
             title: 'Início',
             url: '/dashboard',
             icon: Home,
+        },
+        {
+            title: 'Perfil',
+            url: '/profile',
+            icon: User,
         },
         {
             title: 'Notificações',

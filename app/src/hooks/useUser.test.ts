@@ -1,11 +1,17 @@
 import { renderHook, waitFor } from '@testing-library/react'
+import React from 'react'
 import { ROUTES } from '@/config' // Import directly
+import { UserProvider } from '@/contexts/UserContext'
 import api from '@/services/api'
 import { createFakeUser, FakeUser } from '@/types/user'
 import { useUser } from './useUser'
 
 // Mock the API service
 vi.mock('@/services/api')
+
+// Create a wrapper component to provide the UserContext
+const wrapper = ({ children }: { children: React.ReactNode }) =>
+    React.createElement(UserProvider, null, children)
 
 describe('useUser', () => {
     const originalNodeEnv = process.env.NODE_ENV
@@ -21,7 +27,7 @@ describe('useUser', () => {
     })
 
     it('should return initial loading state', () => {
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         expect(result.current.loading).toBe(true)
         expect(result.current.data).toBeNull()
@@ -32,7 +38,7 @@ describe('useUser', () => {
         const mockUser = createFakeUser()
         ;(api.get as vi.Mock).mockResolvedValueOnce({ data: mockUser })
 
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         await waitFor(() => expect(result.current.loading).toBe(false))
 
@@ -45,7 +51,7 @@ describe('useUser', () => {
         process.env.NODE_ENV = 'development'
         ;(api.get as vi.Mock).mockRejectedValueOnce(new Error('API Error'))
 
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         await waitFor(() => expect(result.current.loading).toBe(false))
 
@@ -57,7 +63,7 @@ describe('useUser', () => {
         process.env.NODE_ENV = 'production'
         ;(api.get as vi.Mock).mockRejectedValueOnce(new Error('API Error'))
 
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         await waitFor(() => expect(result.current.loading).toBe(false))
 
@@ -71,7 +77,7 @@ describe('useUser', () => {
         process.env.NODE_ENV = 'development'
         ;(api.get as vi.Mock).mockResolvedValueOnce({ data: null })
 
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         await waitFor(() => expect(result.current.loading).toBe(false))
 
@@ -87,7 +93,7 @@ describe('useUser', () => {
             .mockResolvedValueOnce({ data: mockUser1 })
             .mockResolvedValueOnce({ data: mockUser2 })
 
-        const { result } = renderHook(() => useUser())
+        const { result } = renderHook(() => useUser(), { wrapper })
 
         await waitFor(() => expect(result.current.loading).toBe(false))
         expect(result.current.data).toEqual(mockUser1)
