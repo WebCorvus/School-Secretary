@@ -2,10 +2,13 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 const protectedRoutes = [
     '/dashboard',
+    '/inbox',
     '/agenda',
     '/events',
     '/lessons',
     '/groups',
+    '/week-planning',
+    '/resources',
 ]
 const loginRoute = '/'
 
