@@ -32,40 +32,40 @@ export default function About() {
 
             <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <Link
-                    href={NAVIGATION.STUDENTS}
+                    href={NAVIGATION.DASHBOARD}
                     className="btn text-2xl text-center"
                 >
-                    Consultar Alunos
+                    Consultar Dashboard
                 </Link>
                 <Link
-                    href={NAVIGATION.PROFESSORS}
+                    href={NAVIGATION.AGENDA}
                     className="btn text-2xl text-center"
                 >
-                    Consultar Professores
-                </Link>
-                <Link
-                    href={NAVIGATION.GROUPS}
-                    className="btn text-2xl text-center"
-                >
-                    Ver Turmas
-                </Link>
-                <Link
-                    href={NAVIGATION.SUBJECTS}
-                    className="btn text-2xl text-center"
-                >
-                    Disciplinas Oferecidas
-                </Link>
-                <Link
-                    href={NAVIGATION.ITINERARIES}
-                    className="btn text-2xl text-center"
-                >
-                    Itinerários Formativos
+                    Consultar Agenda
                 </Link>
                 <Link
                     href={NAVIGATION.LESSONS}
                     className="btn text-2xl text-center"
                 >
-                    Horários de Aula
+                    Ver Aulas
+                </Link>
+                <Link
+                    href={NAVIGATION.PROFILE}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Meu Perfil
+                </Link>
+                <Link
+                    href={NAVIGATION.EVENTS}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Eventos
+                </Link>
+                <Link
+                    href={NAVIGATION.RESOURCES}
+                    className="btn text-2xl text-center"
+                >
+                    Recursos da Escola
                 </Link>
             </section>
         </div>

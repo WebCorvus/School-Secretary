@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { LoginForm } from '@/components/LoginForm'
+import { NAVIGATION } from '@/config'
 import { useUser } from '@/contexts/UserContext'
 import { login } from '@/services/auth'
-import { NAVIGATION } from '@/config'
 
 export default function LoginPage() {
     const router = useRouter()

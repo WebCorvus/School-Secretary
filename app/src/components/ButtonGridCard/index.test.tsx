@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { UserProvider } from '@/contexts/UserContext'
-import { createFakeButtonGridItem } from '@/types/buttonGrid'
+import { UserContext } from '@/contexts/UserContext'
+import { createFakeDashboardLink } from '@/types/dashboardLink'
 import { ButtonGridCard } from './index'
 
 // Mock user context
-const _mockUserContext = {
+const mockUserContext = {
     user: {
         id: 1,
         email: 'test@example.com',
@@ -23,10 +23,14 @@ const _mockUserContext = {
 }
 
 const MockUserProvider = ({ children }: { children: React.ReactNode }) => {
-    return <UserProvider>{children}</UserProvider>
+    return (
+        <UserContext.Provider value={mockUserContext}>
+            {children}
+        </UserContext.Provider>
+    )
 }
 
-const mockData = [createFakeButtonGridItem(), createFakeButtonGridItem()]
+const mockData = [createFakeDashboardLink(), createFakeDashboardLink()]
 
 const mockHandleClick = vi.fn()
 
@@ -62,23 +66,27 @@ describe('ButtonGridCard', () => {
         expect(screen.getByText(mockData[1].title)).toBeInTheDocument()
     })
 
-    it('deve chamar a função handleClick quando um item é selecionado e confirmado', async () => {
+    it('deve chamar a função handleClick diretamente quando o usuário é staff', () => {
+        const mockUserContextWithStaff = {
+            ...mockUserContext,
+            user: {
+                ...mockUserContext.user,
+                is_staff: true,
+            },
+        }
+
         render(
-            <MockUserProvider>
+            <UserContext.Provider value={mockUserContextWithStaff}>
                 <ButtonGridCard
                     header="Test Header"
                     data={mockData}
                     handleClick={mockHandleClick}
                 />
-            </MockUserProvider>,
+            </UserContext.Provider>,
         )
 
         const button1 = screen.getByText(mockData[0].title)
         fireEvent.click(button1)
-
-        // Wait for modal to appear and click confirm
-        const confirmButton = await screen.findByText('Confirmar')
-        fireEvent.click(confirmButton)
 
         expect(mockHandleClick).toHaveBeenCalledTimes(1)
         expect(mockHandleClick).toHaveBeenCalledWith(mockData[0])

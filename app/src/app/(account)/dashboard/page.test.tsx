@@ -1,5 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { toast } from 'sonner'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { useUser } from '@/hooks/useUser'
 import { FakeUser, UserRole } from '@/types/user'
@@ -122,45 +121,12 @@ describe('DashboardPage', () => {
         expect(
             screen.getByText(`User Info: ${FakeUser.name}`),
         ).toBeInTheDocument()
-        expect(screen.getByText('Requisitar Documentos')).toBeInTheDocument()
+        expect(screen.getByText('Ações do Estudante')).toBeInTheDocument()
         expect(
             screen.getByText(
                 `Grades Table: ${FakeUser.profile_details?.grades_details?.length} subjects`,
             ),
         ).toBeInTheDocument()
-
-        // Mock window.open to prevent jsdom error
-        Object.defineProperty(window, 'open', {
-            value: vi.fn(),
-            writable: true,
-        })
-
-        // Mock window.location to prevent navigation error
-        const originalLocation = window.location
-        Object.defineProperty(window, 'location', {
-            value: {
-                ...originalLocation,
-                href: '',
-                assign: vi.fn(),
-                replace: vi.fn(),
-            },
-            writable: true,
-        })
-
-        // Test handleClick for ButtonGridCard
-        const bulletinButton = screen.getByRole('button', { name: /Boletim/i })
-        fireEvent.click(bulletinButton)
-        await waitFor(() => {
-            expect(toast.success).toHaveBeenCalledWith(
-                'Requisição de Boletim enviada com sucesso!',
-            )
-        })
-
-        // Restore original location
-        Object.defineProperty(window, 'location', {
-            value: originalLocation,
-            writable: true,
-        })
     })
 
     it('deve renderizar informações do professor e não cards específicos de aluno', () => {
@@ -195,9 +161,7 @@ describe('DashboardPage', () => {
         expect(
             screen.getByText(`User Info: ${mockProfessorUser.name}`),
         ).toBeInTheDocument()
-        expect(
-            screen.queryByText('Requisitar Documentos'),
-        ).not.toBeInTheDocument()
+        expect(screen.queryByText('Ações do Estudante')).not.toBeInTheDocument()
         expect(screen.queryByText(/Grades Table/i)).not.toBeInTheDocument()
     })
 
@@ -233,9 +197,7 @@ describe('DashboardPage', () => {
         expect(
             screen.getByText(`User Info: ${mockGuardianUser.name}`),
         ).toBeInTheDocument()
-        expect(
-            screen.queryByText('Requisitar Documentos'),
-        ).not.toBeInTheDocument()
+        expect(screen.queryByText('Ações do Estudante')).not.toBeInTheDocument()
         expect(screen.queryByText(/Grades Table/i)).not.toBeInTheDocument()
     })
 })

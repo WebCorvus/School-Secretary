@@ -9,7 +9,7 @@ export async function login(email: string, password: string): Promise<void> {
         if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('loginCompleted'))
         }
-        
+
         // Reload the page to ensure a fresh state after login
         // The middleware will handle redirecting to the appropriate page based on 'from' parameter
         if (typeof window !== 'undefined') {
