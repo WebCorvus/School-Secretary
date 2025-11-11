@@ -35,7 +35,7 @@ export function GuardianPanelCard() {
             url = url.replace('{id}', String(profile.student))
         }
 
-        if (url.includes('/pdf')) {
+        if (item.url === ROUTES.MY_GRADES || item.url === ROUTES.MY_PRESENCE) {
             await openPdfInline(
                 url,
                 `${item.title}-${profile.student_details?.full_name}.pdf`,

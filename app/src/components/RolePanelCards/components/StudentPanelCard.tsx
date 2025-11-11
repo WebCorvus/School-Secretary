@@ -35,7 +35,7 @@ export function StudentPanelCard() {
             url = url.replace('{id}', String(profile.id))
         }
 
-        if (url.includes('/pdf')) {
+        if (item.url === ROUTES.MY_GRADES || item.url === ROUTES.MY_PRESENCE) {
             await openPdfInline(url, `${item.title}-${profile.full_name}.pdf`)
         } else {
             window.location.href = url
