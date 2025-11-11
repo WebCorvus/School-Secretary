@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.utils import timezone
+
 from users.permissions import IsProfessor, IsStaff
 from utils.pdfgen import pdfgen
 from utils.reports import (
@@ -77,11 +79,16 @@ class StudentViewSet(viewsets.ModelViewSet):
         student = self.get_object()
         subjects = get_subject_names()
         data = {}
+        current_year = timezone.now().year
+        all_grades = Grade.objects.filter(student=student, year=current_year)
+
         for subject in subjects:
-            data[subject] = Grade.objects.filter(
-                student=student,
-                subject__full_name=subject,
-            )
+            # Initialize with None for each bimester
+            bimester_grades = [None, None, None, None]
+            for grade in all_grades.filter(subject__full_name=subject):
+                if 1 <= grade.bimester <= 4:
+                    bimester_grades[grade.bimester - 1] = grade.value
+            data[subject] = bimester_grades
         return pdfgen(
             "grades.html",
             {"student": student, "data": data},
