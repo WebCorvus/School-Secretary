@@ -23,6 +23,7 @@ function createRoutes(base: string) {
         USER_INFO: `${usersUrl}me/`,
         LOGIN: `${usersUrl}token/`,
         REFRESH: `${usersUrl}token/refresh/`,
+        LOGOUT: `${usersUrl}token/logout/`,
 
         // SCHOOL app subpaths
         GROUPS: `${schoolUrl}groups/`,
@@ -41,6 +42,23 @@ function createRoutes(base: string) {
 
         // RESOURCES app subpaths
         RESOURCE_LOANS: `${resourcesUrl}loans/`,
+
+        // STUDENTS app subpaths
+        GRADES: `${studentsUrl}grades/`,
+        GUARDIANS: `${studentsUrl}guardians/`,
+        CONTRACTS: `${studentsUrl}contracts/`,
+        PRESENCES: `${studentsUrl}presences/`,
+        WARNINGS: `${studentsUrl}warnings/`,
+        SUSPENSIONS: `${studentsUrl}suspensions/`,
+        TUITIONS: `${studentsUrl}tuitions/`,
+        ENROLLMENTS: `${studentsUrl}enrollments/`,
+
+        // Additional SCHOOL app subpaths (avoiding duplication)
+        SCHOOL_RECORDS: `${schoolUrl}schoolrecords/`,
+        BOOKS: `${schoolUrl}books/`,
+        EVENT_REGISTRATIONS: `${schoolUrl}event-registrations/`,
+        ROOMS: `${schoolUrl}rooms/`,
+        ROOM_RESERVATIONS: `${schoolUrl}room-reservations/`,
     }
 }
 
@@ -53,6 +71,9 @@ const createNavigation = () => {
         // Main pages
         DASHBOARD: `/dashboard`,
         LOGIN: `/`,
+        AUTH_LOGIN: `/auth/login`,
+        AUTH_REFRESH: `/auth/refresh`,
+        AUTH_LOGOUT: `/auth/logout`,
         PROFILE: `/profile`,
         WEEK_PLANNING: `/week-planning`,
         RESOURCES: `/resources`,
@@ -78,6 +99,28 @@ const createNavigation = () => {
         ADMIN_SCHOOL_LESSON_PLAN: `${adminPrefix}school/lessonplan/`,
         ADMIN_REPORTS: `${adminPrefix}reports/`,
         ADMIN_AUTH_GROUP: `${adminPrefix}auth/group/`,
+
+        // Frontend specific pages
+        STUDENT_GRADES: `/students/grades`,
+        STUDENT_ATTENDANCE: `/students/attendance`,
+        STUDENT_ACADEMIC_HISTORY: `/students/history`,
+        STUDENT_TRANSFER_REQUEST: `/students/transfer`,
+        STUDENT_RETAKE_REQUEST: `/students/retake`,
+
+        PROFESSOR_LESSON_PLANS: `/professor/lesson-plans`,
+        PROFESSOR_ATTENDANCE: `/professor/attendance`,
+        PROFESSOR_GRADES: `/professor/grades`,
+        PROFESSOR_INCIDENTS: `/professor/incidents`,
+        PROFESSOR_COMMUNICATION: `/professor/communication`,
+
+        GUARDIAN_CHILDREN: `/guardian/children`,
+        GUARDIAN_COMMUNICATION: `/guardian/communication`,
+        GUARDIAN_HOMEWORK: `/guardian/homework`,
+
+        CALENDAR: `/calendar`,
+        RESOURCES_LEARNING: `/resources/learning`,
+        FINANCIAL: `/financial`,
+        ACADEMIC_SCHEDULE: `/academic-schedule`,
     }
 }
 

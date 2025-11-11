@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { GuardianDashboardCard } from './GuardianDashboardCard'
+import { GuardianPanelCard } from './GuardianPanelCard'
 
 // Mock the useUser hook
 const mockUseUser = vi.fn()
@@ -8,7 +8,7 @@ vi.mock('@/hooks/useUser', () => ({
     useUser: () => mockUseUser(),
 }))
 
-// Mock the components used in GuardianDashboardCard
+// Mock the components used in GuardianPanelCard
 vi.mock('@/components/ButtonGridCard', () => ({
     ButtonGridCard: ({
         header,
@@ -23,21 +23,21 @@ vi.mock('@/components/ButtonGridCard', () => ({
     ),
 }))
 
-vi.mock('./RoleDashboardCardLayout', () => ({
-    RoleDashboardCardLayout: ({
+vi.mock('./RolePanelCardLayout', () => ({
+    RolePanelCardLayout: ({
         title,
         children,
     }: {
         title: string
         children: React.ReactNode
     }) => (
-        <div data-testid="role-dashboard-card-layout" data-title={title}>
+        <div data-testid="role-panel-card-layout" data-title={title}>
             {children}
         </div>
     ),
 }))
 
-describe('GuardianDashboardCard', () => {
+describe('GuardianPanelCard', () => {
     it('renders correctly for a guardian user', () => {
         const mockGuardianProfile = {
             full_name: 'Jane Smith',
@@ -51,14 +51,13 @@ describe('GuardianDashboardCard', () => {
             },
         })
 
-        render(<GuardianDashboardCard />)
+        render(<GuardianPanelCard />)
 
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toBeInTheDocument()
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toHaveAttribute('data-title', 'Painel do Responsável')
+        expect(screen.getByTestId('role-panel-card-layout')).toBeInTheDocument()
+        expect(screen.getByTestId('role-panel-card-layout')).toHaveAttribute(
+            'data-title',
+            'Painel do Responsável',
+        )
         expect(screen.getByTestId('button-grid-card')).toBeInTheDocument()
     })
 
@@ -70,10 +69,10 @@ describe('GuardianDashboardCard', () => {
             },
         })
 
-        render(<GuardianDashboardCard />)
+        render(<GuardianPanelCard />)
 
         expect(
-            screen.queryByTestId('role-dashboard-card-layout'),
+            screen.queryByTestId('role-panel-card-layout'),
         ).not.toBeInTheDocument()
     })
 })

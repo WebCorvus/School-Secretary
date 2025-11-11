@@ -1,17 +1,17 @@
 import type { ReactNode } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-interface RoleDashboardCardLayoutProps {
+interface RolePanelCardLayoutProps {
     title: string
     children: ReactNode
     className?: string
 }
 
-export function RoleDashboardCardLayout({
+export function RolePanelCardLayout({
     title,
     children,
     className = '',
-}: RoleDashboardCardLayoutProps) {
+}: RolePanelCardLayoutProps) {
     return (
         <Card className={`w-full ${className}`}>
             <CardHeader>

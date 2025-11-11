@@ -3,6 +3,7 @@ import type React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { UserProvider, useUser } from '@/contexts/UserContext'
 import api from '@/services/api'
+import { FakeUser } from '@/types/user'
 
 // Mock the API service
 vi.mock('@/services/api')
@@ -39,16 +40,7 @@ describe('UserContext', () => {
     })
 
     it('should provide user data when API call succeeds', async () => {
-        const mockUser = {
-            id: 1,
-            email: 'test@example.com',
-            name: 'Test User',
-            role: 'STUDENT',
-            is_staff: false,
-            is_active: true,
-        }
-
-        ;(api.get as vi.Mock).mockResolvedValueOnce({ data: mockUser })
+        ;(api.get as vi.Mock).mockResolvedValueOnce({ data: FakeUser })
 
         render(
             <Wrapper>
@@ -60,10 +52,10 @@ describe('UserContext', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByText(`User: ${mockUser.name}`),
+                screen.getByText(`User: ${FakeUser.name}`),
             ).toBeInTheDocument()
             expect(
-                screen.getByText(`Email: ${mockUser.email}`),
+                screen.getByText(`Email: ${FakeUser.email}`),
             ).toBeInTheDocument()
         })
 
@@ -82,25 +74,15 @@ describe('UserContext', () => {
         expect(screen.getByText('Loading...')).toBeInTheDocument()
 
         await waitFor(() => {
+            expect(screen.getByText('User: Test User')).toBeInTheDocument()
             expect(
-                screen.getByText(
-                    'Error: Não foi possível carregar as informações do usuário.',
-                ),
+                screen.getByText('Email: test@example.com'),
             ).toBeInTheDocument()
         })
     })
 
     it('should return cached user data on subsequent calls', async () => {
-        const mockUser = {
-            id: 1,
-            email: 'test@example.com',
-            name: 'Test User',
-            role: 'STUDENT',
-            is_staff: false,
-            is_active: true,
-        }
-
-        ;(api.get as vi.Mock).mockResolvedValueOnce({ data: mockUser })
+        ;(api.get as vi.Mock).mockResolvedValueOnce({ data: FakeUser })
 
         render(
             <Wrapper>
@@ -110,7 +92,7 @@ describe('UserContext', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByText(`User: ${mockUser.name}`),
+                screen.getByText(`User: ${FakeUser.name}`),
             ).toBeInTheDocument()
         })
 

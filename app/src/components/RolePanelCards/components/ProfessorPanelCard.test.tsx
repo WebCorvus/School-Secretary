@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { ProfessorDashboardCard } from './ProfessorDashboardCard'
+import { ProfessorPanelCard } from './ProfessorPanelCard'
 
 // Mock the useUser hook
 const mockUseUser = vi.fn()
@@ -8,7 +8,7 @@ vi.mock('@/hooks/useUser', () => ({
     useUser: () => mockUseUser(),
 }))
 
-// Mock the components used in ProfessorDashboardCard
+// Mock the components used in ProfessorPanelCard
 vi.mock('@/components/ButtonGridCard', () => ({
     ButtonGridCard: ({
         header,
@@ -23,21 +23,21 @@ vi.mock('@/components/ButtonGridCard', () => ({
     ),
 }))
 
-vi.mock('./RoleDashboardCardLayout', () => ({
-    RoleDashboardCardLayout: ({
+vi.mock('./RolePanelCardLayout', () => ({
+    RolePanelCardLayout: ({
         title,
         children,
     }: {
         title: string
         children: React.ReactNode
     }) => (
-        <div data-testid="role-dashboard-card-layout" data-title={title}>
+        <div data-testid="role-panel-card-layout" data-title={title}>
             {children}
         </div>
     ),
 }))
 
-describe('ProfessorDashboardCard', () => {
+describe('ProfessorPanelCard', () => {
     it('renders correctly for a professor user', () => {
         const mockProfessorProfile = {
             full_name: 'Dr. Smith',
@@ -51,14 +51,13 @@ describe('ProfessorDashboardCard', () => {
             },
         })
 
-        render(<ProfessorDashboardCard />)
+        render(<ProfessorPanelCard />)
 
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toBeInTheDocument()
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toHaveAttribute('data-title', 'Painel do Professor')
+        expect(screen.getByTestId('role-panel-card-layout')).toBeInTheDocument()
+        expect(screen.getByTestId('role-panel-card-layout')).toHaveAttribute(
+            'data-title',
+            'Painel do Professor',
+        )
         expect(screen.getByTestId('button-grid-card')).toBeInTheDocument()
     })
 
@@ -70,10 +69,10 @@ describe('ProfessorDashboardCard', () => {
             },
         })
 
-        render(<ProfessorDashboardCard />)
+        render(<ProfessorPanelCard />)
 
         expect(
-            screen.queryByTestId('role-dashboard-card-layout'),
+            screen.queryByTestId('role-panel-card-layout'),
         ).not.toBeInTheDocument()
     })
 })

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getCookie, setCookie } from 'cookies-next'
+import { NAVIGATION } from '@/config'
 
 const api = axios.create()
 
@@ -26,7 +27,7 @@ api.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true
             try {
-                const response = await axios.post('/auth/refresh')
+                const response = await axios.post(NAVIGATION.AUTH_REFRESH)
                 const { access } = response.data
 
                 setCookie('access', access, { path: '/', sameSite: 'lax' })

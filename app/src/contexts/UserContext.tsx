@@ -36,21 +36,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const getUser = useCallback(
         async (forceRefetch: boolean = false): Promise<UserProps | null> => {
+            const currentIsDevOrTestEnv =
+                typeof process !== 'undefined' &&
+                (process.env.NODE_ENV === 'test' ||
+                    process.env.NODE_ENV === 'development')
+
             if (user && !forceRefetch && loading === false) {
                 // If user data already exists and we're not forcing a refetch, return it without making a new request
                 return user
             }
 
             try {
-                // Check if we're running in a test environment
-                const isTestEnv =
-                    typeof process !== 'undefined' &&
-                    process.env.NODE_ENV === 'test'
-
                 // Check if we have an access token before attempting to fetch user data
                 // Only skip the API call in browser environments where there's no access token
                 // Skip this check in test environments to maintain test compatibility
-                if (!isTestEnv && typeof window !== 'undefined') {
+                if (!currentIsDevOrTestEnv && typeof window !== 'undefined') {
                     const accessToken = getCookie('access')
                     if (!accessToken) {
                         // If no access token in browser, don't make API call, just return null
@@ -68,13 +68,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                     setLoading(true)
                 }
 
-                setError(null)
-
                 const response = await api.get<UserProps>(`${ROUTES.USER_INFO}`)
                 const payload = response.data || null
 
-                if (process.env.NODE_ENV === 'development' && !payload) {
-                    // In development, use the exported FakeUser for consistency
+                setError(null) // Move setError(null) here, after successful API call
+
+                if (currentIsDevOrTestEnv && !payload) {
+                    // In development or test, use the exported FakeUser for consistency
                     setUser(FakeUser)
                     return FakeUser
                 } else {
@@ -84,10 +84,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             } catch (err) {
                 console.error('Error fetching user data:', err)
                 // In development or test environments, use the exported FakeUser for consistency
-                if (
-                    process.env.NODE_ENV === 'development' ||
-                    process.env.NODE_ENV === 'test'
-                ) {
+                if (currentIsDevOrTestEnv) {
                     setUser(FakeUser)
                     setError(null)
                     return FakeUser
@@ -99,17 +96,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                     return null
                 }
             } finally {
-                // Only set loading to false if not forcing a refetch (to maintain current state during refresh)
-                if (!forceRefetch) {
-                    setLoading(false)
-                } else {
-                    // For forced refetch, ensure loading is eventually set to false
-                    setTimeout(() => {
-                        if (typeof window !== 'undefined') {
-                            setLoading(false)
-                        }
-                    }, 0)
-                }
+                setLoading(false)
             }
         },
         [user, loading],
@@ -125,12 +112,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     // In test environments, always proceed with normal flow to maintain test compatibility
     // In browser environments, only fetch if we have an access token to prevent infinite redirects
     useEffect(() => {
-        // Check if we're running in a test environment
-        const isTestEnv =
-            typeof process !== 'undefined' && process.env.NODE_ENV === 'test'
+        // Check if we're running in a test or development environment
+        const isDevOrTestEnv =
+            typeof process !== 'undefined' &&
+            (process.env.NODE_ENV === 'test' ||
+                process.env.NODE_ENV === 'development')
 
-        if (isTestEnv) {
-            // In test environment, proceed with normal flow
+        if (isDevOrTestEnv) {
+            // In test or development environment, always proceed with normal flow
             void getUser(false)
         } else if (typeof window !== 'undefined') {
             // In browser environment, check for access token

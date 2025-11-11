@@ -4,7 +4,7 @@ import { FullScreenError } from '@/components/FullScreenError'
 import { FullScreenLoading } from '@/components/FullScreenLoading'
 import { Header1 } from '@/components/Header1'
 import { Paragraph } from '@/components/Paragraph'
-import { RoleDashboardCards } from '@/components/RoleDashboardCards'
+import { RolePanelCards } from '@/components/RolePanelCards'
 import { UserInfoCard } from '@/components/UserInfoCard'
 import { useUser } from '@/hooks/useUser'
 
@@ -30,7 +30,7 @@ export default function DashboardPage() {
             />
             <div className="flex flex-col gap-3 ">
                 <UserInfoCard data={userInfo} />
-                <RoleDashboardCards />
+                <RolePanelCards />
             </div>
         </div>
     )

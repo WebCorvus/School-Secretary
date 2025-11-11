@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { StudentDashboardCard } from './StudentDashboardCard'
+import { StudentPanelCard } from './StudentPanelCard'
 
 // Mock the useUser hook
 const mockUseUser = vi.fn()
@@ -8,7 +8,7 @@ vi.mock('@/hooks/useUser', () => ({
     useUser: () => mockUseUser(),
 }))
 
-// Mock the components used in StudentDashboardCard
+// Mock the components used in StudentPanelCard
 vi.mock('@/components/ButtonGridCard', () => ({
     ButtonGridCard: ({
         header,
@@ -37,21 +37,21 @@ vi.mock('@/components/GradesTableCard', () => ({
     ),
 }))
 
-vi.mock('./RoleDashboardCardLayout', () => ({
-    RoleDashboardCardLayout: ({
+vi.mock('./RolePanelCardLayout', () => ({
+    RolePanelCardLayout: ({
         title,
         children,
     }: {
         title: string
         children: React.ReactNode
     }) => (
-        <div data-testid="role-dashboard-card-layout" data-title={title}>
+        <div data-testid="role-panel-card-layout" data-title={title}>
             {children}
         </div>
     ),
 }))
 
-describe('StudentDashboardCard', () => {
+describe('StudentPanelCard', () => {
     it('renders correctly for a student user', () => {
         const mockStudentProfile = {
             full_name: 'John Doe',
@@ -65,14 +65,13 @@ describe('StudentDashboardCard', () => {
             },
         })
 
-        render(<StudentDashboardCard />)
+        render(<StudentPanelCard />)
 
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toBeInTheDocument()
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toHaveAttribute('data-title', 'Painel do Estudante')
+        expect(screen.getByTestId('role-panel-card-layout')).toBeInTheDocument()
+        expect(screen.getByTestId('role-panel-card-layout')).toHaveAttribute(
+            'data-title',
+            'Painel do Estudante',
+        )
         expect(screen.getByTestId('button-grid-card')).toBeInTheDocument()
     })
 
@@ -89,14 +88,13 @@ describe('StudentDashboardCard', () => {
             },
         })
 
-        render(<StudentDashboardCard />)
+        render(<StudentPanelCard />)
 
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toBeInTheDocument()
-        expect(
-            screen.getByTestId('role-dashboard-card-layout'),
-        ).toHaveAttribute('data-title', 'Painel do Estudante')
+        expect(screen.getByTestId('role-panel-card-layout')).toBeInTheDocument()
+        expect(screen.getByTestId('role-panel-card-layout')).toHaveAttribute(
+            'data-title',
+            'Painel do Estudante',
+        )
         expect(screen.getByTestId('button-grid-card')).toBeInTheDocument()
         // Should not contain grades table card
         expect(
@@ -112,10 +110,10 @@ describe('StudentDashboardCard', () => {
             },
         })
 
-        render(<StudentDashboardCard />)
+        render(<StudentPanelCard />)
 
         expect(
-            screen.queryByTestId('role-dashboard-card-layout'),
+            screen.queryByTestId('role-panel-card-layout'),
         ).not.toBeInTheDocument()
     })
 })

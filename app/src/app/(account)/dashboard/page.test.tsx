@@ -2,10 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { toast } from 'sonner'
 import { describe, expect, it, vi } from 'vitest'
 import { useUser } from '@/hooks/useUser'
-import { createFakeGuardian } from '@/types/guardian'
-import { createFakeProfessor } from '@/types/professor'
-import { createFakeStudent } from '@/types/student'
-import { createFakeUser, UserRole } from '@/types/user'
+import { FakeUser, UserRole } from '@/types/user'
 import DashboardPage from './page'
 
 vi.mock('@/components/Header1', () => ({
@@ -107,12 +104,7 @@ describe('DashboardPage', () => {
     })
 
     it('deve renderizar informações do aluno e cards específicos para aluno', async () => {
-        const mockStudentProfile = createFakeStudent()
-        const mockUser = {
-            ...createFakeUser(),
-            role: UserRole.STUDENT,
-            profile_details: mockStudentProfile,
-        }
+        const mockUser = { ...FakeUser, role: UserRole.STUDENT }
         ;(useUser as vi.Mock).mockReturnValue({
             data: mockUser,
             loading: false,
@@ -123,15 +115,17 @@ describe('DashboardPage', () => {
 
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
         expect(
-            screen.getByText(`Bem-vindo(a), ${mockStudentProfile.full_name}`),
+            screen.getByText(
+                `Bem-vindo(a), ${FakeUser.profile_details?.full_name}`,
+            ),
         ).toBeInTheDocument()
         expect(
-            screen.getByText(`User Info: ${mockUser.name}`),
+            screen.getByText(`User Info: ${FakeUser.name}`),
         ).toBeInTheDocument()
         expect(screen.getByText('Requisitar Documentos')).toBeInTheDocument()
         expect(
             screen.getByText(
-                `Grades Table: ${mockStudentProfile.grades_details.length} subjects`,
+                `Grades Table: ${FakeUser.profile_details?.grades_details?.length} subjects`,
             ),
         ).toBeInTheDocument()
 
@@ -170,14 +164,22 @@ describe('DashboardPage', () => {
     })
 
     it('deve renderizar informações do professor e não cards específicos de aluno', () => {
-        const mockProfessorProfile = createFakeProfessor()
-        const mockUser = {
-            ...createFakeUser(),
+        const mockProfessorUser = {
+            ...FakeUser,
             role: UserRole.PROFESSOR,
-            profile_details: mockProfessorProfile,
+            profile_details: {
+                id: 2,
+                full_name: 'Test Professor',
+                phone_number: '11987654321',
+                photoUrl: 'https://example.com/professor.jpg',
+                user: 2,
+                created_at: '2023-01-01T00:00:00Z',
+                email: 'professor@example.com',
+                address: '456 Professor Avenue',
+            },
         }
         ;(useUser as vi.Mock).mockReturnValue({
-            data: mockUser,
+            data: mockProfessorUser,
             loading: false,
             error: undefined,
         })
@@ -186,10 +188,12 @@ describe('DashboardPage', () => {
 
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
         expect(
-            screen.getByText(`Bem-vindo(a), ${mockProfessorProfile.full_name}`),
+            screen.getByText(
+                `Bem-vindo(a), ${mockProfessorUser.profile_details.full_name}`,
+            ),
         ).toBeInTheDocument()
         expect(
-            screen.getByText(`User Info: ${mockUser.name}`),
+            screen.getByText(`User Info: ${mockProfessorUser.name}`),
         ).toBeInTheDocument()
         expect(
             screen.queryByText('Requisitar Documentos'),
@@ -198,14 +202,22 @@ describe('DashboardPage', () => {
     })
 
     it('deve renderizar informações do responsável e não cards específicos de aluno', () => {
-        const mockGuardianProfile = createFakeGuardian()
-        const mockUser = {
-            ...createFakeUser(),
+        const mockGuardianUser = {
+            ...FakeUser,
             role: UserRole.GUARDIAN,
-            profile_details: mockGuardianProfile,
+            profile_details: {
+                id: 3,
+                full_name: 'Test Guardian',
+                phone_number: '11987654321',
+                photoUrl: 'https://example.com/guardian.jpg',
+                user: 3,
+                created_at: '2023-01-01T00:00:00Z',
+                email: 'guardian@example.com',
+                address: '789 Guardian Road',
+            },
         }
         ;(useUser as vi.Mock).mockReturnValue({
-            data: mockUser,
+            data: mockGuardianUser,
             loading: false,
             error: undefined,
         })
@@ -214,10 +226,12 @@ describe('DashboardPage', () => {
 
         expect(screen.getByText('Dashboard')).toBeInTheDocument()
         expect(
-            screen.getByText(`Bem-vindo(a), ${mockGuardianProfile.full_name}`),
+            screen.getByText(
+                `Bem-vindo(a), ${mockGuardianUser.profile_details.full_name}`,
+            ),
         ).toBeInTheDocument()
         expect(
-            screen.getByText(`User Info: ${mockUser.name}`),
+            screen.getByText(`User Info: ${mockGuardianUser.name}`),
         ).toBeInTheDocument()
         expect(
             screen.queryByText('Requisitar Documentos'),
