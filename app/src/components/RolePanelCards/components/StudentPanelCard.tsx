@@ -3,9 +3,9 @@ import { ButtonGridCard } from '@/components/ButtonGridCard'
 import { GradesTableCard } from '@/components/GradesTableCard'
 import { NAVIGATION, ROUTES } from '@/config'
 import { useUser } from '@/hooks/useUser'
-import api from '@/services/api'
 import type { DashboardLink } from '@/types/dashboardLink'
 import type { StudentProps } from '@/types/student'
+import { openPdfInline } from '@/utils/download-file'
 import { RolePanelCardLayout } from './RolePanelCardLayout'
 
 const studentActions: DashboardLink[] = [
@@ -36,28 +36,7 @@ export function StudentPanelCard() {
         }
 
         if (url.includes('/pdf')) {
-            try {
-                const response = await api.get(url, { responseType: 'blob' })
-                const blob = new Blob([response.data], {
-                    type: 'application/pdf',
-                })
-                const fileURL = URL.createObjectURL(blob)
-                const link = document.createElement('a')
-                link.href = fileURL
-                link.setAttribute(
-                    'download',
-                    `${item.title}-${profile.full_name}.pdf`,
-                )
-                document.body.appendChild(link)
-                link.click()
-                link.remove()
-                URL.revokeObjectURL(fileURL)
-            } catch (error) {
-                toast.error(
-                    'Não foi possível baixar o PDF. Tente novamente mais tarde.',
-                )
-                console.error('Error downloading PDF:', error)
-            }
+            await openPdfInline(url, `${item.title}-${profile.full_name}.pdf`)
         } else {
             window.location.href = url
         }
