@@ -19,7 +19,7 @@ class SchoolRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_student_details(self, obj):
-        from accounts.serializers import StudentCompactSerializer
+        from students.serializers import StudentCompactSerializer
         if obj.student:
             return StudentCompactSerializer(obj.student).data
         return None
@@ -33,7 +33,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_tenant_details(self, obj):
-        from accounts.serializers import StudentCompactSerializer
+        from students.serializers import StudentCompactSerializer
         if obj.tenant:
             return StudentCompactSerializer(obj.tenant).data
         return None

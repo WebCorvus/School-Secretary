@@ -15,7 +15,7 @@ from academics.serializers import (
     GroupSerializer,
     LessonSerializer,
 )
-from accounts.serializers import (
+from students.serializers import (
     ProfessorCompactSerializer,
     ProfessorSerializer,
 )
@@ -31,7 +31,7 @@ from academics.models import (
     Group,
     Lesson,
 )
-from accounts.models import Professor, Student
+from students.models import Professor, Student
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 import datetime

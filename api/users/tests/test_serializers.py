@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from users.serializers import UserSerializer, UserProfileSerializer
-from accounts.models import Student, Guardian, Professor
+from students.models import Student, Guardian, Professor
 import datetime
 
 

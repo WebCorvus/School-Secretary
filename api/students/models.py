@@ -11,6 +11,7 @@ class Student(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Usuário",
+        related_name="student_profile",
     )
     full_name = models.CharField(verbose_name="Nome completo", max_length=255)
     cpf = models.CharField(
@@ -67,6 +68,7 @@ class Guardian(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Usuário",
+        related_name="guardian_profile",
     )
     full_name = models.CharField(verbose_name="Nome completo", max_length=255)
     cpf = models.CharField(
@@ -96,6 +98,8 @@ class Guardian(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Estudante",
         related_name="guardians",
+        blank=True,
+        null=True,
     )
     created_at = models.DateTimeField(
         verbose_name="Criado em",
@@ -104,7 +108,8 @@ class Guardian(models.Model):
     )
 
     def __str__(self):
-        return f"{self.full_name} - Responsável por {self.student.full_name}"
+        student_name = self.student.full_name if self.student else "Sem estudante"
+        return f"{self.full_name} - Responsável por {student_name}"
 
     class Meta:
         verbose_name = "Responsável"
@@ -116,6 +121,7 @@ class Professor(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         verbose_name="Usuário",
+        related_name="professor_profile",
     )
     full_name = models.CharField(verbose_name="Nome completo", max_length=255)
     cpf = models.CharField(
@@ -155,7 +161,8 @@ class Professor(models.Model):
     )
 
     def __str__(self):
-        return f"{self.full_name} - Professor de {self.subject.full_name}"
+        subject_name = self.subject.full_name if self.subject else "Sem disciplina"
+        return f"{self.full_name} - Professor de {subject_name}"
 
     class Meta:
         verbose_name = "Professor"

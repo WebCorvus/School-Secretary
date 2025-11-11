@@ -43,12 +43,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile = obj.profile
         if profile:
             if obj.role == get_user_model().Role.STUDENT:
-                from accounts.serializers import StudentSerializer
                 return StudentSerializer(profile, context=self.context).data
             elif obj.role == get_user_model().Role.GUARDIAN:
-                from accounts.serializers import GuardianSerializer
                 return GuardianSerializer(profile, context=self.context).data
             elif obj.role == get_user_model().Role.PROFESSOR:
-                from accounts.serializers import ProfessorSerializer
                 return ProfessorSerializer(profile, context=self.context).data
         return None

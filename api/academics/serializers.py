@@ -75,7 +75,7 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_professor_details(self, obj):
-        from accounts.serializers import ProfessorCompactSerializer
+        from students.serializers import ProfessorCompactSerializer
         if obj.professor:
             return ProfessorCompactSerializer(obj.professor).data
         return None
