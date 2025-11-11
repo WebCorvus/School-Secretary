@@ -11,7 +11,8 @@ import { RolePanelCardLayout } from './RolePanelCardLayout'
 const studentActions: DashboardLink[] = [
     { title: 'Meu Perfil', url: NAVIGATION.PROFILE },
     { title: 'Minhas Aulas', url: NAVIGATION.LESSONS },
-    { title: 'Minha Frequência', url: ROUTES.MY_PRESENCE },
+    { title: 'Baixar Frequência', url: ROUTES.MY_PRESENCE },
+    { title: 'Baixar Notas', url: ROUTES.MY_GRADES },
     { title: 'Recursos de Aprendizagem', url: NAVIGATION.RESOURCES },
     { title: 'Eventos', url: NAVIGATION.EVENTS },
     { title: 'Plano Semanal', url: NAVIGATION.WEEK_PLANNING },
