@@ -1,15 +1,15 @@
 // API URL configuration
-const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || `/api/`;
+const API_BASE = process.env.NEXT_PUBLIC_PUBLIC_API_HOST || `/api/`
 const API_INTERNAL_BASE =
-    process.env.NEXT_PUBLIC_PRIVATE_API_HOST || `http://api:8000/api/`;
+    process.env.NEXT_PUBLIC_PRIVATE_API_HOST || `http://api:8000/api/`
 
 // Factory function to create routes based on a base URL
 function createRoutes(base: string) {
     // Django apps base URLs as variables
-    const usersUrl = `${base}users/`;
-    const studentsUrl = `${base}students/`;
-    const schoolUrl = `${base}school/`;
-    const resourcesUrl = `${base}resources/`;
+    const usersUrl = `${base}users/`
+    const studentsUrl = `${base}students/`
+    const schoolUrl = `${base}school/`
+    const resourcesUrl = `${base}resources/`
 
     return {
         // Main paths
@@ -41,13 +41,13 @@ function createRoutes(base: string) {
 
         // RESOURCES app subpaths
         RESOURCE_LOANS: `${resourcesUrl}loans/`,
-    };
+    }
 }
 
 // Frontend navigation routes
 const createNavigation = () => {
-    const apiPrefix = `/api/`;
-    const adminPrefix = `${apiPrefix}admin/`;
+    const apiPrefix = `/api/`
+    const adminPrefix = `${apiPrefix}admin/`
 
     return {
         // Main pages
@@ -78,12 +78,12 @@ const createNavigation = () => {
         ADMIN_SCHOOL_LESSON_PLAN: `${adminPrefix}school/lessonplan/`,
         ADMIN_REPORTS: `${adminPrefix}reports/`,
         ADMIN_AUTH_GROUP: `${adminPrefix}auth/group/`,
-    };
-};
+    }
+}
 
 // Export routes for application use
-const ROUTES = createRoutes(API_BASE);
-const ROUTES_INTERNAL = createRoutes(API_INTERNAL_BASE);
-const NAVIGATION = createNavigation();
+const ROUTES = createRoutes(API_BASE)
+const ROUTES_INTERNAL = createRoutes(API_INTERNAL_BASE)
+const NAVIGATION = createNavigation()
 
-export { ROUTES, ROUTES_INTERNAL, NAVIGATION };
+export { ROUTES, ROUTES_INTERNAL, NAVIGATION }

@@ -31,6 +31,11 @@ api.interceptors.response.use(
 
                 setCookie('access', access, { path: '/', sameSite: 'lax' })
 
+                // Dispatch a custom event to notify the app about token refresh
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('tokenRefreshed'))
+                }
+
                 if (!originalRequest.headers) {
                     originalRequest.headers = axios.AxiosHeaders.from({})
                 }

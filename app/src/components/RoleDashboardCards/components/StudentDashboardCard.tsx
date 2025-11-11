@@ -1,7 +1,7 @@
 import { toast } from 'sonner'
-import { NAVIGATION, ROUTES } from '@/config'
 import { ButtonGridCard } from '@/components/ButtonGridCard'
 import { GradesTableCard } from '@/components/GradesTableCard'
+import { NAVIGATION, ROUTES } from '@/config'
 import { useUser } from '@/hooks/useUser'
 import type { DocumentRequest } from '@/types/documentRequest'
 import type { StudentProps } from '@/types/student'

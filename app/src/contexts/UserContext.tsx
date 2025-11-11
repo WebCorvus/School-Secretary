@@ -36,7 +36,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const getUser = useCallback(
         async (forceRefetch: boolean = false): Promise<UserProps | null> => {
-            if (user && !forceRefetch) {
+            if (user && !forceRefetch && loading === false) {
                 // If user data already exists and we're not forcing a refetch, return it without making a new request
                 return user
             }
@@ -60,7 +60,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                     }
                 }
 
-                setLoading(true)
+                // Only set loading to true if this is not a force refetch
+                // This prevents flickering when user data is being revalidated
+                if (forceRefetch) {
+                    // Don't change the loading state when forcing refetch for smoother UX
+                } else {
+                    setLoading(true)
+                }
+
                 setError(null)
 
                 const response = await api.get<UserProps>(`${ROUTES.USER_INFO}`)
@@ -92,15 +99,26 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                     return null
                 }
             } finally {
-                setLoading(false)
+                // Only set loading to false if not forcing a refetch (to maintain current state during refresh)
+                if (!forceRefetch) {
+                    setLoading(false)
+                } else {
+                    // For forced refetch, ensure loading is eventually set to false
+                    setTimeout(() => {
+                        if (typeof window !== 'undefined') {
+                            setLoading(false)
+                        }
+                    }, 0)
+                }
             }
         },
-        [user],
+        [user, loading],
     )
 
-    const refetch = useCallback(() => {
-        setUser(null)
-        void getUser(true) // force refetch
+    const refetch = useCallback(async () => {
+        setLoading(true) // Set loading state during refetch
+        // Don't reset user to null during refetch to avoid UI flickering
+        return getUser(true) // force refetch and return the result
     }, [getUser])
 
     // Initialize user data on mount
@@ -129,6 +147,67 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         } else {
             // In other non-browser environments (like SSR), proceed with normal flow
             void getUser(false)
+        }
+    }, [getUser])
+
+    // Listen for token refresh events to update user info
+    useEffect(() => {
+        const handleTokenRefresh = () => {
+            if (typeof window !== 'undefined') {
+                const accessToken = getCookie('access')
+                if (accessToken) {
+                    // Token was refreshed, refetch user data
+                    void refetch()
+                }
+            }
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('tokenRefreshed', handleTokenRefresh)
+        }
+
+        return () => {
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('tokenRefreshed', handleTokenRefresh)
+            }
+        }
+    }, [refetch])
+
+    // Listen for login and logout events to update user state accordingly
+    useEffect(() => {
+        const handleLoginCompleted = () => {
+            if (typeof window !== 'undefined') {
+                const accessToken = getCookie('access')
+                if (accessToken) {
+                    // New login, fetch user data
+                    void getUser(true) // force refetch
+                }
+            }
+        }
+
+        const handleLogoutCompleted = () => {
+            // Clear user data on logout
+            setUser(null)
+            setLoading(false)
+            setError(null)
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('loginCompleted', handleLoginCompleted)
+            window.addEventListener('logoutCompleted', handleLogoutCompleted)
+        }
+
+        return () => {
+            if (typeof window !== 'undefined') {
+                window.removeEventListener(
+                    'loginCompleted',
+                    handleLoginCompleted,
+                )
+                window.removeEventListener(
+                    'logoutCompleted',
+                    handleLogoutCompleted,
+                )
+            }
         }
     }, [getUser])
 
