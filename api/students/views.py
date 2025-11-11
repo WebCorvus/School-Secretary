@@ -99,7 +99,10 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download-presence")
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
-        presence_records = Presence.objects.filter(student=student)
+        current_year = timezone.now().year
+        presence_records = Presence.objects.filter(
+            student=student, date__year=current_year
+        )
         return pdfgen(
             "presence.html",
             {"student": student, "data": presence_records},
@@ -116,10 +119,9 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download-academic-report")
     def download_academic_report(self, request, pk=None):
         """Download comprehensive academic report PDF"""
-        from django.utils import timezone as tz
-
+        current_year = timezone.now().year
         student = self.get_object()
-        report = generate_student_academic_report(student)
+        report = generate_student_academic_report(student, year=current_year)
 
         context = {
             "student": student,
@@ -364,11 +366,10 @@ class TuitionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="download-financial-report")
     def download_financial_report(self, request):
         """Download financial report PDF"""
-        from django.utils import timezone as tz
-
+        current_year = timezone.now().year
         student_id = request.query_params.get("student_id")
         student = Student.objects.get(id=student_id) if student_id else None
-        report = generate_financial_report(student)
+        report = generate_financial_report(student, year=current_year)
 
         context = {
             "student": student,
