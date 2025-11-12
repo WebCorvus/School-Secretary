@@ -21,15 +21,17 @@ export function useGroupLessons(selectedGroup?: number) {
     const [error, setError] = useState<string | null>(null)
 
     const fetchGroups = useCallback(async () => {
+        setLoading(true)
         try {
             const response = await api.get<GroupProps[]>(`${ROUTES.GROUPS}`)
             setGroups(response.data)
         } catch {
-            if (process.env.NODE_ENV === 'development') {
-                setGroups([])
-            } else {
+            setGroups([])
+            if (process.env.NODE_ENV === 'production') {
                 setError('Não foi possível carregar as turmas.')
             }
+        } finally {
+            setLoading(false)
         }
     }, [])
 

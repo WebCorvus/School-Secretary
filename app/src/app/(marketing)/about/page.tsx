@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { NAVIGATION } from '@/config'
 
 export default function About() {
     return (
@@ -30,23 +31,41 @@ export default function About() {
             </section>
 
             <section className="mb-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <Link href="/students" className="btn text-2xl text-center">
-                    Consultar Alunos
+                <Link
+                    href={NAVIGATION.DASHBOARD}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Dashboard
                 </Link>
-                <Link href="/professors" className="btn text-2xl text-center">
-                    Consultar Professores
+                <Link
+                    href={NAVIGATION.AGENDA}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Agenda
                 </Link>
-                <Link href="/groups" className="btn text-2xl text-center">
-                    Ver Turmas
+                <Link
+                    href={NAVIGATION.LESSONS}
+                    className="btn text-2xl text-center"
+                >
+                    Ver Aulas
                 </Link>
-                <Link href="/subjects" className="btn text-2xl text-center">
-                    Disciplinas Oferecidas
+                <Link
+                    href={NAVIGATION.PROFILE}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Meu Perfil
                 </Link>
-                <Link href="/itineraries" className="btn text-2xl text-center">
-                    Itinerários Formativos
+                <Link
+                    href={NAVIGATION.EVENTS}
+                    className="btn text-2xl text-center"
+                >
+                    Consultar Eventos
                 </Link>
-                <Link href="/lessons" className="btn text-2xl text-center">
-                    Horários de Aula
+                <Link
+                    href={NAVIGATION.RESOURCES}
+                    className="btn text-2xl text-center"
+                >
+                    Recursos da Escola
                 </Link>
             </section>
         </div>

@@ -40,7 +40,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "email", "name", "role", "profile_details"]
+        fields = ["id", "email", "name", "role", "is_staff", "is_superuser", "profile_details"]
 
     def get_profile_details(self, obj):
         profile = obj.profile

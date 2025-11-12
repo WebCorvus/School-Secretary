@@ -1,15 +1,21 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import {
-    createFakeStudentSubjectGrades,
-    type StudentSubjectGradesProps,
-} from '@/types/student'
+import type { StudentSubjectGradesProps } from '@/types/student'
 import { GradesTableCard } from './index'
 
 const mockData: StudentSubjectGradesProps[] = [
-    createFakeStudentSubjectGrades(),
-    createFakeStudentSubjectGrades(),
-    createFakeStudentSubjectGrades(),
+    {
+        subject: 'Math',
+        grades: [10, 9, 8, 7],
+    },
+    {
+        subject: 'Science',
+        grades: [9, 8, 7, 6],
+    },
+    {
+        subject: 'History',
+        grades: [8, 7, 6, 5],
+    },
 ]
 
 describe('GradesTableCard', () => {

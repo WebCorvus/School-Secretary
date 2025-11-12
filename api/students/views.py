@@ -3,6 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.utils import timezone
+
 from users.permissions import IsProfessor, IsStaff
 from utils.pdfgen import pdfgen
 from utils.reports import (
@@ -77,11 +79,17 @@ class StudentViewSet(viewsets.ModelViewSet):
         student = self.get_object()
         subjects = get_subject_names()
         data = {}
+        current_year = timezone.now().year
+        all_grades = Grade.objects.filter(student=student, year=current_year)
+
         for subject in subjects:
-            data[subject] = Grade.objects.filter(
-                student=student,
-                subject__full_name=subject,
-            )
+            # Initialize with None for each bimester
+            bimester_grades = [None, None, None, None]
+            for grade in all_grades.filter(subject__full_name=subject):
+                bimester_num = int(grade.bimester[0])  # Extract the numeric part (e.g., "1B" -> 1)
+                if 1 <= bimester_num <= 4:
+                    bimester_grades[bimester_num - 1] = grade.value
+            data[subject] = bimester_grades
         return pdfgen(
             "grades.html",
             {"student": student, "data": data},
@@ -91,7 +99,10 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download-presence")
     def download_presence_pdf(self, request, pk=None):
         student = self.get_object()
-        presence_records = Presence.objects.filter(student=student)
+        current_year = timezone.now().year
+        presence_records = Presence.objects.filter(
+            student=student, date__year=current_year
+        ).order_by('date')
         return pdfgen(
             "presence.html",
             {"student": student, "data": presence_records},
@@ -108,10 +119,9 @@ class StudentViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="download-academic-report")
     def download_academic_report(self, request, pk=None):
         """Download comprehensive academic report PDF"""
-        from django.utils import timezone as tz
-
+        current_year = timezone.now().year
         student = self.get_object()
-        report = generate_student_academic_report(student)
+        report = generate_student_academic_report(student, year=current_year)
 
         context = {
             "student": student,
@@ -356,11 +366,10 @@ class TuitionViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path="download-financial-report")
     def download_financial_report(self, request):
         """Download financial report PDF"""
-        from django.utils import timezone as tz
-
+        current_year = timezone.now().year
         student_id = request.query_params.get("student_id")
         student = Student.objects.get(id=student_id) if student_id else None
-        report = generate_financial_report(student)
+        report = generate_financial_report(student, year=current_year)
 
         context = {
             "student": student,

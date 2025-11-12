@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, Inbox, type LucideIcon } from 'lucide-react'
+import { Home, Inbox, type LucideIcon, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type * as React from 'react'
 import { NavMain } from '@/components/NavMain'
@@ -11,7 +11,7 @@ import {
     SidebarFooter,
     SidebarRail,
 } from '@/components/ui/sidebar'
-import { ROUTES } from '@/config'
+import { NAVIGATION } from '@/config'
 import { useUser } from '@/hooks/useUser'
 import { logout } from '@/services/auth'
 import { UserRole } from '@/types/user'
@@ -41,12 +41,17 @@ const data = {
     navMain: [
         {
             title: 'Início',
-            url: '/dashboard',
+            url: NAVIGATION.DASHBOARD,
             icon: Home,
         },
         {
+            title: 'Perfil',
+            url: NAVIGATION.PROFILE,
+            icon: User,
+        },
+        {
             title: 'Notificações',
-            url: '/inbox',
+            url: NAVIGATION.INBOX,
             icon: Inbox,
         },
     ],
@@ -57,16 +62,27 @@ const data = {
             items: [
                 {
                     title: 'Atividades',
-                    url: '/agenda',
+                    url: NAVIGATION.AGENDA,
                 },
                 {
                     title: 'Eventos',
-                    url: '/events',
+                    url: NAVIGATION.EVENTS,
                 },
                 {
                     title: 'Aulas',
-                    url: '/lessons',
+                    url: NAVIGATION.LESSONS,
                     blockedRoles: [UserRole.STAFF],
+                },
+            ],
+        },
+        {
+            title: 'Professor',
+            url: '#',
+            blockedRoles: [UserRole.STUDENT, UserRole.GUARDIAN],
+            items: [
+                {
+                    title: 'Planejamento Semanal',
+                    url: NAVIGATION.WEEK_PLANNING,
                 },
             ],
         },
@@ -76,16 +92,16 @@ const data = {
             items: [
                 {
                     title: 'Sobre',
-                    url: '/about',
+                    url: NAVIGATION.ABOUT,
                 },
                 {
                     title: 'Recursos',
-                    url: '/resources',
+                    url: NAVIGATION.RESOURCES,
                     blockedRoles: [UserRole.GUARDIAN],
                 },
                 {
                     title: 'Painel administrativo',
-                    url: `${ROUTES.ADMIN}`,
+                    url: NAVIGATION.ADMIN,
                     blockedRoles: [
                         UserRole.STUDENT,
                         UserRole.GUARDIAN,

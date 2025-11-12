@@ -1,13 +1,39 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LoginForm } from '@/components/LoginForm'
+import { NAVIGATION } from '@/config'
+import { useUser } from '@/contexts/UserContext'
 import { login } from '@/services/auth'
 
 export default function LoginPage() {
     const router = useRouter()
+    const { user, loading } = useUser() // Get user data and loading state
     const [error, setError] = useState<string>('')
+
+    // Redirect to dashboard if user is already authenticated
+    useEffect(() => {
+        if (!loading && user) {
+            router.push(NAVIGATION.DASHBOARD)
+        }
+    }, [user, loading, router])
+
+    // If still loading user data, show a loading state
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-[var(--background)]">
+                <div className="text-center">
+                    <p>Carregando...</p>
+                </div>
+            </div>
+        )
+    }
+
+    // If user is already logged in, don't show the login form
+    if (user) {
+        return null // The redirect will happen via useEffect
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -20,7 +46,7 @@ export default function LoginPage() {
 
         try {
             await login(email, password)
-            router.push('/dashboard')
+            // The login function handles the redirect to the appropriate page
         } catch (err) {
             setError((err as Error).message || 'Erro ao realizar login')
         }

@@ -51,15 +51,9 @@
                 {% for subject, grades in data.items %}
                 <tr>
                     <th>{{ subject }}</th>
-                    {% if grades %} {% for grade in grades %}
-                    <td>{{ grade.value|default_if_none:"-" }}</td>
-
-                    {% endfor %} {% else %}
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    {% endif %}
+                    {% for grade_value in grades %}
+                    <td>{{ grade_value|default_if_none:"-" }}</td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </table>

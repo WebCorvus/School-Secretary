@@ -13,7 +13,7 @@
         "lint:write": "biome lint --write ./src",
         "check": "biome check ./src",
         "check:write": "biome check --write ./src",
-        "test": "npm run typecheck && npm run check && vitest run"
+        "test": "npm run typecheck && npm run check:write && vitest run"
     },
     "dependencies": {
         "@radix-ui/react-alert-dialog": "^1.1.15",

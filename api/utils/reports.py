@@ -19,17 +19,19 @@ from students.models import (
 )
 
 
-def generate_student_academic_report(student):
+def generate_student_academic_report(student, year=None):
     """Generate comprehensive academic report for a single student"""
+    if year is None:
+        year = timezone.now().year
 
     # Get all grades by subject and bimester
     grades_by_subject = {}
     all_subjects = Subject.objects.all()
 
     for subject in all_subjects:
-        grades = Grade.objects.filter(student=student, subject=subject).order_by(
-            "bimester"
-        )
+        grades = Grade.objects.filter(
+            student=student, subject=subject, year=year
+        ).order_by("bimester")
         bimester_grades = {"1B": None, "2B": None, "3B": None, "4B": None}
 
         for grade in grades:
@@ -45,20 +47,28 @@ def generate_student_academic_report(student):
         }
 
     # Get attendance statistics
-    total_days = Presence.objects.filter(student=student).count()
-    absences = Presence.objects.filter(student=student, presence=False).count()
-    presences = Presence.objects.filter(student=student, presence=True).count()
+    total_days = Presence.objects.filter(student=student, date__year=year).count()
+    absences = Presence.objects.filter(
+        student=student, presence=False, date__year=year
+    ).count()
+    presences = Presence.objects.filter(
+        student=student, presence=True, date__year=year
+    ).count()
     absence_rate = (absences / total_days * 100) if total_days > 0 else 0
 
     # Get disciplinary records
-    warnings_count = Warning.objects.filter(student=student).count()
-    suspensions_count = Suspension.objects.filter(student=student).count()
+    warnings_count = Warning.objects.filter(student=student, date__year=year).count()
+    suspensions_count = Suspension.objects.filter(
+        student=student, start_date__year=year
+    ).count()
 
     # Get recent warnings and suspensions
-    recent_warnings = Warning.objects.filter(student=student).order_by("-date")[:5]
-    recent_suspensions = Suspension.objects.filter(student=student).order_by(
-        "-start_date"
+    recent_warnings = Warning.objects.filter(student=student, date__year=year).order_by(
+        "-date"
     )[:5]
+    recent_suspensions = Suspension.objects.filter(
+        student=student, start_date__year=year
+    ).order_by("-start_date")[:5]
 
     return {
         "student_id": student.id,
@@ -174,13 +184,19 @@ def generate_group_performance_report(group):
     }
 
 
-def generate_financial_report(student=None):
+def generate_financial_report(student=None, year=None):
     """Generate financial report for tuition payments"""
+    if year is None:
+        year = timezone.now().year
 
     if student:
-        tuitions = Tuition.objects.filter(student=student).order_by("-reference_month")
+        tuitions = Tuition.objects.filter(
+            student=student, reference_month__year=year
+        ).order_by("-reference_month")
     else:
-        tuitions = Tuition.objects.all().order_by("-reference_month")
+        tuitions = Tuition.objects.filter(reference_month__year=year).order_by(
+            "-reference_month"
+        )
 
     # Summary statistics
     total_pending = tuitions.filter(status="PENDING").count()

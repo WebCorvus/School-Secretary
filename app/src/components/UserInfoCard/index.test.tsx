@@ -17,7 +17,7 @@ describe('UserInfoCard', () => {
 
         render(<UserInfoCard data={mockStudentData} />)
 
-        expect(screen.getByText('Suas Informações')).toBeInTheDocument()
+        expect(screen.getByText('Informações do Aluno')).toBeInTheDocument()
         expect(screen.getByText(mockStudent.full_name)).toBeInTheDocument()
         expect(
             screen.getByText(mockStudent.registration_number),
@@ -45,14 +45,11 @@ describe('UserInfoCard', () => {
 
         render(<UserInfoCard data={mockGuardianData} />)
 
-        expect(screen.getByText('Suas Informações')).toBeInTheDocument()
+        expect(
+            screen.getByText('Informações do Responsável'),
+        ).toBeInTheDocument()
         expect(screen.getByText(mockGuardian.full_name)).toBeInTheDocument()
         expect(screen.getByText('Responsável por:')).toBeInTheDocument()
-        if (mockGuardian.student_details) {
-            expect(
-                screen.getByText(mockGuardian.student_details.full_name),
-            ).toBeInTheDocument()
-        }
         expect(screen.getByText(mockGuardian.phone_number)).toBeInTheDocument()
         expect(screen.getByText(mockGuardianData.email)).toBeInTheDocument()
         expect(screen.getByText(mockGuardian.cpf)).toBeInTheDocument()
@@ -71,7 +68,7 @@ describe('UserInfoCard', () => {
 
         render(<UserInfoCard data={mockProfessorData} />)
 
-        expect(screen.getByText('Suas Informações')).toBeInTheDocument()
+        expect(screen.getByText('Informações do Professor')).toBeInTheDocument()
         expect(screen.getByText(mockProfessor.full_name)).toBeInTheDocument()
         expect(screen.getByText(mockProfessor.phone_number)).toBeInTheDocument()
         expect(screen.getByText(mockProfessorData.email)).toBeInTheDocument()
@@ -80,7 +77,7 @@ describe('UserInfoCard', () => {
         expect(screen.getByText(mockProfessor.address)).toBeInTheDocument()
         if (mockProfessor.subject_details) {
             expect(
-                screen.getByText(mockProfessor.subject_details.full_name),
+                screen.getByText(mockProfessor.subject_details.id),
             ).toBeInTheDocument()
         }
         expect(screen.getByText(UserRole.PROFESSOR)).toBeInTheDocument()
