@@ -1,6 +1,5 @@
 import { toast } from 'sonner'
 import { ButtonGridCard } from '@/components/ButtonGridCard'
-import { GradesTableCard } from '@/components/GradesTableCard'
 import { NAVIGATION, ROUTES } from '@/config'
 import { useUser } from '@/hooks/useUser'
 import type { DashboardLink } from '@/types/dashboardLink'
@@ -15,7 +14,6 @@ const studentActions: DashboardLink[] = [
     { title: 'Baixar Notas', url: ROUTES.MY_GRADES },
     { title: 'Recursos de Aprendizagem', url: NAVIGATION.RESOURCES },
     { title: 'Eventos', url: NAVIGATION.EVENTS },
-    { title: 'Plano Semanal', url: NAVIGATION.WEEK_PLANNING },
 ]
 
 export function StudentPanelCard() {
@@ -61,10 +59,6 @@ export function StudentPanelCard() {
                     data={studentActions}
                     handleClick={handleClick}
                 />
-
-                {profile.grades_details && (
-                    <GradesTableCard data={profile.grades_details} />
-                )}
             </div>
         </RolePanelCardLayout>
     )
