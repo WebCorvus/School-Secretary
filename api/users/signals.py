@@ -1,14 +1,6 @@
 import random
 import string
-
-
-def generate_random_password(length=12):
-    chars = string.ascii_letters + string.digits + "!@#$%^&*()_+-="
-    return "".join(random.choice(chars) for _ in range(length))
-
-
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import UserManager
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
@@ -17,7 +9,10 @@ from students.models import Guardian, Student
 
 User = get_user_model()
 
-# Função utilitária para criar usuário
+
+def generate_random_password(length=12):
+    chars = string.ascii_letters + string.digits + "!@#$%^&*()_+-="
+    return "".join(random.choice(chars) for _ in range(length))
 
 
 def create_related_user(instance, role):

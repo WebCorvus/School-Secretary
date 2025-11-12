@@ -1,9 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from school.models import Professor
 from school.serializers import ProfessorSerializer
-from students.models import Guardian, Student
 from students.serializers import GuardianSerializer, StudentSerializer
 
 
@@ -40,7 +38,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "email", "name", "role", "is_staff", "is_superuser", "profile_details"]
+        fields = [
+            "id",
+            "email",
+            "name",
+            "role",
+            "is_staff",
+            "is_superuser",
+            "profile_details",
+        ]
 
     def get_profile_details(self, obj):
         profile = obj.profile

@@ -7,7 +7,6 @@ from django.utils import timezone
 
 
 class ResourceSerializersTest(APITestCase):
-
     def setUp(self):
         self.User = get_user_model()
         self.user_student = self.User.objects.create_user(
@@ -33,8 +32,8 @@ class ResourceSerializersTest(APITestCase):
     def test_resource_serializer(self):
         serializer = ResourceSerializer(self.resource)
         data = serializer.data
-        self.assertEqual(data['name'], 'Test Resource')
-        self.assertEqual(data['resource_type'], 'COMPUTER')
+        self.assertEqual(data["name"], "Test Resource")
+        self.assertEqual(data["resource_type"], "COMPUTER")
 
     def test_resource_loan_serializer(self):
         loan = ResourceLoan.objects.create(
@@ -45,7 +44,7 @@ class ResourceSerializersTest(APITestCase):
         )
         serializer = ResourceLoanSerializer(loan)
         data = serializer.data
-        self.assertEqual(data['resource'], self.resource.id)
-        self.assertEqual(data['student'], self.student.id)
-        self.assertIn('resource_details', data)
-        self.assertIn('student_name', data)
+        self.assertEqual(data["resource"], self.resource.id)
+        self.assertEqual(data["student"], self.student.id)
+        self.assertIn("resource_details", data)
+        self.assertIn("student_name", data)

@@ -2,12 +2,12 @@
 Utility functions for generating comprehensive academic reports
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from django.db.models import Avg, Case, Count, FloatField, Q, Sum, When
+from django.db.models import Avg, Sum
 from django.utils import timezone
 
-from school.models import Group, Subject
+from school.models import Subject
 from students.models import (
     Enrollment,
     Grade,

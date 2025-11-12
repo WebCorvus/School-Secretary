@@ -1,14 +1,11 @@
 from rest_framework.test import APITestCase
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from users.serializers import UserSerializer, UserProfileSerializer
 from students.models import Student, Guardian
 from school.models import Professor
-import datetime
 
 
 class UserSerializersTest(APITestCase):
-
     def setUp(self):
         self.User = get_user_model()
         self.student_user = self.User.objects.create_user(
@@ -127,8 +124,10 @@ class UserSerializersTest(APITestCase):
         )
 
     def test_user_profile_serializer_guardian(self):
-        guardian_instance = Guardian.objects.create(
-            user=self.guardian_user, student=self.student_instance, **self.guardian_profile_data
+        Guardian.objects.create(
+            user=self.guardian_user,
+            student=self.student_instance,
+            **self.guardian_profile_data,
         )
         serializer = UserProfileSerializer(self.guardian_user)
         self.assertEqual(serializer.data["email"], "guardian_profile@example.com")
@@ -139,7 +138,7 @@ class UserSerializersTest(APITestCase):
         )
 
     def test_user_profile_serializer_professor(self):
-        professor_instance = Professor.objects.create(
+        Professor.objects.create(
             user=self.professor_user, **self.professor_profile_data
         )
         serializer = UserProfileSerializer(self.professor_user)

@@ -30,7 +30,7 @@ if [ ! -f "$SCRIPT_PATH" ]; then
 fi
 
 
-echo "-------------------------"
+echo "---------------------"
 echo "Executing $SCRIPT_NAME..."
 
 chmod +x "$SCRIPT_PATH"

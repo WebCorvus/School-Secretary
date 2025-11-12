@@ -86,7 +86,9 @@ class StudentViewSet(viewsets.ModelViewSet):
             # Initialize with None for each bimester
             bimester_grades = [None, None, None, None]
             for grade in all_grades.filter(subject__full_name=subject):
-                bimester_num = int(grade.bimester[0])  # Extract the numeric part (e.g., "1B" -> 1)
+                bimester_num = int(
+                    grade.bimester[0]
+                )  # Extract the numeric part (e.g., "1B" -> 1)
                 if 1 <= bimester_num <= 4:
                     bimester_grades[bimester_num - 1] = grade.value
             data[subject] = bimester_grades
@@ -102,7 +104,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         current_year = timezone.now().year
         presence_records = Presence.objects.filter(
             student=student, date__year=current_year
-        ).order_by('date')
+        ).order_by("date")
         return pdfgen(
             "presence.html",
             {"student": student, "data": presence_records},
@@ -128,7 +130,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             "grades": report["grades"],
             "attendance": report["attendance"],
             "discipline": report["discipline"],
-            "now": tz.now(),
+            "now": timezone.now(),
         }
 
         return pdfgen(
@@ -375,7 +377,7 @@ class TuitionViewSet(viewsets.ModelViewSet):
             "student": student,
             "summary": report["summary"],
             "payment_history": report["payment_history"],
-            "now": tz.now(),
+            "now": timezone.now(),
         }
 
         filename = (

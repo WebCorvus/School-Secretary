@@ -36,9 +36,9 @@ echo "--- Running and Waiting for Services to be Healthy ---"
 docker compose -f compose.test.yaml up -d --wait
 
 echo "--- Testing APP ---"
-docker compose -f compose.test.yaml exec -T app npm run test
+docker compose -f compose.test.yaml exec -T app /app/test.sh
 
 echo "--- Testing API ---"
-docker compose -f compose.test.yaml exec -T api uv run python manage.py test
+docker compose -f compose.test.yaml exec -T api /api/test.sh
 
 on_success

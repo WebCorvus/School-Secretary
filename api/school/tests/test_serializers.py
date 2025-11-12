@@ -1,5 +1,4 @@
 from rest_framework.test import APITestCase
-from rest_framework import serializers
 from school.serializers import (
     SubjectCompactSerializer,
     ItineraryCompactSerializer,
@@ -35,7 +34,6 @@ import datetime
 
 
 class SchoolSerializersTest(APITestCase):
-
     def setUp(self):
         self.User = get_user_model()
         self.user = self.User.objects.create_user(

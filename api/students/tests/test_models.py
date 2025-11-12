@@ -6,7 +6,6 @@ from school.models import Group, Subject
 
 
 class StudentModelsTest(TestCase):
-
     def setUp(self):
         self.User = get_user_model()
         self.user_student = self.User.objects.create_user(

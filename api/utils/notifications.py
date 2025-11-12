@@ -8,7 +8,7 @@ from django.db.models import Avg
 from django.utils import timezone
 
 from school.models import Notification
-from students.models import Grade, Presence, Student, Suspension, Tuition, Warning
+from students.models import Grade, Presence, Student, Tuition
 
 
 def create_notification(recipient, notification_type, title, message):

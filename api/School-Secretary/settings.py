@@ -1,5 +1,4 @@
 # Permitir mais campos em POST para deleção em massa no admin
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 """
 Django settings for School-Secretary project.
 
@@ -15,6 +14,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

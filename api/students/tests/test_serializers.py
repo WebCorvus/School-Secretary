@@ -1,5 +1,4 @@
 from rest_framework.test import APITestCase
-from rest_framework import serializers
 from students.serializers import (
     StudentCompactSerializer,
     GuardianCompactSerializer,
@@ -15,11 +14,9 @@ from students.models import Student, Grade, Guardian, Contract, Presence
 from school.models import Group, Subject
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-import datetime
 
 
 class StudentSerializersTest(APITestCase):
-
     def setUp(self):
         self.User = get_user_model()
         self.user_student = self.User.objects.create_user(
