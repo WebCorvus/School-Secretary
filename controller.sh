@@ -29,16 +29,17 @@ if [ ! -f "$SCRIPT_PATH" ]; then
   exit 1
 fi
 
-CMD="$SCRIPT_PATH"
-OS=$(uname -s)
-if [[ "$OS" == "MINGW"* || "$OS" == "CYGWIN"* || "$OS" == "MSYS"* ]]; then
-  CMD="winpty $CMD"
-fi
+
+echo "-------------------------"
+echo "Executing $SCRIPT_NAME..."
 
 chmod +x "$SCRIPT_PATH"
-echo "----------------------"
-echo "Executing $SCRIPT_NAME..."
-"$CMD"
+OS=$(uname -s)
+if [[ "$OS" == "MINGW"* || "$OS" == "CYGWIN"* || "$OS" == "MSYS"* ]]; then
+    winpty bash "$SCRIPT_PATH"
+else
+    bash "$SCRIPT_PATH"
+fi
 
 if [ "$NO_CONFIRM" = false ]; then
   chmod +x "$SCRIPT_DIR/on_exit.sh"
