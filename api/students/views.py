@@ -102,7 +102,7 @@ class StudentViewSet(viewsets.ModelViewSet):
         current_year = timezone.now().year
         presence_records = Presence.objects.filter(
             student=student, date__year=current_year
-        )
+        ).order_by('date')
         return pdfgen(
             "presence.html",
             {"student": student, "data": presence_records},
