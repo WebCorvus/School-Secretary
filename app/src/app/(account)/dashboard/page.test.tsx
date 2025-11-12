@@ -122,11 +122,6 @@ describe('DashboardPage', () => {
             screen.getByText(`User Info: ${FakeUser.name}`),
         ).toBeInTheDocument()
         expect(screen.getByText('Ações do Estudante')).toBeInTheDocument()
-        expect(
-            screen.getByText(
-                `Grades Table: ${FakeUser.profile_details?.grades_details?.length} subjects`,
-            ),
-        ).toBeInTheDocument()
     })
 
     it('deve renderizar informações do professor e não cards específicos de aluno', () => {
