@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-import urllib.request
 import sys
+import urllib.request
 
 try:
     r = urllib.request.urlopen("http://localhost:8000/api/admin/login/")

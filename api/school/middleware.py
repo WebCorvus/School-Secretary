@@ -75,4 +75,3 @@ class LogUserExceptionMiddleware(MiddlewareMixin):
         username = user.name if user and user.is_authenticated else "Anonymous"
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         logging.error(f"[{timestamp}] Exception for user '{username}': {exception}")
-        return None

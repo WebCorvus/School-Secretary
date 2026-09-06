@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 from school.models import Professor
 from students.models import Guardian, Student
+
 from users.models import User
 
 

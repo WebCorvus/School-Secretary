@@ -8,10 +8,8 @@ def generate_random_password(length=12):
 
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import UserManager
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-
 from school.models import Professor
 from students.models import Guardian, Student
 

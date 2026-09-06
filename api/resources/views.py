@@ -1,6 +1,5 @@
 from rest_framework import filters, viewsets
 from rest_framework.permissions import IsAuthenticated
-
 from users.permissions import IsStaff
 
 from .models import Resource, ResourceLoan

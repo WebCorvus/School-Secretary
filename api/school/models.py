@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-
 from utils.date import get_today
 from utils.validators import cep_validator, cpf_validator, phone_validator
 

@@ -4,7 +4,6 @@ Signals to automatically trigger notifications for school events
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 from students.models import Student
 from utils.notifications import (
     notify_student_new_assignment,

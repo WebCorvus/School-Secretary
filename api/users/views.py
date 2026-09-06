@@ -14,9 +14,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_permissions(self):
-        if self.action == "create":
-            self.permission_classes = [IsStaff]
-        elif self.action == "list":
+        if self.action == "create" or self.action == "list":
             self.permission_classes = [IsStaff]
         elif self.action in ["update", "partial_update", "retrieve"]:
             self.permission_classes = [IsOwnerOrStaff]

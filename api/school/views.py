@@ -3,12 +3,9 @@ from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
 from users.permissions import IsProfessor, IsStaff
 from utils.date import get_day_name
 from utils.reports import (
-    calculate_approval_rate,
-    calculate_dropout_rate,
     generate_efficiency_analysis,
     generate_group_performance_report,
 )
